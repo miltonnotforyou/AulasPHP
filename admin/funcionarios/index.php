@@ -107,7 +107,7 @@
                     <option value="">Cargo</option>
                     
                     <?php 
-                      $sql_cargo = "SELECT funcionario.codigo_funcionario, funcionario.foto, funcionario.codigo_cargo, funcionario.nome, funcionario.cpf, funcionario.observacao, funcionario.status, funcionario.data_cadastro, cargo.nome 'cargo'
+                      $sql_cargo = "SELECT funcionario.codigo_funcionario, funcionario.foto, funcionario.codigo_cargo, funcionario.nome, funcionario.cpf, funcionario.sexo, funcionario.observacao, funcionario.status, funcionario.data_cadastro, cargo.nome 'cargo'
                       FROM funcionario JOIN cargo 
                       ON funcionario.codigo_cargo = cargo.codigo_cargo 
                       WHERE funcionario.status = 1";
@@ -134,13 +134,7 @@
             </form>
             </div>
 
-            <div class="col-3">
-              <form action="">
-                <input type="search" name="pesquisa" id="pesquisa" class="form-control" placeholder="Pesquisar por código...">
-
-            </form>
-            </div>
-                                  
+                                            
           </div>
 
           <div class="card-body">
@@ -152,6 +146,7 @@
                   <th class="text-white" style="background-color: #2b3d4f; color: white;">cargo</th>
                   <th class="text-white" style="background-color: #2b3d4f; color: white;">Nome</th>
                   <th class="text-white" style="background-color: #2b3d4f; color: white;">CPF</th>
+                  <th class="text-white" style="background-color: #2b3d4f; color: white;">Sexo</th>
                   <th class="text-white" style="background-color: #2b3d4f; color: white;">Observação</th>
                   <th class="text-white" style="background-color: #2b3d4f; color: white;">Status</th>
                   <th class="text-white" style="background-color: #2b3d4f; color: white;">Data Cadastro</th>
@@ -168,6 +163,13 @@
                   <td class="table-light"><?php echo $funcionario['cargo'] ?></td>
                   <td class="table-light"><?php echo $funcionario['nome'] ?></td>
                   <td class="table-light"><?php echo $funcionario['cpf'] ?></td>
+                  <td class="table-light"><?php 
+                    if ($funcionario['sexo'] == 'M') {
+                      echo '<span>Masculino</span>';
+                    } else {
+                      echo '<span>Feminino</span>';
+                    }
+                  ?></td>
                   <td class="table-light"><?php echo $funcionario['observacao'] ?></td>
                   <td class="table-light"><?php 
                     if ($funcionario['status'] == 1) {
@@ -189,31 +191,7 @@
                       <i class="bi bi-trash"> </i>
                     </a>
                   </td>
-                  </tr>
-
-
-                <tr>
-                  <td>1</td>
-                  <th><img src="https://upload.wikimedia.org/wikipedia/commons/d/d8/El_Chapul%C3%ADn_Colorado_logo.svg"  alt="Foto de Milton" class="img-fluid rounded-circle" style="width: 50px; height: 50px;"></th>
-                  <td>Gerente</td>
-                  <td>Chapolin</td>
-                  <td>123.456.789-00</td>
-                  <td>Responsável pela gestão da equipe</td>
-                  <td><span class="badge text-bg-success">Ativo</span></td>
-                  <td>08/04/2026</td>
-                  <td> <!-- Botões  -->
-                    <a href="" class="btn btn-outline-success btn-sm" title="Editar">
-                      <i class="bi bi-pencil"> </i>
-                    </a>
-
-                    <a href="" class="btn btn-outline-danger btn-sm" title="Excluir">
-                      <i class="bi bi-trash"> </i>
-                    </a>
-                  </td>
-
-                </tr>
-
-                
+                         
 
                 <?php } 
                 ?>
