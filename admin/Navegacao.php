@@ -28,28 +28,28 @@
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-white" href="#">
+        <a class="nav-link text-white" href="http://localhost/INFO_52/IOT_Store/admin/categorias/">
           <i class="bi bi-stack"></i>
           Categorias
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link text-white" href="#">
+        <a class="nav-link text-white" href="http://localhost/INFO_52/IOT_Store/admin/marcas/">
           <i class="bi bi-bag-fill"></i>
           Marcas
         </a>
       </li>
       
       <li class="nav-item">
-        <a class="nav-link text-white" href="#">
+        <a class="nav-link text-white" href="http://localhost/INFO_52/IOT_Store/admin/produtos/">
           <i class="bi bi-archive-fill"></i>
           Produtos
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link text-white" href="#">
+        <a class="nav-link text-white" href="http://localhost/INFO_52/IOT_Store/admin/clientes/">
           <i class="bi bi-people-fill"></i>
           Clientes
         </a>

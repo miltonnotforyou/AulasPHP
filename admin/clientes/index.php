@@ -40,16 +40,16 @@
         
         <div class="card">
           <div class="card-header d-flex justify-content-between" style="background-color: #2b3d4f; color: white;">
-            <h4 class="m-0">Funcionários</h4>
+            <h4 class="m-0">Clientes</h4>
             <a href="Inserir.php" class="btn btn-light btn-sm">
               <i class="bi bi-plus"></i> Adicionar
             </a>
           </div>
 
           <?php 
-            $sql = "SELECT funcionario.*, cargo.nome AS cargo_nome 
-                    FROM funcionario 
-                    LEFT JOIN cargo ON funcionario.codigo_cargo = cargo.codigo_cargo";
+            $sql = "SELECT * 
+                    FROM cliente
+                    WHERE status = 1;";
 
             $query = mysqli_query($conexao, $sql);
             
@@ -80,68 +80,53 @@
                 </form>
               </div>
 
-              <div class="col-2">
-                <form action="">
-                  <select name="cargo" id="cargo" class="form-control">
-                    <option value="">Cargo</option>
-                    <?php 
-                      // Buscando apenas os cargos para preencher o select
-                      $sql_cargo = "SELECT codigo_cargo, nome FROM cargo WHERE status = 1";
-                      $query_cargo = mysqli_query($conexao, $sql_cargo);
-                      
-                      if($query_cargo){
-                          foreach($query_cargo as $cargo) {
-                              echo '<option value="' . $cargo['codigo_cargo'] . '">' . $cargo['nome'] . '</option>';
-                          }
-                      }
-                    ?>
-                  </select>
-                </form>
-              </div>
-
               <div class="col-3">
-                <form action="">
+               <form action="">
                   <input type="search" name="pesquisa" id="pesquisa" class="form-control" placeholder="Pesquisar por nome...">
                 </form>
               </div>
+
+              <div class="col-2">
+                <form action="">
+                  <input type="search" name="pesquisa" id="pesquisa" class="form-control" placeholder="Pesquisar por Cidade...">
+                </form>
+              </div>
+
+              <div class="col-2">
+                <form action="">
+                  <input type="search" name="pesquisa" id="pesquisa" class="form-control" placeholder="Pesquisar por Data Cadastro...">
+                </form>
+              </div>
+
             </div> 
             <table class="table table-striped table-hover" style="background-color: #2b3d4f; color: white;">
               <thead> 
                 <tr style="background-color: #2b3d4f; color: white;">
                   <th class="text-white" style="background-color: #2b3d4f;">Código</th>
-                  <th class="text-white" style="background-color: #2b3d4f;">Foto</th>
-                  <th class="text-white" style="background-color: #2b3d4f;">Cargo</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Nome</th>
                   <th class="text-white" style="background-color: #2b3d4f;">CPF</th>
+                  <th class="text-white" style="background-color: #2b3d4f;">E-mail</th>
+                  <th class="text-white" style="background-color: #2b3d4f;">Telefone Celular</th>
+                  <th class="text-white" style="background-color: #2b3d4f;">Cidade / UF</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Sexo</th>
-                  <th class="text-white" style="background-color: #2b3d4f;">Tipo Acesso</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Status</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Data Cadastro</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Ações</th>
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($query as $funcionario) { ?>
+                <?php foreach ($query as $cliente) { ?>
                 <tr>
-                  <td class="table-light"><?php echo $funcionario['codigo_funcionario'] ?></td>
-                  <td class="table-light">
-                  <?php 
-                    if ($funcionario['foto'] != '') {
-                      echo '<img src="../../images/' . $funcionario['foto'] . '" alt="Foto do Funcionário" class="rounded-circle shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">';
-                    } else {
-                      echo '<img src="../../assets/img/placeholder-funcionario.png" alt="Foto padrão" class="rounded-circle shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">'; // Ou uma imagem padrão caso não haja foto
-                    }
-                  
-                  ?>
-                                
-                  </td>
-                  <td class="table-light"><?php echo $funcionario['cargo_nome'] ?></td>
-                  <td class="table-light"><?php echo $funcionario['nome'] ?></td>
-                  <td class="table-light"><?php echo $funcionario['cpf'] ?></td>
+                  <td class="table-light"><?php echo $cliente['codigo_cliente'] ?></td>
+                  <td class="table-light"><?php echo $cliente['nome'] ?></td>
+                  <td class="table-light"><?php echo $cliente['cpf'] ?></td>
+                  <td class="table-light"><?php echo $cliente['email'] ?></td>
+                  <td class="table-light"><?php echo $cliente['telefone_celular'] ?></td>
+                  <td class="table-light"><?php echo $cliente['cidade'] . ' / ' . $cliente['estado'] ?></td>
                   <td class="table-light">
                     <?php 
-                      // Lógica do sexo do funcionário
-                      $sexo = strtoupper($funcionario['sexo']);
+                      // Lógica do sexo do cliente
+                      $sexo = strtoupper($cliente['sexo']);
                       if ($sexo == 'M') {
                         echo '<span>Masculino</span>';
                       } elseif ($sexo == 'F') {
@@ -152,30 +137,17 @@
                     ?>
                   </td>
                   <td class="table-light">
-                    <?php
-                    // Lógica do sexo do funcionário
-                      $tipo_acesso = strtoupper($funcionario['tipo_acesso']);
-                      if ($tipo_acesso == '0') {
-                        echo '<span>Comum</span>';
-                      } else{
-                        echo '<span>Administrador</span>';
-                      }
-                    ?>
-
-                  </td>
-
-                  <td class="table-light">
                     <?php 
-                      if ($funcionario['status'] == 1) {
+                      if ($cliente['status'] == 1) {
                         echo '<span class="badge rounded-pill bg-success">Ativo</span>';
                       } else {
                         echo '<span class="badge rounded-pill bg-danger">Inativo</span>';
                       }
                     ?>
                   </td>
-                  <td class="table-light"><?php echo date('d/m/Y', strtotime($funcionario['data_cadastro'])) ?></td>
+                  <td class="table-light"><?php echo date('d/m/Y', strtotime($cliente['data_cadastro'])) ?></td>
                   <td class="table-light"> 
-                    <a href="Editar.php?codigo_funcionario=<?php echo $funcionario['codigo_funcionario'] ?>" class="btn btn-outline-success btn-sm" title="Editar">
+                    <a href="Editar.php?codigo_cliente=<?php echo $cliente['codigo_cliente'] ?>" class="btn btn-outline-success btn-sm" title="Editar">
                       <i class="bi bi-pencil"></i>
                     </a>
                     <a href="" class="btn btn-outline-danger btn-sm" title="Excluir">
@@ -190,7 +162,7 @@
             } else {
               // Exibe mensagem caso não haja funcionários
               echo '<div class="alert alert-danger mx-3 mt-3" role="alert">
-                      Nenhum funcionário encontrado!
+                      Nenhum cliente encontrado!
                     </div>';
             }
           ?>
