@@ -1,6 +1,14 @@
 <?php 
   // Conexão com o banco de dados
-  require_once('../../conexao/conecta.php');
+  require_once __DIR__ .'/../../conexao/conecta.php';
+
+  ######## Inicia a sessão#######
+
+if (!isset($_SESSION)) 
+{
+    session_start();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -27,9 +35,6 @@
   <link rel="shortcut icon" href="../../assets/img/favicon.ico" type="image/x-icon">
 
 </head>
-
-
-
 <body>
 
   <?php
@@ -47,8 +52,9 @@
       ?>
 
       <main class="ms-auto col-lg-10 px-md-4">
-        <?php
+         <?php
           include('../Log.php');
+          include('../Mensagem.php');
         ?>
         
         <div class="card">
@@ -102,7 +108,7 @@
 
                                     <div class="col-md-3 mt-2">
                                         <label for="data_nascimento"><strong class="text-danger">*</strong> Data Nascimento</label>
-                                        <input type="text" name="data_nascimento" id="data_nascimento" class="form-control" placeholder="dd/mm/aaaa" required>
+                                        <input type="date" name="data_nascimento" id="data_nascimento" class="form-control" placeholder="dd/mm/aaaa" required>
                                     </div>
 
                                     <div class="col-md-3 mt-2">

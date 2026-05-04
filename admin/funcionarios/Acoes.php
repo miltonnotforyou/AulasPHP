@@ -1,6 +1,6 @@
 <?php 
 // Conexão com o banco de dados
-require_once '../../conexao/conecta.php';
+require_once __DIR__ .'/../../conexao/conecta.php';
 
 ######## Inicia a sessão#######
 
@@ -13,7 +13,7 @@ if (!isset($_SESSION))
 
 if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario') 
     {
-    //$foto = mysqli_real_escape_string($conexao, $_POST['foto']);
+    
     $nome = mysqli_real_escape_string($conexao, $_POST['nome']);
     $nome_social = mysqli_real_escape_string($conexao, $_POST['nome_social']);
     $data_nascimento = mysqli_real_escape_string($conexao, $_POST['data_nascimento']);
@@ -50,16 +50,23 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
     #################### Movendo o arquivo da pasta temporária para a pasta final #####################
     move_uploaded_file($tmp, $caminho_final); #####move o arquivo da pasta temporária para a pasta final
 
-    }
+    
     ########################Insert no banco de dados########################
 
-    $sql_insert = "INSERT INTO funcionario VALUES (0,'$nome', '$nome_social', '$data_nascimento', '$sexo', '$estado_civil', '$CPF', '$RG','$salario', '$endereco', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$telefone_residencial', '$telefone_celular', '$email', 1, NOW(), '$usuario', '$senha', $tipo_acesso,'$foto', '$cargo')";
+    $sql = "INSERT INTO funcionario VALUES (0,'$nome', '$nome_social', '$data_nascimento', '$sexo', '$estado_civil', '$CPF', '$RG','$salario', '$endereco', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$telefone_residencial', '$telefone_celular', '$email', 1, NOW(), '$usuario', '$senha', $tipo_acesso,'$foto', '$cargo')";
 
-    if(mysqli_query($conexao, $sql_insert)) {
-        header('Location: index.php');
-    } else {
-        die("Erro ao cadastrar funcionário: " . mysqli_error($conexao));
-        
+    try {
+        if(mysqli_query($conexao, $sql)) {
+            $_SESSION['mensagem'] = "Funcionário cadastrado com sucesso!";
+        } else {
+            $_SESSION['mensagem'] = "Erro ao cadastrar funcionário!";
+        }
+
+        } catch (mysqli_sql_exception) {
+            $_SESSION['mensagem'] = "Erro ao cadastrar funcionário!";
+        }
+
+    header("Location: Inserir.php");
+    exit();
     }
-
 ?>

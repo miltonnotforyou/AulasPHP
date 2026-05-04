@@ -1,6 +1,6 @@
 <?php 
   // Conexão com o banco de dados
-  require_once('../../conexao/conecta.php');
+  require_once __DIR__ .'/../../conexao/conecta.php';
 ?>
 
 <!DOCTYPE html>

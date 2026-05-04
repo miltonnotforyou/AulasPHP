@@ -53,6 +53,7 @@ if (!isset($_SESSION)) {
         <?php
           include('../Log.php');
           include('../Mensagem.php');
+       
         ?>
         
         <div class="card">

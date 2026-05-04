@@ -1,6 +1,6 @@
 <?php 
   // Abrindo a Conexão com o banco de dados
-  require_once('../../conexao/conecta.php');
+  require_once __DIR__ .'/../../conexao/conecta.php';
 
 ?>
 
@@ -48,6 +48,7 @@
       <main class="ms-auto col-lg-10 px-md-4">
         <?php
           include('../Log.php');
+        
         ?>
         
         <div class="card">

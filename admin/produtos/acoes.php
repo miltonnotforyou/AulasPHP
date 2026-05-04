@@ -1,5 +1,5 @@
 <?php 
-require_once '../../conexao/conecta.php';
+require_once __DIR__ .'/../../conexao/conecta.php';
 
 if (!isset($_SESSION)) {
     session_start();
@@ -17,9 +17,9 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_produto')
     $_preco_promocao    = str_replace(',', '.', $_POST['preco_promocao']); ## Corrigido: Substituindo vírgula por ponto para o formato decimal
     $_codigo_marca      = mysqli_real_escape_string($conexao, $_POST['marca']);          
     $_codigo_categoria  = mysqli_real_escape_string($conexao, $_POST['categoria']);      
-
-    $foto         = basename($_FILES['foto']['name']);
-    $tmp          = $_FILES['foto']['tmp_name'];
+################################## Upload da foto do produto ##########################
+    $foto = basename($_FILES['foto']['name']);
+    $tmp = $_FILES['foto']['tmp_name'];
     $caminho_final = '../../images/' . $foto;
     move_uploaded_file($tmp, $caminho_final);
 
@@ -30,11 +30,12 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_produto')
         if(mysqli_query($conexao, $sql)) {
             $_SESSION['mensagem'] = "Produto cadastrado com sucesso!";
         } else {
-            $_SESSION['mensagem'] = "Erro ao cadastrar produto: " . mysqli_error($conexao);
+            $_SESSION['mensagem'] = "Erro ao cadastrar produto!";
         }
-    } catch (mysqli_sql_exception $e) {
-        $_SESSION['mensagem'] = "Erro ao cadastrar produto: " . $e->getMessage();
-    }
+
+        } catch (mysqli_sql_exception) {
+            $_SESSION['mensagem'] = "Erro ao cadastrar produto!";
+        }
 
     header("Location: Inserir.php");
     exit();

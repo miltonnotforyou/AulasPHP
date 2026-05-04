@@ -1,6 +1,6 @@
 <?php 
   // Conexão com o banco de dados
-  require_once('../../conexao/conecta.php');
+  require_once __DIR__ .'/../../conexao/conecta.php';
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +36,7 @@
       <main class="ms-auto col-lg-10 px-md-4">
         <?php
           include('../Log.php');
+          include('../Mensagem.php');
         ?>
         
         <div class="card">
@@ -112,6 +113,7 @@
                   <th class="text-white" style="background-color: #2b3d4f;">Foto</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Cargo</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Nome</th>
+                  <th class="text-white" style="background-color: #2b3d4f;">Nascimento</th>
                   <th class="text-white" style="background-color: #2b3d4f;">CPF</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Sexo</th>
                   <th class="text-white" style="background-color: #2b3d4f;">Tipo Acesso</th>
@@ -137,6 +139,7 @@
                   </td>
                   <td class="table-light"><?php echo $funcionario['cargo_nome'] ?></td>
                   <td class="table-light"><?php echo $funcionario['nome'] ?></td>
+                  <td class="table-light"><?php echo $funcionario['data_nascimento'] ?></td>
                   <td class="table-light"><?php echo $funcionario['cpf'] ?></td>
                   <td class="table-light">
                     <?php 

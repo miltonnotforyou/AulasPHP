@@ -1,6 +1,6 @@
 <?php 
 // Conexão com o banco de dados
-require_once '../../conexao/conecta.php';
+require_once __DIR__ .'/../../conexao/conecta.php';
 
 ######## Inicia a sessão#######
 
@@ -14,6 +14,8 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_categoria')
     $_categoria = mysqli_real_escape_string($conexao, $_POST['categoria']);
     $_observacao = mysqli_real_escape_string($conexao, $_POST['observacao']);
 
+    ########################Insert no banco de dados########################
+    
     $sql = "INSERT INTO categoria VALUES (0, '$_categoria','$_observacao', 1, NOW())";
     
     try {
@@ -35,7 +37,8 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_categoria')
             $_SESSION['mensagem'] = "Erro ao cadastrar categoria";
             }
 
-    header("Location: inserir.php");
+    header("Location: Inserir.php");
+    exit();
 }
 
 

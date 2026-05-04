@@ -1,7 +1,16 @@
 <?php 
   // Conexão com o banco de dados
-  require_once('../../conexao/conecta.php');
+  require_once __DIR__ .'/../../conexao/conecta.php';
+
+  ######## Inicia a sessão#######
+
+if (!isset($_SESSION)) 
+{
+    session_start();
+}
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -28,10 +37,7 @@
 
 </head>
 
-
-
 <body>
-
   <?php
     #Início TOPO
     include('../Topo.php');
@@ -47,8 +53,9 @@
       ?>
 
       <main class="ms-auto col-lg-10 px-md-4">
-        <?php
+         <?php
           include('../Log.php');
+          include('../Mensagem.php');
         ?>
         
         <div class="card">
@@ -68,12 +75,12 @@
                <div class="card-body">
                 <form action="Acoes.php" method="post" enctype="multipart/form-data">
                     <div class="row ">
-                        <div class="col-md-3 d-flex justify-content-center">
+                        <div class="col-md-3 mt-4 d-flex justify-content-center" img-fluid>
                             <img src="../../assets/img/placeholder-produto.jpg"
                                 id="preview-foto" 
                                 alt="Foto do Produto" 
                                 class="rounded" 
-                                style="width: 250px; height: 250px; object-fit: cover;">
+                                style="width: 350px; height: 350px; object-fit: cover;">
                         </div>
 
                         <div class="col-md-9">
