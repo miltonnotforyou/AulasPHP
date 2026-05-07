@@ -20,7 +20,9 @@
   $status = $_POST['status'] ?? ''; // Ex: '1' (ativo) ou '0' (inativo)
   $cidade = $_POST['cidade'] ?? ''; // Ex: 'Piracicaba'
   $cargo  = $_POST['cargo']  ?? ''; // Ex: '3' (código do cargo)
-  $nome   = $_POST['nome']   ?? ''; // Ex: 'Milton' (busca por texto)
+
+  //Busca por nome: o usuário pode digitar parte do nome, então usamos LIKE na query.
+  $nome   = mysqli_real_escape_string($conexao, $_POST['nome'] ?? ''); // Ex: 'Milton'
 
   // ============================================================
   // 2. MONTAGEM DA QUERY SQL DE FORMA DINÂMICA
@@ -70,7 +72,8 @@
   // Filtro por NOME — usa LIKE com % nas duas pontas para busca parcial.
   // Ex: buscar "il" encontra "Milton", "Milena", "Gilberto", etc.
   if (!empty($nome)) {
-      $sql .= " AND funcionario.nome LIKE '%" . mysqli_real_escape_string($conexao, $nome) . "%'";
+      $sql .= " AND (funcionario.nome LIKE '%" . mysqli_real_escape_string($conexao, $nome) . "%' OR funcionario.nome_social LIKE '%" . mysqli_real_escape_string($conexao, $nome) . "%')";
+      
   }
 
   // Ordena o resultado por nome em ordem crescente (A → Z)
@@ -103,6 +106,9 @@
           <!-- Código único do funcionário -->
           <td class="table-light"><?php echo $funcionario['codigo_funcionario']; ?></td>
 
+          <!-- Nome do cargo (vem do JOIN com a tabela cargo) -->
+          <td class="table-light"><?php echo htmlspecialchars($funcionario['cargo_nome']); ?></td>
+
           <!-- Foto do funcionário: se tiver foto cadastrada usa ela,
                senão usa uma imagem placeholder padrão.
                htmlspecialchars() evita XSS ao exibir o nome do arquivo. -->
@@ -122,11 +128,15 @@
             ?>
           </td>
 
-          <!-- Nome do cargo (vem do JOIN com a tabela cargo) -->
-          <td class="table-light"><?php echo htmlspecialchars($funcionario['cargo_nome']); ?></td>
-
-          <!-- Nome do funcionário -->
-          <td class="table-light"><?php echo htmlspecialchars($funcionario['nome']); ?></td>
+          <!-- Nome do funcionário (Exibe Nome Social se existir) -->
+          <td class="table-light">
+            <?php 
+              // Verifica se o nome_social não está vazio. Se não estiver, usa ele. Se estiver, usa o nome normal.
+              $nome_exibicao = !empty($funcionario['nome_social']) ? $funcionario['nome_social'] : $funcionario['nome'];
+              
+              echo htmlspecialchars($nome_exibicao); 
+            ?>
+          </td>
 
           <!-- Data de nascimento: strtotime() converte a string do banco
                para timestamp Unix; date() formata para dd/mm/aaaa -->

@@ -79,7 +79,7 @@
 
               <div class="col-2">
                 <form action="">
-                  <select name="status" id="status" class="form-control">
+                  <select name="status" id="status" class="form-control" onchange="buscar()">
                     <option value="">Status</option>
                     <option value="1">Ativo</option>
                     <option value="0">Inativo</option>
@@ -91,7 +91,7 @@
 
             <div class="col-4">
               <form action="">
-                <input type="search" name="pesquisa" id="pesquisa" class="form-control" placeholder="Pesquisar por cargo...">
+                <input type="search" name="cargo" id="cargo" class="form-control" placeholder="Pesquisar por cargo..." onkeyup="buscar()">
 
           </form>
             </div>
@@ -110,40 +110,12 @@
                       <th class="text-white" style="background-color: #2b3d4f; color: white;">Ações</th>
                   </tr>
               </thead>
-              <tbody>
-
-                <?php 
-                  foreach ($query as $cargo) {  
-                ?>
-                <tr>
-                  <td class="table-light"><?php echo $cargo['codigo_cargo'] ?></td>
-                  <td class="table-light"><?php echo $cargo['nome'] ?></td>
-                  <td class="table-light"><?php echo $cargo['observacao'] ?></td>
-                  <td class="table-light"><?php 
-                    if ($cargo['status'] == 1) {
-                      echo '<span class="badge rounded-pill bg-success">Ativo</span>';
-                    } else {
-                      echo '<span class="badge rounded-pill bg-danger">Inativo</span>';
-                    }
-                  ?></td>
-
-                  <td class="table-light"><?php echo date('d/m/Y', strtotime($cargo['data_cadastro'])) ?></td>
-
-
-                  <td class="table-light"> <!-- Botões  -->
-                    <a href="Editar.php?codigo_cargo=<?php echo $cargo['codigo_cargo'] ?>" class="btn btn-outline-success btn-sm" title="Editar">
-                      <i class="bi bi-pencil"> </i>
-                    </a>
-
-                    <a href="" class="btn btn-outline-danger btn-sm" title="Excluir">
-                      <i class="bi bi-trash"> </i>
-                    </a>
-                  </td>
-
-                </tr>
-                <?php } 
-                ?>
-                
+             <!-- Corpo da tabela: começa com mensagem de espera.
+                     O JavaScript substituirá este conteúdo pelo retorno do AJAX. -->
+              <tbody id="listar">
+                 <tr>
+                    <td colspan="10" class="text-center py-4">Carregando dados...</td>
+                 </tr>
               </tbody>
             </table>
         </div>
@@ -165,14 +137,79 @@
   </div>
 
 
-    <!-- FECHANDO A CONEXÃO COM O BANCO DE DADOS -->
-  <?php 
-    mysqli_close($conexao);
-  ?>
+    <!-- Fecha a conexão com o banco — não é mais necessária após os selects -->
+  <?php mysqli_close($conexao); ?>
   
-  <!-- JQUERY CDN -->
+  <!-- jQuery (necessário para o $.ajax abaixo) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!-- BOOTSTRAP JS -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+   <script>
+    // ============================================================
+    // 3. FUNÇÃO buscar() — CORAÇÃO DA PÁGINA
+    // Coleta os filtros, faz uma requisição AJAX para Tabela.php
+    // e injeta o HTML retornado dentro do <tbody id="listar">.
+    // ============================================================
+    function buscar() {
+
+      // Captura o valor atual de cada filtro com jQuery ($('#id').val())
+      let cargo   = $('#cargo').val();    // 'M', 'F', 'O' ou '' (todos)
+      let status  = $('#status').val();   // '1', '0' ou '' (todos)
+      
+
+      // Feedback visual imediato: troca o conteúdo da tabela por
+      // uma mensagem de "carregando" enquanto a requisição acontece.
+      $('#listar').html(
+        '<tr><td colspan="11" class="text-center text-muted py-4">Filtrando informações...</td></tr>'
+      );
+
+      // --------------------------------------------------------
+      // Requisição AJAX com jQuery
+      // --------------------------------------------------------
+      $.ajax({
+        url: 'Tabela.php',  // Arquivo PHP que processa os filtros e retorna as <tr>
+        method: 'POST',     // Envia os dados no corpo da requisição (não na URL)
+        data: {             // Objeto com todos os filtros que serão recebidos via $_POST
+          cargo:   cargo,
+          status:  status,
+          
+        },
+        dataType: 'html',          // Espera HTML puro de volta (as linhas <tr>)
+
+        // Sucesso: substitui o conteúdo do <tbody> pelo HTML retornado
+        success: function(resposta) {
+          $('#listar').html(resposta);
+        },
+
+        // Erro de rede ou servidor: exibe mensagem de falha na tabela
+        error: function() {
+          $('#listar').html(
+            '<tr><td colspan="11" class="text-center text-danger py-4">Erro de conexão ao carregar a tabela.</td></tr>'
+          );
+        }
+      });
+    }
+
+    // ============================================================
+    // 4. CARREGAMENTO INICIAL
+    // Assim que a página terminar de carregar no navegador,
+    // chama buscar() sem nenhum filtro — isso traz TODOS os
+    // Clientes e preenche a tabela automaticamente.
+    // ============================================================
+    $(document).ready(function() {
+      buscar();
+
+      //FUNÇÃO PARA PESQUISAR APENAS PELO NOME
+      $('#pesquisar').keyup(function() {
+        var pesquisa = $(this).val();
+
+        buscar('', '', '',  pesquisa); // Chama a função buscar() para atualizar a tabela com o filtro de nome
+      })
+    });
+
+  </script>
+
+
 </body>
 </html>

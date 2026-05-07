@@ -357,5 +357,9 @@ if (!isset($_SESSION))
    <!-- JAVASCRIPT PREVIEW FOTO -->
   <script src= "../../assets/js/preview_foto.js"></script>
 
+   <!-- JAVASCRIPT Data Nascimento-->
+   
+  <script src="../../custom/js/script.js"></script>
+
 </body>
 </html>

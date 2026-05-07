@@ -82,7 +82,6 @@
                     <option value="">Status</option>
                     <option value="1">Ativo</option>
                     <option value="0">Inativo</option>
-
                   </select>
                 </form>
               </div>
@@ -93,10 +92,47 @@
                   <input type="search" name="pesquisa" id="pesquisa" class="form-control" placeholder="Pesquisar por nome...">
                 </form>
               </div>
-              <div class="col-3">
+              <div class="col-2">
                 <form action="">
-                  <input type="search" name="pesquisa" id="pesquisa" class="form-control" placeholder="Pesquisar por data de cadastro...">
+                  <select name="promocao" id="promocao" class="form-control">
+                    <option value="">Promoção</option>
+                    <option value="1">Não</option>
+                    <option value="0">Sim</option>
+                  </select>
                 </form>
+              </div>
+
+          <div class="col-2">
+                <form action="">
+                  <select name="estoque" id="estoque" class="form-control">
+                    <option value="">Estoque</option>
+                    <option value="1">Em Estoque</option>
+                    <option value="0">Estoque Baixo</option>
+                    <option value="0">Fora de Estoque</option>
+                  </select>
+                </form>
+              </div>
+
+          <div class="col-md-3">
+                <select name="marca" id="marca" class="form-control" onchange="buscar()">
+                  <option value="">marca</option>
+                  <?php 
+                    $sql_marca = "SELECT codigo_marca, nome 
+                                  FROM marca
+                                  WHERE status = 1 
+                                  ORDER BY nome";
+                    $query_marca = mysqli_query($conexao, $sql_marca);
+
+                    if ($query_marca) {
+                      foreach($query_marca as $marca) {
+                        // htmlspecialchars() no value E no texto evita XSS
+                        // caso alguma marca tenha caracteres especiais
+                        echo '<option value="' . htmlspecialchars($marca['codigo_marca']) . '">' 
+                             . htmlspecialchars($marca['codigo_marca']) . '</option>';
+                      }
+                    }
+                  ?>
+                </select>
               </div>
 
         <div class="card-body">

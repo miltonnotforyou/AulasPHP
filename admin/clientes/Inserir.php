@@ -279,6 +279,10 @@ if (!isset($_SESSION))
   <!-- JAVASCRIPT CEP -->
   <script src= "../../assets/js/cep.js"></script>
 
+  <!-- JAVASCRIPT Data Nascimento-->
+   
+  <script src="../../custom/js/script.js"></script>
+
   
 
 </body>
