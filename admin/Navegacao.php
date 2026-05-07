@@ -7,7 +7,7 @@
     
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link text-white" href="http://localhost/INFO_52/IOT_Store/admin/index.php">
+        <a class="nav-link text-white" href="http://localhost/INFO_52/IOT_Store/admin/admin.php">
           <i class="bi bi-house-door-fill"></i>
           Início
         </a>

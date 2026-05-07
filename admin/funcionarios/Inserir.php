@@ -125,10 +125,10 @@ if (!isset($_SESSION))
                                         <label for="estado_civil"><strong class="text-danger">*</strong> Estado Civil</label>
                                         <select name="estado_civil" id="estado_civil" class="form-control" required>
                                             <option value="">Selecione</option>
-                                            <option value="S">Solteiro(a)</option>
-                                            <option value="C">Casado(a)</option>
-                                            <option value="D">Divorciado(a)</option>
-                                            <option value="V">Viúvo(a)</option>
+                                            <option value="Solteiro(a)">Solteiro(a)</option>
+                                            <option value="Casado(a)">Casado(a)</option>
+                                            <option value="Divorciado(a)">Divorciado(a)</option>
+                                            <option value="Viuvo(a)">Viúvo(a)</option>
                                         </select>
                                     </div>
 
@@ -138,8 +138,8 @@ if (!isset($_SESSION))
                                     </div>
 
                                     <div class="col-md-3 mt-2">
-                                        <label for="RG"><strong class="text-danger">*</strong> RG</label>
-                                        <input type="text" name="RG" id="RG" class="form-control" placeholder="00.000.000-A" maxlength="12" required data-mask="00.000.000-A">
+                                        <label for="RG"><strong class="text-danger"></strong> RG</label>
+                                        <input type="text" name="RG" id="RG" class="form-control" placeholder="00.000.000-A" maxlength="12" data-mask="00.000.000-A">
                                     </div>
 
                                      <div class="col-md-3 mt-2">
@@ -253,7 +253,7 @@ if (!isset($_SESSION))
 
                 <div class="col-3 mt-2">
                     
-                    <label for="cargo">Cargo</label>
+                    <label for="cargo"><strong class="text-danger">*</strong>Cargo</label>
                     <select name="cargo" id="cargo" class="form-control">
                         <option value="" >Selecione</option>
                         <?php 

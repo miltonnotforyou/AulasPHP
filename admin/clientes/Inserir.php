@@ -80,22 +80,21 @@ if (!isset($_SESSION))
                     <form action="Acoes.php" method="post" enctype="multipart/form-data"> <!-- enctype necessário para upload de arquivos -->
                         
                     <div class="row">       
-                    <div class="col-8 hr">
+                    <div class="col-8 hr mt-1">
                             <h6>Dados Pessoais</h6>
                         </div>
-                            <div class="col-3">
+                                                
+                                <div class="row mt-2">
+                                    <div class="col-2 mt-2">
                                         <label for="data_cadastro"><strong class="text-danger">*</strong> Data Cadastro</label>
                                         <input type="date" name="data_cadastro" id="data_cadastro" class="form-control" value="<?php echo date('Y-m-d'); ?>" readonly>
-                            </div>
-                    </div>
-                        
-                                <div class="row mt-3">                               
-                                    <div class="col-6 mt-2">
+                            </div>                               
+                                    <div class="col-5 mt-2">
                                         <label for="nome"><strong class="text-danger">*</strong> Nome</label>
                                         <input type="text" name="nome" id="nome" class="form-control" maxlength="60" required>
                                     </div>
 
-                                    <div class="col-6 mt-2">
+                                    <div class="col-5 mt-2">
                                         <label for="nome_social">Nome Social</label>
                                         <input type="text" name="nome_social" id="nome_social" class="form-control" maxlength="60">
                                     </div>
@@ -121,8 +120,8 @@ if (!isset($_SESSION))
                                     </div>
 
                                     <div class="col-md-3 mt-2">
-                                        <label for="RG"><strong class="text-danger">*</strong> RG</label>
-                                        <input type="text" name="RG" id="RG" class="form-control" placeholder="00.000.000-A" maxlength="12" required data-mask="00.000.000-A">
+                                        <label for="RG">RG</label>
+                                        <input type="text" name="RG" id="RG" class="form-control" placeholder="00.000.000-A" maxlength="12" data-mask="00.000.000-A">
                                     </div>
 
                                      
@@ -202,7 +201,7 @@ if (!isset($_SESSION))
                     </div>
                 </div>
 
-                <div class="row mt-3 mb-4"> 
+                <div class="row mt-2 mb-4"> 
                 <!-- Dados Contato -->
                 <div class="hr">
                 <hr>
