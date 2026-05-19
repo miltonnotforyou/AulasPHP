@@ -1,8 +1,5 @@
 <?php 
-  // ============================================================
-  // ARQUIVO: busca_marcas.php (chamado via AJAX)
-  // ============================================================
-
+ 
   require_once __DIR__ .'/../../conexao/conecta.php';
 
   // ============================================================
@@ -79,7 +76,7 @@
       } // Fim do while
 
   } else {
-      // Alterado o colspan de 11 para 6, para bater com o número de colunas da tabela marcas
+      // Colspan 6, para bater com o número de colunas da tabela marcas
       echo '<tr>
               <td colspan="6" class="text-center table-light text-danger py-3">
                 Nenhuma marca encontrado com estes filtros!

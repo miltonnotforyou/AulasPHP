@@ -1,17 +1,25 @@
 <?php 
   require_once __DIR__ .'/../../conexao/conecta.php';
 
-  // 1. RECEBIMENTO DE TODOS OS FILTROS
+ // ============================================================
+  // 1. RECEBIMENTO DOS FILTROS ENVIADOS PELO AJAX (método POST)
+  // ============================================================
   $busca_produto = $_POST['produto'] ?? ''; 
   $status        = $_POST['status'] ?? ''; 
   $promocao      = $_POST['promocao'] ?? ''; 
   $estoque       = $_POST['estoque'] ?? ''; 
   $marca         = $_POST['marca'] ?? ''; 
 
-  // 2. MONTAGEM DA QUERY SQL DINÂMICA
+  // ============================================================
+  // 2. MONTAGEM DA QUERY SQL DE FORMA DINÂMICA
+  // ============================================================
   $sql = "SELECT * FROM produto WHERE 1=1";
 
-  // Filtro por produto (Nome)
+  // ============================================================
+  // 3. ADIÇÃO CONDICIONAL DOS FILTROS NA QUERY
+  // ============================================================
+
+  // Filtro por marca - "LIKE" para buscar enquanto digita
   if (!empty($busca_produto)) {
       $sql .= " AND nome LIKE '%" . mysqli_real_escape_string($conexao, $busca_produto) . "%'";
   }
@@ -48,10 +56,15 @@
   // Ordenação
   $sql .= " ORDER BY nome ASC";
 
-  // 3. EXECUÇÃO DA QUERY
+   // ============================================================
+  // 4. EXECUÇÃO DA QUERY
+  // ============================================================
   $query = mysqli_query($conexao, $sql);
 
-  // 4. EXIBIÇÃO DOS RESULTADOS (Alinhados com as colunas do index.php)
+  // ============================================================
+  // 5. VERIFICAÇÃO E EXIBIÇÃO DOS RESULTADOS
+  // ============================================================
+  
   if ($query && mysqli_num_rows($query) > 0) {
       while ($produto = mysqli_fetch_assoc($query)) {
 ?>
