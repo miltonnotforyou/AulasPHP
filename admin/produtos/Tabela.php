@@ -1,66 +1,74 @@
 <?php 
-  // ============================================================
-  // ARQUIVO: busca_categorias.php (chamado via AJAX)
-  // ============================================================
-
   require_once __DIR__ .'/../../conexao/conecta.php';
 
-  // ============================================================
-  // 1. RECEBIMENTO DOS FILTROS ENVIADOS PELO AJAX (método POST)
-  // ============================================================
-
-  // Recebe o nome do produto e o status 
+  // 1. RECEBIMENTO DE TODOS OS FILTROS
   $busca_produto = $_POST['produto'] ?? ''; 
-  $status      = $_POST['status'] ?? ''; 
+  $status        = $_POST['status'] ?? ''; 
+  $promocao      = $_POST['promocao'] ?? ''; 
+  $estoque       = $_POST['estoque'] ?? ''; 
+  $marca         = $_POST['marca'] ?? ''; 
 
-  // ============================================================
-  // 2. MONTAGEM DA QUERY SQL DE FORMA DINÂMICA
-  // ============================================================
- 
+  // 2. MONTAGEM DA QUERY SQL DINÂMICA
+  $sql = "SELECT * FROM produto WHERE 1=1";
 
-  $sql = "SELECT produto.*, marca.nome AS marca_nome 
-          FROM produto 
-          JOIN marca ON produto.codigo_marca = marca.codigo_marca 
-          WHERE 1=1";
-
-  // ============================================================
-  // 3. ADIÇÃO CONDICIONAL DOS FILTROS NA QUERY
-  // ============================================================
-
-  // Filtro por produto - "LIKE" para buscar enquanto digita
+  // Filtro por produto (Nome)
   if (!empty($busca_produto)) {
-      $sql .= " AND produto.nome LIKE '%" . mysqli_real_escape_string($conexao, $busca_produto) . "%'";
+      $sql .= " AND nome LIKE '%" . mysqli_real_escape_string($conexao, $busca_produto) . "%'";
   }
 
-  // Filtro por STATUS 
+  // Filtro por STATUS
   if ($status !== '') {
-      $sql .= " AND produto.status = '" . mysqli_real_escape_string($conexao, $status) . "'";
+      $sql .= " AND status = '" . mysqli_real_escape_string($conexao, $status) . "'";
   }
 
-  // Ordena o resultado por nome em ordem crescente (A → Z)
-  $sql .= " ORDER BY produto.nome ASC";
+  // Filtro por PROMOÇÃO
+  if ($promocao !== '') {
+      $sql .= " AND status_promocao = '" . mysqli_real_escape_string($conexao, $promocao) . "'";
+  }
 
-  // ============================================================
-  // 4. EXECUÇÃO DA QUERY
-  // ============================================================
+  // Filtro por ESTOQUE
+  if ($estoque !== '') {
+      if ($estoque == '1') {
+          // Em Estoque (Acima de 10)
+          $sql .= " AND qtde_estoque > 10";
+      } elseif ($estoque == '2') {
+          // Estoque Baixo (De 1 até 10)
+          $sql .= " AND qtde_estoque > 0 AND qtde_estoque <= 10";
+      } elseif ($estoque == '3') {
+          // Fora de Estoque (0 ou negativo)
+          $sql .= " AND qtde_estoque <= 0";
+      }
+  }
+
+  // Filtro por MARCA
+  if ($marca !== '') {
+      $sql .= " AND codigo_marca = '" . mysqli_real_escape_string($conexao, $marca) . "'";
+  }
+
+  // Ordenação
+  $sql .= " ORDER BY nome ASC";
+
+  // 3. EXECUÇÃO DA QUERY
   $query = mysqli_query($conexao, $sql);
 
-  // ============================================================
-  // 5. VERIFICAÇÃO E EXIBIÇÃO DOS RESULTADOS
-  // ============================================================
+  // 4. EXIBIÇÃO DOS RESULTADOS (Alinhados com as colunas do index.php)
   if ($query && mysqli_num_rows($query) > 0) {
-
       while ($produto = mysqli_fetch_assoc($query)) {
 ?>
         <tr>
           <td class="table-light"><?php echo htmlspecialchars($produto['codigo_produto']); ?></td>
-
           <td class="table-light"><?php echo htmlspecialchars($produto['nome']); ?></td>
-
-          <td class="table-light"><?php echo htmlspecialchars($produto['marca_nome']); ?></td>
-
           <td class="table-light"><?php echo htmlspecialchars($produto['descricao']); ?></td>
-
+          <td class="table-light"><?php echo htmlspecialchars($produto['qtde_estoque']); ?></td>
+          <td class="table-light">
+            <?php 
+              if ($produto['status_promocao'] == 1) {
+                echo '<span class="badge rounded-pill bg-success">Sim</span>';
+              } else {
+                echo '<span class="badge rounded-pill bg-danger">Não</span>';
+              }
+            ?>
+          </td>
           <td class="table-light">
             <?php 
               if ($produto['status'] == 1) {
@@ -70,9 +78,7 @@
               }
             ?>
           </td>
-
           <td class="table-light"><?php echo date('d/m/Y', strtotime($produto['data_cadastro'])); ?></td>
-
           <td class="table-light"> 
             <a href="Editar.php?codigo_produto=<?php echo $produto['codigo_produto']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
@@ -83,13 +89,12 @@
           </td>
         </tr>
 <?php 
-      } // Fim do while
-
+      }
   } else {
-      // Alterado o colspan de 11 para 6, para bater certinho com o número de colunas da sua tabela de categorias
+      // colspan 8 (total exato de colunas de produtos)
       echo '<tr>
-              <td colspan="6" class="text-center table-light text-danger py-3">
-                Nenhuma marca encontrado com estes filtros!
+              <td colspan="8" class="text-center table-light text-danger py-3">
+                Nenhum produto encontrado com estes filtros!
               </td>
             </tr>';
   }
