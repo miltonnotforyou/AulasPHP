@@ -117,7 +117,7 @@ if (!isset($_SESSION))
                                             <option value="">Selecione</option>
                                             <option value="M">Masculino</option>
                                             <option value="F">Feminino</option>
-                                            <option value="O">Outro</option>
+                                            <option value="O">Não Informado</option>
                                         </select>
                                     </div>
 

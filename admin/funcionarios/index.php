@@ -9,6 +9,13 @@
   // Conexão com o banco necessária para popular os selects de
   // cidade e cargo ainda no carregamento inicial da página.
   require_once __DIR__ .'/../../conexao/conecta.php';
+
+  ######## Inicia a sessão #######
+
+      if (!isset($_SESSION)) 
+      {
+          session_start();
+      }
 ?>
 
 <!DOCTYPE html>
@@ -80,7 +87,7 @@
                   <option value="">Sexo</option>
                   <option value="M">Masculino</option>
                   <option value="F">Feminino</option>
-                  <option value="O">Outro</option>
+                  <option value="O">Não Informado</option>
                 </select>
               </div>
 

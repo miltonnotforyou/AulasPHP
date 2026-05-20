@@ -1,6 +1,13 @@
 <?php 
   // Conexão com o banco de dados
   require_once __DIR__ .'/../../conexao/conecta.php';
+
+  ######## Inicia a sessão #######
+
+      if (!isset($_SESSION)) 
+      {
+          session_start();
+      }
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +43,7 @@
       <main class="ms-auto col-lg-10 px-md-4">
         <?php
           include('../Log.php');
+          include('../Mensagem.php');
         
         ?>
         

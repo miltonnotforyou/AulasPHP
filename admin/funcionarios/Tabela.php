@@ -153,7 +153,6 @@
               $sexoFormatado = strtoupper($funcionario['sexo']);
               if      ($sexoFormatado == 'M') { echo 'Masculino'; } 
               elseif  ($sexoFormatado == 'F') { echo 'Feminino'; } 
-              elseif  ($sexoFormatado == 'O') { echo 'Outro'; }
               else                            { echo 'Não Informado'; }
             ?>
           </td>
@@ -186,7 +185,8 @@
 
           <!-- Botões de ação: Editar e Excluir.
                Passam o código do funcionário via GET na URL de destino. -->
-          <td class="table-light"> 
+          <td class="table-light">
+            <!-- Link para a página de edição, passando o código do funcionário na URL. O botão tem um ícone de lápis e um título "Editar" para acessibilidade.  -->
             <a href="Editar.php?codigo_funcionario=<?php echo $funcionario['codigo_funcionario']; ?>" 
                class="btn btn-outline-success btn-sm" 
                title="Editar">

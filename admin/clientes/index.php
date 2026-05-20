@@ -9,6 +9,14 @@
   // Conexão com o banco necessária para popular os selects de
   // cidade e cargo ainda no carregamento inicial da página.
   require_once __DIR__ .'/../../conexao/conecta.php';
+
+   ######## Inicia a sessão #######
+
+      if (!isset($_SESSION)) 
+      {
+          session_start();
+      }
+
 ?>
 
 <!DOCTYPE html>
@@ -45,6 +53,7 @@
       <main class="ms-auto col-lg-10 px-md-4">
         <?php
           include('../Log.php'); // Registra acesso do usuário
+          include('../Mensagem.php'); // Exibe mensagens de sucesso/erro armazenadas na sessão
         ?>
         
          <!-- Cabeçalho do card com título e botão de cadastro -->
@@ -91,9 +100,9 @@
               <div class="col-2">
                   <select name="sexo" id="sexo" class="form-control" onchange="buscar()">
                     <option value="">Sexo</option>
-                    <option value="m">Masculino</option>
-                    <option value="f">Feminino</option>
-                    <option value="n">Não Informado</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                    <option value="O">Não Informado</option>
                   </select>
               </div>
 
