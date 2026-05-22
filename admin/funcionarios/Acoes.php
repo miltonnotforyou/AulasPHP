@@ -159,7 +159,7 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
 
             if($numero_erro == 1451) {
                 // 1. O banco bloqueou a exclusão. Agora, vamos contar quantos registros estão atrapalhando.
-                // ATENÇÃO: Substitua 'tabela_filha' pelo nome real da tabela que tem a chave estrangeira!
+              
                 $sql_conta = "SELECT COUNT(*) AS total FROM venda WHERE codigo_funcionario = $codigo";
                 $resultado_conta = mysqli_query($conexao, $sql_conta);
                 

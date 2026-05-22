@@ -87,7 +87,7 @@ if(isset($_POST['editar']) && $_POST['editar'] === 'editar_marca')
 
             if($numero_erro == 1451) {
                 // 1. O banco bloqueou a exclusão. Agora, vamos contar quantos registros estão atrapalhando.
-                // ATENÇÃO: Substitua 'tabela_filha' pelo nome real da tabela que tem a chave estrangeira!
+               
                 $sql_conta = "SELECT COUNT(*) AS total FROM produto WHERE codigo_marca = $codigo";
                 $resultado_conta = mysqli_query($conexao, $sql_conta);
                 
