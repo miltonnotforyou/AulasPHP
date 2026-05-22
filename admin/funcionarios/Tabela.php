@@ -192,13 +192,18 @@
                title="Editar">
               <i class="bi bi-pencil"></i> <!-- Ícone de lápis (Bootstrap Icons) -->
             </a>
-            <a href="Excluir.php?codigo_funcionario=<?php echo $funcionario['codigo_funcionario']; ?>" 
-               class="btn btn-outline-danger btn-sm" 
-               title="Excluir">
-              <i class="bi bi-trash"></i> <!-- Ícone de lixeira (Bootstrap Icons) -->
-            </a>
-          </td>
+            
+          <!-- Botões de ação: Excluir. -->
+            <form action="Acoes.php" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-outline-danger btn-sm" title="Excluir" 
+                      name="deletar_funcionario" 
+                      value="<?php echo $funcionario['codigo_funcionario']; ?>" 
+                      onclick="return confirm('Tem certeza que deseja excluir o funcionário <?php echo htmlspecialchars($funcionario['nome']); ?>?');">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>  <!-- ← TAG QUE FALTAVA -->
 
+            </td>
         </tr>
 <?php 
       } // Fim do while — próxima linha do resultado

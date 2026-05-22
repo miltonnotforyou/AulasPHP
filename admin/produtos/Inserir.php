@@ -60,7 +60,7 @@ if (!isset($_SESSION))
         
         <div class="card">
           <div class="card-header d-flex justify-content-between" style="background-color: #2b3d4f; color: white;">
-            <h4 class="m-0">Novo Produto</h4>
+            <h4 class="m-0">Novo Produto 2</h4>
             <a href="index.php" class="btn btn-light btn-sm" >
               <i class="bi bi-arrow-left-short"></i>
 
@@ -109,12 +109,12 @@ if (!isset($_SESSION))
 
                     <div class="col-md-2 mt-2">
                         <label for="preco_custo"><strong class="text-danger">*</strong> Preço de Custo</label>
-                        <input type="number" name="preco_custo" id="preco_custo" class="form-control" step="0.01" min="0" required oninput="lucro()">
+                        <input type="number" name="preco_custo" id="preco_custo" class="form-control" step="0.01" min="0" required oninput="calcularLucro()">
                     </div>
 
                      <div class="col-md-2 mt-2">
-                        <label for="valor_lucro"><strong class="text-danger">*</strong> Lucro %</label>
-                        <input type="number" name="valor_lucro" id="valor_lucro" class="form-control" step="0.01" min="0" required oninput="lucro()">
+                        <label for="lucro"><strong class="text-danger">*</strong> Lucro %</label>
+                        <input type="number" name="lucro" id="lucro" class="form-control" step="0.01" min="0" required oninput="calcularLucro()">
                     </div>
 
                     <div class="col-md-2 mt-2">
@@ -182,8 +182,8 @@ if (!isset($_SESSION))
                 </div>
 
                     <div class="col-12 mt-2">
-                    <label for="observacao">Descrição:</label>
-                    <textarea name="observacao" id="observacao" class="form-control" maxlength="100"></textarea>
+                    <label for="descricao">Descrição:</label>
+                    <textarea name="descricao" id="descricao" class="form-control" maxlength="100"></textarea>
 
                     <!-- Campo oculto para identificar a ação de cadastro de marca -->
                     <input type="hidden" name="cadastrar" value="cadastrar_produto"> 

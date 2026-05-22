@@ -70,9 +70,14 @@
             <a href="Editar.php?codigo_cargo=<?php echo $cargo['codigo_cargo']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
             </a>
-            <a href="Excluir.php?codigo_cargo=<?php echo $cargo['codigo_cargo']; ?>" class="btn btn-outline-danger btn-sm" title="Excluir">
+            
+            <!-- Botões de ação: Excluir. -->
+            <form action="acoes.php" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-outline-danger btn-sm" title="Excluir" name="deletar_cargo" value="<?php echo $cargo['codigo_cargo']?> " onclick="return confirm('Tem certeza que deseja excluir o cargo <?php echo $cargo['nome']; ?>?');">
               <i class="bi bi-trash"></i>
-            </a>
+
+              </button>
+            </form>
           </td>
         </tr>
 <?php 

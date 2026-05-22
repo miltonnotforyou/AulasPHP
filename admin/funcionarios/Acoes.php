@@ -33,7 +33,7 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
     $telefone_celular = mysqli_real_escape_string($conexao, $_POST['telefone_celular']);
     $email = mysqli_real_escape_string($conexao, $_POST['email']);
     $cargo = mysqli_real_escape_string($conexao, $_POST['cargo']);
-    $codigo_cargo = mysqli_real_escape_string($conexao, $_POST['codigo_cargo']); 
+    $codigo_cargo = mysqli_real_escape_string($conexao, $_POST['codigo_cargo'] ?? '');
     $salario = str_replace(',', '.', $_POST['salario']); ## Corrigido: Substituindo vírgula por ponto para o formato decimal
     $usuario = mysqli_real_escape_string($conexao, $_POST['usuario']); 
     $senha = mysqli_real_escape_string($conexao, $_POST['senha']); 
@@ -96,7 +96,7 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
     $telefone_celular = mysqli_real_escape_string($conexao, $_POST['telefone_celular']);
     $email = mysqli_real_escape_string($conexao, $_POST['email']);
     $cargo = mysqli_real_escape_string($conexao, $_POST['cargo']);
-    $codigo_cargo = mysqli_real_escape_string($conexao, $_POST['codigo_cargo']); 
+    $codigo_cargo = mysqli_real_escape_string($conexao, $_POST['codigo_cargo'] ?? '');
     $salario = str_replace(',', '.', $_POST['salario']); 
     $usuario = mysqli_real_escape_string($conexao, $_POST['usuario']); 
     $senha = mysqli_real_escape_string($conexao, $_POST['senha']); 
@@ -116,7 +116,7 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
     
     ########################UPDATE no banco de dados########################
 
-    $sql = "UPDATE funcionario SET nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', sexo = '$sexo', estado_civil = '$estado_civil', CPF = '$CPF', RG = '$RG', salario = '$salario', endereco = '$endereco', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', email = '$email', status = $status, usuario = '$usuario', senha = '$senha', tipo_acesso = $tipo_acesso, codigo_cargo = $cargo, codigo_funcionario = $codigo";
+    $sql = "UPDATE funcionario SET nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', sexo = '$sexo', estado_civil = '$estado_civil', CPF = '$CPF', RG = '$RG', salario = '$salario', endereco = '$endereco', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', email = '$email', status = $status, usuario = '$usuario', senha = '$senha', tipo_acesso = $tipo_acesso, codigo_cargo = $cargo";
 
     ##################### SOMENTE PARA TABELAS QUE TEM FOTO ###########################
     //VERIFICNADO SE O USUÁRIO ENVIOU UMA NOVA FOTO PARA ATUALIZAR. SE SIM, INCLUIR A FOTO NO UPDATE, SE NÃO, MANTER A FOTO ANTIGA.
@@ -142,5 +142,43 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
 
     header("Location: index.php");
     exit();
+    }
+
+    ####################################### EXCLUINDO FUNCIONÁRIO #######################################
+    
+    if(isset($_POST['deletar_funcionario'])) 
+    {
+        $codigo = intval($_POST['deletar_funcionario']); 
+
+        $sql = "DELETE FROM funcionario WHERE codigo_funcionario = $codigo";
+
+        if(mysqli_query($conexao, $sql)) {
+            $_SESSION['mensagem'] = "Funcionário excluído com sucesso!";
+        } else {
+            $numero_erro = mysqli_errno($conexao);
+
+            if($numero_erro == 1451) {
+                // 1. O banco bloqueou a exclusão. Agora, vamos contar quantos registros estão atrapalhando.
+                // ATENÇÃO: Substitua 'tabela_filha' pelo nome real da tabela que tem a chave estrangeira!
+                $sql_conta = "SELECT COUNT(*) AS total FROM venda WHERE codigo_funcionario = $codigo";
+                $resultado_conta = mysqli_query($conexao, $sql_conta);
+                
+                if($resultado_conta) {
+                    $linha = mysqli_fetch_assoc($resultado_conta);
+                    $quantidade = $linha['total'];
+                    
+                    $_SESSION['mensagem'] = "Aviso: Você não pode excluir este funcionário. Existem $quantidade venda(s) vinculado(s) a este funcionário.";
+                } else {
+                    // Caso a consulta de contagem falhe por algum motivo
+                    $_SESSION['mensagem'] = "Aviso: Você não pode excluir este funcionário, pois existem dados vinculados a ele.";
+                }
+
+            } else {
+                $_SESSION['mensagem'] = "Erro ao excluir funcionário!";
+            }
+        }
+
+        header("Location: index.php");
+        exit();
     }
 ?>

@@ -125,12 +125,12 @@ if(!empty($nome_foto) && file_exists($caminho_fisico)) {
 
                             <div class="col-md-2 mt-2">
                                 <label for="preco_custo"><strong class="text-danger">*</strong> Preço de Custo</label>
-                                <input type="number" name="preco_custo" id="preco_custo" class="form-control" step="0.01" min="0" required oninput="lucro()" value="<?php echo $produto['preco_custo']; ?>">
+                                <input type="number" name="preco_custo" id="preco_custo" class="form-control" step="0.01" min="0" required oninput="calcularLucro()" value="<?php echo $produto['preco_custo']; ?>">
                             </div>
 
                              <div class="col-md-2 mt-2">
-                                <label for="valor_lucro"><strong class="text-danger">*</strong> Lucro %</label>
-                                <input type="number" name="valor_lucro" id="valor_lucro" class="form-control" step="0.01" min="0" required oninput="lucro()" value="<?php echo $produto['valor_lucro']; ?>">
+                                <label for="lucro"><strong class="text-danger">*</strong> Lucro %</label>
+                                <input type="number" name="lucro" id="lucro" class="form-control" step="0.01" min="0" required oninput="calcularLucro()" value="<?php echo $produto['lucro']; ?>">
                             </div>
 
                             <div class="col-md-2 mt-2">
@@ -148,7 +148,7 @@ if(!empty($nome_foto) && file_exists($caminho_fisico)) {
                                     <div class="col-md-2 mt-2">                    
                                         <label for="status_promocao">Status Promoção</label>
                                         <select name="status_promocao" id="status_promocao" class="form-control" onchange="desabilitar()">
-                                            <option value="">Selecione</option>
+                                            
                                             <option value="1" <?php if($produto['status_promocao'] == 1) echo 'selected'; ?>>Ativo</option>
                                             <option value="0" <?php if($produto['status_promocao'] == 0) echo 'selected'; ?>>Inativo</option>                                                            
                                         </select>

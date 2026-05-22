@@ -67,9 +67,16 @@
             <a href="Editar.php?codigo_marca=<?php echo $marca['codigo_marca']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
             </a>
-            <a href="Excluir.php?codigo_marca=<?php echo $marca['codigo_marca']; ?>" class="btn btn-outline-danger btn-sm" title="Excluir">
+           <!-- Botões de ação: Excluir. -->
+          <form action="acoes.php" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger btn-sm" title="Excluir" 
+                    name="deletar_marca" 
+                    value="<?php echo $marca['codigo_marca']; ?>" 
+                    onclick="return confirm('Tem certeza que deseja excluir a marca <?php echo htmlspecialchars($marca['nome']); ?>?');">
               <i class="bi bi-trash"></i>
-            </a>
+            </button>
+          </form>  <!-- ← TAG QUE FALTAVA -->
+
           </td>
         </tr>
 <?php 

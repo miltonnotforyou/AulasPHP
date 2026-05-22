@@ -74,4 +74,42 @@ if(isset($_POST['editar']) && $_POST['editar'] === 'editar_categoria')
     header("Location: index.php");
     exit();
 }
+
+####################################### EXCLUINDO categoria #######################################
+    
+    if(isset($_POST['deletar_categoria'])) 
+    {
+        $codigo = intval($_POST['deletar_categoria']); 
+
+        $sql = "DELETE FROM categoria WHERE codigo_categoria = $codigo";
+
+        if(mysqli_query($conexao, $sql)) {
+            $_SESSION['mensagem'] = "categoria excluído com sucesso!";
+        } else {
+            $numero_erro = mysqli_errno($conexao);
+
+            if($numero_erro == 1451) {
+                // 1. O banco bloqueou a exclusão. Agora, vamos contar quantos registros estão atrapalhando.
+                // ATENÇÃO: Substitua 'tabela_filha' pelo nome real da tabela que tem a chave estrangeira!
+                $sql_conta = "SELECT COUNT(*) AS total FROM produto WHERE codigo_categoria = $codigo";
+                $resultado_conta = mysqli_query($conexao, $sql_conta);
+                
+                if($resultado_conta) {
+                    $linha = mysqli_fetch_assoc($resultado_conta);
+                    $quantidade = $linha['total'];
+                    
+                    $_SESSION['mensagem'] = "Aviso: Você não pode excluir esta categoria. Existem $quantidade produto(s) vinculado(s) a esta categoria.";
+                } else {
+                    // Caso a consulta de contagem falhe por algum motivo
+                    $_SESSION['mensagem'] = "Aviso: Você não pode excluir esta categoria, pois existem dados vinculados a ela.";
+                }
+
+            } else {
+                $_SESSION['mensagem'] = "Erro ao excluir categoria!";
+            }
+        }
+
+        header("Location: index.php");
+        exit();
+    }
 ?>

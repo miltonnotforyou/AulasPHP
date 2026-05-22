@@ -127,7 +127,7 @@ if (!isset($_SESSION))
                                             
                         <div class="col-md-2 mt-2">
                             <label for="cep"><strong class="text-danger">*</strong> CEP</label>
-                            <input type="text" name="cep" id="cep" class="form-control" placeholder="00000-000" maxlength="9" required data-mask="00000-000" onblur="pesquisacep(this.value);" value="<?php echo $cliente['cep']; ?>">
+                            <input type="text" name="cep" id="cep" class="form-control" placeholder="00000-000" maxlength="9" required data-mask="00000-000" onblur="pesquisacep(this.value);" value="<?php echo htmlspecialchars($cliente['cep'] ?? $cliente['CEP'] ?? ''); ?>">
                         </div>
 
                         <div class="col-md-6 mt-2">

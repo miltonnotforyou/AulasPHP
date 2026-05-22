@@ -137,10 +137,17 @@
             <a href="Editar.php?codigo_cliente=<?php echo $cliente['codigo_cliente']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
             </a>
-            <a href="Excluir.php?codigo_cliente=<?php echo $cliente['codigo_cliente']; ?>" class="btn btn-outline-danger btn-sm" title="Excluir">
-              <i class="bi bi-trash"></i>
-            </a>
-          </td>
+            <!-- Botões de ação: Excluir. -->
+            <form action="Acoes.php" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-outline-danger btn-sm" title="Excluir" 
+                      name="deletar_cliente" 
+                      value="<?php echo $cliente['codigo_cliente']; ?>" 
+                      onclick="return confirm('Tem certeza que deseja excluir o cliente <?php echo htmlspecialchars($cliente['nome']); ?>?');">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>  <!-- ← TAG QUE FALTAVA -->
+
+            </td>
         </tr>
 <?php 
       } // Fim do while — próxima linha do resultado

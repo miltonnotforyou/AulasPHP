@@ -72,5 +72,42 @@ if(isset($_POST['editar']) && $_POST['editar'] === 'editar_marca')
     header("Location: index.php");
     exit();
 }
+####################################### EXCLUINDO marca #######################################
+    
+    if(isset($_POST['deletar_marca'])) 
+    {
+        $codigo = intval($_POST['deletar_marca']); 
+
+        $sql = "DELETE FROM marca WHERE codigo_marca = $codigo";
+
+        if(mysqli_query($conexao, $sql)) {
+            $_SESSION['mensagem'] = "marca excluído com sucesso!";
+        } else {
+            $numero_erro = mysqli_errno($conexao);
+
+            if($numero_erro == 1451) {
+                // 1. O banco bloqueou a exclusão. Agora, vamos contar quantos registros estão atrapalhando.
+                // ATENÇÃO: Substitua 'tabela_filha' pelo nome real da tabela que tem a chave estrangeira!
+                $sql_conta = "SELECT COUNT(*) AS total FROM produto WHERE codigo_marca = $codigo";
+                $resultado_conta = mysqli_query($conexao, $sql_conta);
+                
+                if($resultado_conta) {
+                    $linha = mysqli_fetch_assoc($resultado_conta);
+                    $quantidade = $linha['total'];
+                    
+                    $_SESSION['mensagem'] = "Aviso: Você não pode excluir este marca. Existem $quantidade produto(s) vinculado(s) a este marca.";
+                } else {
+                    // Caso a consulta de contagem falhe por algum motivo
+                    $_SESSION['mensagem'] = "Aviso: Você não pode excluir este marca, pois existem dados vinculados a ele.";
+                }
+
+            } else {
+                $_SESSION['mensagem'] = "Erro ao excluir marca!";
+            }
+        }
+
+        header("Location: index.php");
+        exit();
+    }
 
 ?>

@@ -91,20 +91,20 @@ if (!isset($_SESSION))
 
                         <div class="row mt-3">
                             <div class="col-mt-2 col-3 d-flex ">
-                                <?php 
-                                if($funcionario['foto'] != '') 
-                                {
-                                    echo '<img src="../../images/' .$funcionario['foto'] . '"
-                                    alt="Foto de Perfil" class=form-control p-0 obj-cover" id="imagem">';
-                                }
-                                else{
-                                    echo '<img src="../../assets/img/placeholder-funcionario.png"
-                                    id="preview-foto" 
-                                    alt="Foto de Perfil" 
-                                    class="rounded" 
-                                    style="width: 250px; height: 250px; object-fit: cover;">';
-                                }
-                                ?>
+                                    <?php 
+                                    if($funcionario['foto'] != '') 
+                                    {
+                                        echo '<img src="../../images/' .$funcionario['foto'] . '"
+                                        alt="Foto de Perfil" class=form-control p-0 obj-cover" id="preview-foto">';
+                                    }
+                                    else{
+                                        echo '<img src="../../assets/img/placeholder-funcionario.png"
+                                        id="preview-foto" 
+                                        alt="Foto de Perfil" 
+                                        class="rounded" 
+                                        style="width: 250px; height: 250px; object-fit: cover;">';
+                                    }
+                                    ?>
 
                             </div>
 

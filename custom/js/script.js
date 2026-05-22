@@ -1,51 +1,35 @@
-// document.getElementById('foto').addEventListener('change', function(event) {
-//       // Pega o arquivo que o usuário selecionou
-//       let arquivo = event.target.files[0];
-//      // Se ele realmente escolheu um arquivo
-//      if (arquivo) {
-//          let leitor = new FileReader();
-//             // Quando o leitor terminar de carregar a foto na memória do navegador...
-//             document.getElementById('preview-foto').src = URL.createObjectURL(arquivo);
-//             }
-            
-//             // Inicia a leitura do arquivo como uma URL de dados
-//     });
-
-
 document.addEventListener("DOMContentLoaded", function() {
-    
-    // ==========================================
-    // 1. LÓGICA DE PRODUTOS / LUCRO
-    // ==========================================
-    let btnLucro = document.querySelector("#preco_custo"); // Apenas para checar se estamos na tela de produto
-    if (btnLucro) {
-        // Torna as funções globais caso você as chame no HTML (ex: onchange="lucro()")
-        window.lucro = function() {
-            let custo = Number(document.querySelector("#preco_custo").value);
-            let margem = Number(document.querySelector("#valor_lucro").value);
 
-            if (custo > 0 && margem > 0) {
-                let preco_venda = custo * (1 + margem / 100);
-                document.querySelector("#preco_venda").value = preco_venda.toFixed(2);
-            } else {
-                document.querySelector("#preco_venda").value = "";
+    // ==========================================
+    // PREVIEW EM TEMPO REAL DA FOTO SELECIONADA
+    // ==========================================
+    let inputFoto = document.getElementById('foto');
+    let previewFoto = document.getElementById('preview-foto');
+
+    if (inputFoto && previewFoto) {
+        inputFoto.addEventListener('change', function(event) {
+            // Pega o arquivo que o usuário selecionou no computador/celular
+            let arquivo = event.target.files[0];
+            
+            // Se ele realmente escolheu um arquivo válido
+            if (arquivo) {
+                // Cria uma URL temporária local para o arquivo e atualiza o 'src' da imagem na tela
+                previewFoto.src = URL.createObjectURL(arquivo);
             }
-        };
+        });
     }
 
     // ==========================================
-    // 2. LÓGICA DE PROMOÇÃO
+    // 1 e 2. LÓGICA DE PRODUTOS, LUCRO E PROMOÇÃO
     // ==========================================
+    let campoCusto = document.querySelector("#preco_custo");
     let inputDesconto = document.getElementById("desconto_promocao");
-    
-    // Só tenta desabilitar se o campo existir na página atual!
-    if (inputDesconto) {
-        inputDesconto.disabled = true;
+    let selectPromocao = document.getElementById("status_promocao");
 
+    if (selectPromocao && inputDesconto) {
+        // Função para habilitar ou desabilitar o campo de desconto
         window.desabilitar = function() {
-            let status_promocao = document.getElementById("status_promocao").value;
-
-            if (status_promocao == "1") {
+            if (selectPromocao.value == "1") {
                 inputDesconto.disabled = false;
             } else {
                 inputDesconto.disabled = true;
@@ -55,19 +39,48 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         };
 
-        window.calcularPrecoPromocao = function() {
-            let preco_venda = Number(document.querySelector("#preco_venda").value);
-            let desconto    = Number(document.querySelector("#desconto_promocao").value);
+        // Sincroniza o estado inicial no carregamento da página sem apagar os dados
+        if (selectPromocao.value == "1") {
+            inputDesconto.disabled = false;
+        } else {
+            inputDesconto.disabled = true;
+        }
 
-            if (preco_venda > 0 && desconto > 0) {
-                let preco_promo = preco_venda - (preco_venda * desconto / 100);
-                document.querySelector("#preco_promocao").value = preco_promo.toFixed(2);
+        // Calcula o preço promocional
+        window.calcularPrecoPromocao = function() {
+            let precoVendaAtual = Number(document.querySelector("#preco_venda").value);
+            let descontoAtual   = Number(document.querySelector("#desconto_promocao").value);
+
+            if (precoVendaAtual > 0 && descontoAtual > 0) {
+                let precoPromo = precoVendaAtual - (precoVendaAtual * descontoAtual / 100);
+                document.querySelector("#preco_promocao").value = precoPromo.toFixed(2);
             } else {
                 document.querySelector("#preco_promocao").value = "";
             }
         };
     }
 
+    // Calcula o preço de venda e engatilha a atualização da promoção
+    if (campoCusto) {
+        window.calcularLucro = function() {
+            let custo  = Number(document.querySelector("#preco_custo").value);
+            let margem = Number(document.querySelector("#lucro").value); 
+
+            if (custo > 0 && margem > 0) {
+                let precoVendaNovo = custo * (1 + margem / 100);
+                document.querySelector("#preco_venda").value = precoVendaNovo.toFixed(2);
+                
+                // Dispara o recálculo da promoção se ela estiver ativa
+                if (typeof window.calcularPrecoPromocao === "function" && selectPromocao && selectPromocao.value == "1") {
+                    window.calcularPrecoPromocao();
+                }
+            } else {
+                document.querySelector("#preco_venda").value = "";
+                let precoPromo = document.querySelector("#preco_promocao");
+                if (precoPromo) precoPromo.value = "";
+            }
+        };
+    }
 
     // ==========================================
     // 3. VALIDAÇÃO DE DATA DE NASCIMENTO
@@ -75,34 +88,28 @@ document.addEventListener("DOMContentLoaded", function() {
     const inputData = document.getElementById("data_nascimento");
     
     if (inputData) {
-        // Criando a data no fuso horário local
         const dataAtual = new Date();
         const ano = dataAtual.getFullYear();
         const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
         const dia = String(dataAtual.getDate()).padStart(2, '0');
-        const hoje = `${ano}-${mes}-${dia}`; // Formato YYYY-MM-DD
+        const hoje = `${ano}-${mes}-${dia}`;
 
-        // Define a data máxima como hoje
         inputData.setAttribute("max", hoje);
 
-      
-
-        // Validação ao tirar o foco ou escolher no calendário
         inputData.addEventListener("change", function() {
             if (this.value > hoje) {
                 alert("A data de nascimento não pode ser no futuro!");
-                this.value = ""; // Limpa o campo
+                this.value = "";
             }
         });
 
-        // Validação enquanto digita
         inputData.addEventListener("input", function() {
             if (this.value > hoje) {
                 this.setCustomValidity("A data não pode ser futura.");
             } else {
-                this.setCustomValidity(""); // Remove o erro
+                this.setCustomValidity("");
             }
-            this.reportValidity(); // Mostra o alerta de erro visual
+            this.reportValidity();
         });
     }
 });

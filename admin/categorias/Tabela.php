@@ -70,9 +70,12 @@
             <a href="Editar.php?codigo_categoria=<?php echo $categoria['codigo_categoria']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
             </a>
-            <a href="Excluir.php?codigo_categoria=<?php echo $categoria['codigo_categoria']; ?>" class="btn btn-outline-danger btn-sm" title="Excluir">
-              <i class="bi bi-trash"></i>
-            </a>
+            <!-- Botões de ação: Excluir. -->
+            <form action="acoes.php" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger btn-sm" title="Excluir" name="deletar_categoria" value="<?php echo $categoria['codigo_categoria']; ?>" onclick="return confirm('Tem certeza que deseja excluir a categoria <?php echo $categoria['nome']; ?>?');">
+            <i class="bi bi-trash"></i>
+            </button>
+  </form>
           </td>
         </tr>
 <?php 
