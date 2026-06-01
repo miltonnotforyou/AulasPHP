@@ -71,7 +71,11 @@
         <tr>
           <td class="table-light"><?php echo htmlspecialchars($produto['codigo_produto']); ?></td>
           <td class="table-light"><?php echo htmlspecialchars($produto['nome']); ?></td>
+          <td class="table-light">
+            <img src="../../produtos/<?php echo htmlspecialchars($produto['foto']); ?>" alt="<?php echo htmlspecialchars($produto['nome']); ?>" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+          </td>
           <td class="table-light"><?php echo htmlspecialchars($produto['descricao']); ?></td>
+          <td class="table-light">R$ <?php echo number_format($produto['preco_venda'], 2, ',', '.'); ?></td>
           <td class="table-light"><?php echo htmlspecialchars($produto['qtde_estoque']); ?></td>
           <td class="table-light">
             <?php 

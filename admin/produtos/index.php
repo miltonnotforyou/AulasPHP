@@ -2,12 +2,8 @@
   // Abrindo a Conexão com o banco de dados
   require_once __DIR__ .'/../../conexao/conecta.php';
 
-  ######## Inicia a sessão #######
-
-      if (!isset($_SESSION)) 
-      {
-          session_start();
-      }
+ // Verificando se o usuário está autenticado para permitir o acesso à página de administração
+  include_once '../Usuario_Comum.php'; // Verifica se o usuário está logado (qualquer tipo de usuário)
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +111,9 @@
                   <tr style="background-color: #2b3d4f; color: white;"> 
                       <th class="text-white" style="background-color: #2b3d4f; color: white;">Código</th>
                       <th class="text-white" style="background-color: #2b3d4f; color: white;">Produto</th>
+                      <th class="text-white" style="background-color: #2b3d4f; color: white;">Foto</th>
                       <th class="text-white" style="background-color: #2b3d4f; color: white;">Descrição</th>
+                      <th class="text-white" style="background-color: #2b3d4f; color: white;">Preço</th>
                       <th class="text-white" style="background-color: #2b3d4f; color: white;">Estoque</th>
                       <th class="text-white" style="background-color: #2b3d4f; color: white;">Promoção</th>
                       <th class="text-white" style="background-color: #2b3d4f; color: white;">Status</th>
@@ -128,7 +126,11 @@
                 <tr>
                   <td class="table-light"><?php echo $produto['codigo_produto'] ?></td>
                   <td class="table-light"><?php echo $produto['nome'] ?></td>
+                  <td class="table-light">
+                    <img src="../../produtos/<?php echo htmlspecialchars($produto['foto']); ?>" alt="<?php echo htmlspecialchars($produto['nome']); ?>" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                  </td>
                   <td class="table-light"><?php echo $produto['descricao'] ?></td>
+                  <td class="table-light">R$ <?php echo number_format($produto['preco_venda'], 2, ',', '.') ?></td>
                   <td class="table-light"><?php echo $produto['qtde_estoque'] ?></td>
                   <td class="table-light"><?php 
                     if ($produto['status_promocao'] == 1) {

@@ -1,3 +1,12 @@
+<?php 
+//Iniciando a sessão para gerenciar o estado de autenticação do usuário
+if (!isset($_SESSION)) 
+    {
+    session_start();
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -26,19 +35,66 @@
 <body>
 
   <main class="form-signin text-center">
-    <form action="login.php" method="POST">
+    <!-- Formulário de login -->
+    <form action="login.php" method="POST"> 
       <h2 class="h3 mb-3 text-light">Faça seu Login</h2>
+     <!-- Campos de entrada para usuário e senha, ambos com validação de preenchimento obrigatório -->
+      <input type="text" class="form-control mb-2" name="usuario" placeholder="Usuário" required autofocus>
 
-      <input type="text" class="form-control mb-2" name="usuario" placeholder="Usuário">
-
-      <input type="password" class="form-control" name="senha" placeholder="Senha">
+      <input type="password" class="form-control" name="senha" placeholder="Senha" required>
 
       <button class="w-100 btn btn-lg btn-dark" type="submit">Login</button>
 
     </form>
 
     <div class="pt-2 text-light">
-      STATUS DE MENSAGEM
+      <?php 
+      // Verificando se há mensagens de erro armazenadas na sessão e exibindo-as para o usuário
+      
+      //loginVazio é a mensagem de erro para campos vazios 
+      if (isset($_SESSION['loginVazio']))
+          {
+             echo '<div class="alert alert-dark alert-dismissible fade show" role="alert">';
+            echo $_SESSION['loginVazio']; // Exibe a mensagem de erro armazenada na sessão
+            echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+            unset($_SESSION['loginVazio']); // Limpa a mensagem da sessão para evitar exibições futuras
+          }
+
+      //loginErro é a mensagem de erro para usuário ou senha inválidos
+      if (isset($_SESSION['loginErro']))
+          {
+            echo '<div class="alert alert-dark alert-dismissible fade show" role="alert">';
+            echo $_SESSION['loginErro']; // Exibe a mensagem de erro armazenada na sessão
+            echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+            unset($_SESSION['loginErro']); // Limpa a mensagem da sessão para evitar exibições futuras
+          }
+
+      //naoAutorizado é a mensagem de erro para usuário não autorizado
+      if (isset($_SESSION['naoAutorizado']))
+          {
+            echo '<div class="alert alert-dark alert-dismissible fade show" role="alert">';
+            echo $_SESSION['naoAutorizado']; // Exibe a mensagem de erro armazenada na sessão
+            echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';            
+            unset($_SESSION['naoAutorizado']); // Limpa a mensagem da sessão para evitar exibições futuras
+          }
+
+      
+      //logoff é a mensagem de sucesso para usuário que saiu da conta
+      if (isset($_SESSION['logoff']))
+          {
+            echo '<div class="alert alert-dark alert-dismissible fade show" role="alert">';
+            echo $_SESSION['logoff']; // Exibe a mensagem de sucesso armazenada na sessão
+            echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';            
+            unset($_SESSION['logoff']); // Limpa a mensagem da sessão para evitar exibições futuras
+          }
+        
+        
+        
+        ?>
     </div>
 
     <p class="mt-5 text-light">&copy; <?= date('Y') ?></p>

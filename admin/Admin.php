@@ -1,3 +1,31 @@
+<?php 
+// Iniciando a sessão para gerenciar o estado de autenticação do usuário
+//conexão com o banco de dados
+require_once __DIR__ . '/../conexao/conecta.php';
+
+//Iniciando a sessão para gerenciar o estado de autenticação do usuário
+if (!isset($_SESSION)) 
+    {
+    session_start();
+    }
+
+    // Verificando se o usuário está autenticado para permitir o acesso à página de administração
+    if (!isset($_SESSION['USER']))
+        {
+            $_SESSION['naoAutorizado'] = "Apenas usuários autenticados podem acessar o painel administrativo."; // Armazenando a mensagem de erro na sessão para exibir na página de login
+            header("Location: Index.php"); // Redireciona para a página de login se o usuário não estiver autenticado
+            
+        }
+    // Configuração da data de hoje em Português
+    $meses = [
+        '01' => 'Janeiro', '02' => 'Fevereiro', '03' => 'Março', '04' => 'Abril',
+        '05' => 'Maio', '06' => 'Junho', '07' => 'Julho', '08' => 'Agosto',
+        '09' => 'Setembro', '10' => 'Outubro', '11' => 'Novembro', '12' => 'Dezembro'
+    ];
+    $data_hoje = date('d') . ' de ' . $meses[date('m')] . ' de ' . date('Y');
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -46,6 +74,17 @@
           include('Log.php');
         ?>
 
+        <div>
+            <?php 
+            if (isset($_SESSION['naoAdm']))
+                {
+                    echo $_SESSION['naoAdm']; // Exibe a mensagem de erro armazenada na sessão
+                    unset($_SESSION['naoAdm']); // Limpa a mensagem da sessão para evitar exibições futuras
+                }
+                            
+            ?>
+        </div>
+
               <!-- Conteúdo Principal -->
         <main class="conteudo-principal">
             <header class="cabecalho-superior">
@@ -54,12 +93,16 @@
                     <input type="text" placeholder="Pesquisar sistemas, dispositivos...">
                 </div>
 
-                <div class="perfil-usuario">
+                <div class="perfil-usuario" style="display: flex; align-items: center; gap: 10px;">
                     <div style="text-align: right;">
-                      
-                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 900;">Administrador</p>
+                        <p style="font-size: 14px; margin: 0; font-weight: 700; color: #1e293b;">
+                            <?php echo htmlspecialchars($_SESSION['USER']['nome'] ?? 'Usuário'); ?>
+                        </p>
+                        <p style="font-size: 11px; margin: 0; color: #64748b; text-transform: uppercase; font-weight: 900;">Administrador</p>
                     </div>
-                    <img src="https://i.pravatar.cc/100" class="foto-perfil" alt="Avatar">
+                    
+                    <?php $foto_perfil = !empty($_SESSION['USER']['foto']) ? $_SESSION['USER']['foto'] : 'default-avatar.png'; ?>
+                    <img src="../images/<?php echo htmlspecialchars($foto_perfil); ?>" class="foto-perfil" alt="Avatar" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
                 </div>
             </header>
 
@@ -71,8 +114,7 @@
                     </div>
                     <div class="seletor-data">
                         <i class="bi bi-calendar3"></i>
-                        <span>01 Abril, 2025 - 30 Abril, 2025</span>
-                        <i class="bi bi-chevron-down"></i>
+                        <span><?php echo $data_hoje; ?></span>
                     </div>
                 </div>
 

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Store - Smart Home Marketplace</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <h1>IOT STORE</h1>
+            </div>
+
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input class="search-input" placeholder="Pesquisar dispositivos inteligentes..." type="text">
+            </div>
+
+            <div class="header-actions">
+                <button class="action-btn">
+                    <i class="fa-regular fa-user"></i>
+                </button>
+                <button class="action-btn">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+                <button class="cart-btn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count">2</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container container">
+        <!-- Breadcrumbs -->
+        <nav class="breadcrumbs">
+            <a href="#">Home</a>
+            <span class="separator">/</span>
+            <span class="current">Produtos</span>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Dispositivos Inteligentes</h1>
+            <p>Transforme seu ambiente com o que há de mais avançado em conectividade e automação residencial.</p>
+        </div>
+
+        <div class="content-layout">
+            <!-- Sidebar Filters -->
+            <aside class="sidebar">
+                <div class="sidebar-content">
+                    <!-- Categories -->
+                    <div class="filter-section">
+                        <h3>Categorias</h3>
+                        <div class="filter-grid">
+                            <label class="filter-item">
+                                <input type="checkbox" checked>
+                                <span>Segurança</span>
+                            </label>
+                            <label class="filter-item">
+                                <input type="checkbox">
+                                <span>Iluminação</span>
+                            </label>
+                            <label class="filter-item">
+                                <input type="checkbox">
+                                <span>Conectividade</span>
+                            </label>
+                            <label class="filter-item">
+                                <input type="checkbox">
+                                <span>Energia</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="filter-section">
+                        <h3>Faixa de Preço</h3>
+                        <input class="price-slider" max="5000" min="0" type="range">
+                        <div class="price-labels">
+                            <span>R$ 0</span>
+                            <span>R$ 5.000+</span>
+                        </div>
+                    </div>
+
+                    <!-- Brand -->
+                    <div class="filter-section">
+                        <h3>Marcas</h3>
+                        <div class="filter-grid">
+                            <label class="filter-item">
+                                <input name="brand" type="radio">
+                                <span>SmartLife Pro</span>
+                            </label>
+                            <label class="filter-item">
+                                <input name="brand" type="radio">
+                                <span>ConnectX</span>
+                            </label>
+                            <label class="filter-item">
+                                <input name="brand" type="radio">
+                                <span>GuardEye</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Product Listing -->
+            <div class="product-area">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <p>Exibindo <span>12</span> de 48 produtos</p>
+                    <div class="sort-container">
+                        <label class="sort-label">Ordenar por:</label>
+                        <select class="sort-select">
+                            <option>Mais relevantes</option>
+                            <option>Menor preço</option>
+                            <option>Maior preço</option>
+                            <option>Novidades</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Grid -->
+                <div class="product-grid">
+                    <!-- Product 1 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYarUvBYXD2Jf1Zk6zzNPkVMl7CIsi3KT4AoiaiVQfG2w7Qcsn4cHtsarVeI1LVJPpn2O2tA9oMhAyis8nGUdYFce1Ff0R1pAzW2W14Va8P2cAa66rZp-pAOlNOP4d0TTwgIkBcVrHDL0adZTONxzmne8sA7I7WBHVtEKoWu0z1_yple8H08yYq4xjOG1XMs_JckIk-sBRgvcePl5z52h1Ta4JEXhwWnIc0P8YM6asKXIv4Fd9mJ8yY0Xb5VsbHM_hzXUSc6yGNVEk" alt="Câmera Smart 4K Ultra" referrerpolicy="no-referrer">
+                            <span class="badge badge-default">Destaque</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <span>(124)</span>
+                            </div>
+                            <h3>Câmera Smart 4K Ultra</h3>
+                            <p>Monitoramento inteligente com visão noturna e detecção de movimento via IA.</p>
+                            <div class="product-footer">
+                                <div class="price-box">
+                                    <span class="old-price">R$ 549,00</span>
+                                    <span class="price">R$ 429,90</span>
+                                </div>
+                                <button class="add-btn">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDs8PqkccoF7fFjUJdgWPJyfmQ-hGqvNDEFaw6-ZNtgkoqTDpXJxzOrKqDL0nBZU1P_ny8hSalJrapstpwXV0oNm17bxADv5keiqZPOm2mz9UPbY-M9ZkzH10iRpfUgcqabVc-AcQ0ucoqSMJN3UdUadZPBlw2OVd9MG1nOE3Td8epj1Kxzi1HBNU2R_wDojyO-d5kC-grFfiaCxFdvoVFOVbVtd4vFIyKRj9U6CMuSRIcSF-k5wl7M9r6GMOSYdd0F5JbD1DO-zdKj" alt="Smart Hub Gateway Zigbee" referrerpolicy="no-referrer">
+                            <span class="badge badge-stock">Em Estoque</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <span>(89)</span>
+                            </div>
+                            <h3>Smart Hub Gateway Zigbee</h3>
+                            <p>O cérebro da sua casa inteligente. Conecte até 50 dispositivos simultaneamente.</p>
+                            <div class="product-footer">
+                                <div class="price-box">
+                                    <span class="price">R$ 289,00</span>
+                                </div>
+                                <button class="add-btn">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0JSA60KUEZ9WY-l8dpzgiuNKsMheoZQYoRlTRhUarJg2EdX8sjMpEfb3crzVqHtzEJCTeU4RJ8h4s-gIJtHts2O5CV2Vwne4H6A4b5mos5FQWQQjkG58azcjd8qzxNKltMoCsk-btm27mZnO0PHxWgF84OyIuJS25gBPaPNupjJF76GtDtuIC0t2ISjsAu4qQZxGzx3BcVwv2jFtUKDLNhFnBN_LZFziuHDUcmPWozxnWFfqQhZEuMDApDso808pFMC4kpPRkpeGj" alt="Lâmpada LED Smart RGBW" referrerpolicy="no-referrer">
+                        </div>
+                        <div class="product-info">
+                            <div class="rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <span>(245)</span>
+                            </div>
+                            <h3>Lâmpada LED Smart RGBW</h3>
+                            <p>16 milhões de cores. Controle por voz compatível com Alexa e Google Home.</p>
+                            <div class="product-footer">
+                                <div class="price-box">
+                                    <span class="price">R$ 89,90</span>
+                                </div>
+                                <button class="add-btn">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx4vQrLQ_T7jJMQlCRh9tYnI4zL7mSArjPAHMdMgz2FpPnEn1EL6TmzIWI48IgWnUSxSlleq-6KISshKGdyytA1ONVJ-mozk6KnN9w528nFxNZX8ULd--kgS9vpbSDLYJGnZVdlJfypxZGhnvfk42XGry0qBf7CyCy6Q6ksGSi7q6xCAIAeL9OrjB3gbArhCGMy6WbokOi2zZL2OQBinwz7O_sOj0DryUijeL1RuPZ2Jgt4I52Buo_qy9vtNa16TOgqq8IIAh1E9-8" alt="Termostato Smart Nest Gen 3" referrerpolicy="no-referrer">
+                        </div>
+                        <div class="product-info">
+                            <div class="rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <span>(42)</span>
+                            </div>
+                            <h3>Termostato Smart Nest Gen 3</h3>
+                            <p>Economia de energia com programação inteligente e sensores de presença.</p>
+                            <div class="product-footer">
+                                <div class="price-box">
+                                    <span class="price">R$ 1.250,00</span>
+                                </div>
+                                <button class="add-btn">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 5 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcUUtqxgTe-7bPW3Eqaim9LryqjxnsgI7gBpChYNhX8D2ITE42SxFfoYmolPfajOci-kTtt1dGXZimItTaG-tZWsfBxW67e-g-1i6CsQ7pgBEIbPXWRg9cgYVZByE5kDy5Nev5_YmwcB_3JiHNOe5kQf1k6Cf7lt3QEzXu5H_EkMYv8Nqm2gJB_skAO6QoObl32OO8qb2tM1XT4aOPjm9uQgv3pgAyXUJfwlfgtICWwNME7uOYXKUjm7J6gHM7ZejvMdHil_dFh_N2" alt="Sensor de Fumaça Wi-Fi" referrerpolicy="no-referrer">
+                        </div>
+                        <div class="product-info">
+                            <div class="rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <span>(67)</span>
+                            </div>
+                            <h3>Sensor de Fumaça Wi-Fi</h3>
+                            <p>Alertas em tempo real no seu smartphone. Segurança 24h para sua família.</p>
+                            <div class="product-footer">
+                                <div class="price-box">
+                                    <span class="price">R$ 179,00</span>
+                                </div>
+                                <button class="add-btn">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 6 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFAW4o0Mu1FKF9Q0NWJuHcuuBlIfyG0-sGZ0CqtFXcGMVn14KqkI3A9tL9RPtBTkpd4NWJuHcuuBlIfyG0-sGZ0CqtFXcGMVn14KqkI3A9tL9RPtBTkpd4NBs6am_l87i27r7Ujn3ZrrGM04L0Tl7HO5HQsuNgBFLmkvE4G5fGCwwsVJYrSrrmXAxYp2fq4qmUmhJuvatNdYw2icpl_dfXSNJ761BMK840O9pDQQbLnOd4xdJYrYUM5B9gPcCsCt7FiyphLbYRraus_w_L4kvrHOzwZOGahZw-YlME6BfKf9CylcNF7P0IGQaIhzPJJVr" alt="Tomada Inteligente 10A" referrerpolicy="no-referrer">
+                            <span class="badge badge-sale">-15% OFF</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <span>(156)</span>
+                            </div>
+                            <h3>Tomada Inteligente 10A</h3>
+                            <p>Mensure o consumo de energia e agende o funcionamento de qualquer aparelho.</p>
+                            <div class="product-footer">
+                                <div class="price-box">
+                                    <span class="old-price">R$ 119,00</span>
+                                    <span class="price">R$ 99,00</span>
+                                </div>
+                                <button class="add-btn">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <nav class="pagination-nav">
+                        <button class="page-btn">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span>...</span>
+                        <button class="page-btn">8</button>
+                        <button class="page-btn">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fa-solid fa-microchip"></i>
+                        <h2>IoT Store</h2>
+                    </div>
+                    <p class="footer-desc">Líder em soluções de conectividade e automação residencial no Brasil. Tecnologia que transforma vidas.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn"><i class="fa-brands fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Navegação</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Produtos</a></li>
+                        <li><a href="#">Novidades</a></li>
+                        <li><a href="#">Ofertas do Dia</a></li>
+                        <li><a href="#">Smart Home Hub</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Suporte</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Minha Conta</a></li>
+                        <li><a href="#">Rastreio de Pedidos</a></li>
+                        <li><a href="#">Política de Devolução</a></li>
+                        <li><a href="#">Central de Ajuda</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p class="footer-desc" style="margin-bottom: 1rem;">Receba novidades e descontos exclusivos no seu e-mail.</p>
+                    <form class="newsletter-form">
+                        <input class="newsletter-input" placeholder="Seu e-mail" type="email">
+                        <button class="newsletter-btn">OK</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 IoT Store - Tecnologia e Futuro Ltda. Todos os direitos reservados.</p>
+                <div class="footer-legal">
+                    <a href="#">Termos de Uso</a>
+                    <a href="#">Privacidade</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

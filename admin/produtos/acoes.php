@@ -19,17 +19,17 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_produto')
     // Tratamento seguro para os campos que o JavaScript desabilita
     $_desconto_promocao = (isset($_POST['desconto_promocao']) && $_POST['desconto_promocao'] !== '') ? str_replace(',', '.', $_POST['desconto_promocao']) : 0;
     $_preco_promocao    = (isset($_POST['preco_promocao']) && $_POST['preco_promocao'] !== '') ? str_replace(',', '.', $_POST['preco_promocao']) : 0;
-    $_codigo_produto      = mysqli_real_escape_string($conexao, $_POST['produto']);          
+    $_codigo_marca      = mysqli_real_escape_string($conexao, $_POST['marca']);          
     $_codigo_categoria  = mysqli_real_escape_string($conexao, $_POST['categoria']);      
-################################## Upload da foto do produto ##########################
+    ################################## Upload da foto do produto ##########################
     $foto = basename($_FILES['foto']['name']);
     $tmp = $_FILES['foto']['tmp_name'];
     $caminho_final = '../../images/' . $foto;
     move_uploaded_file($tmp, $caminho_final);
 
+    // Corrigido: Passando '$_codigo_marca' no final da query
+    $sql = "INSERT INTO produto VALUES (0, '$_nome', '$_descricao', '$_qtde_estoque', '$_preco_custo', '$_lucro', '$_preco_venda', $_status_promocao, '$_desconto_promocao', '$_preco_promocao', '$foto', NOW(), 1, '$_codigo_marca', '$_codigo_categoria' )";
     
-    $sql = "INSERT INTO produto VALUES (0, '$_nome', '$_descricao', '$_qtde_estoque', '$_preco_custo', '$_lucro', '$_preco_venda', $_status_promocao, '$_desconto_promocao', '$_preco_promocao', '$foto', NOW(), 1, '$_codigo_produto', '$_codigo_categoria' )";
-
     try {
         if(mysqli_query($conexao, $sql)) {
             $_SESSION['mensagem'] = "Produto cadastrado com sucesso!";
@@ -60,7 +60,7 @@ if(isset($_POST['editar']) && $_POST['editar'] === 'editar_produto')
     $status_promocao   = (isset($_POST['status_promocao']) && $_POST['status_promocao'] !== '') ? intval($_POST['status_promocao']) : 0;
     
     // Recebe as chaves estrangeiras de produto e categoria
-    $codigo_produto      = intval($_POST['produto']);          
+    $codigo_marca      = intval($_POST['marca']);       
     $codigo_categoria  = intval($_POST['categoria']);  
 
     // 3. Recebe os valores monetários/decimais substituindo vírgula por ponto
@@ -83,8 +83,8 @@ if(isset($_POST['editar']) && $_POST['editar'] === 'editar_produto')
     ######################## UPDATE no banco de dados ########################
     
     $sql = "UPDATE produto SET 
-            nome = '$nome', descricao = '$descricao', qtde_estoque = '$qtde_estoque', preco_custo = '$preco_custo', lucro = '$lucro', preco_venda = '$preco_venda', status_promocao = $status_promocao, desconto_promocao = '$desconto_promocao', preco_promocao = '$preco_promocao', codigo_produto = $codigo_produto, codigo_categoria = $codigo_categoria, status = $status";
-
+    nome = '$nome', descricao = '$descricao', qtde_estoque = '$qtde_estoque', preco_custo = '$preco_custo', lucro = '$lucro', preco_venda = '$preco_venda', status_promocao = $status_promocao, desconto_promocao = '$desconto_promocao', preco_promocao = '$preco_promocao', codigo_marca = $codigo_marca, codigo_categoria = $codigo_categoria, status = $status";
+    
     // Verifica se uma nova foto foi enviada. Se sim, adiciona ela na query.
     if(!empty($foto))
     {

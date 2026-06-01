@@ -3,10 +3,9 @@
   require_once __DIR__ .'/../../conexao/conecta.php';
   ######## Inicia a sessão#######
 
-if (!isset($_SESSION)) 
-{
-    session_start();
-}
+// Verificando se o usuário está autenticado para permitir o acesso à página de administração
+  include_once '../Usuario_Comum.php'; // Verifica se o usuário está logado (qualquer tipo de usuário)
+?>
 
 ?>
 
