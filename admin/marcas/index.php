@@ -90,11 +90,17 @@
                   </select>
                 </form>
               </div>
-              <!-- CAMPO BUSCA  -->
-
-          <div class="col-3">
+              <!-- CAMPO BUSCA POR NOME  -->
+              <div class="col-3">
                 <form action="">
                   <input type="search" name="marca" id="marca" class="form-control" placeholder="marca por nome..." onkeyup="buscar()">
+                </form>
+              </div>
+
+              <!-- CAMPO BUSCA POR CÓDIGO -->
+          <div class="col-3">
+                <form action="">
+                  <input type="search" name="codigo" id="codigo" class="form-control" placeholder="marca por código..." onkeyup="buscar()">
                 </form>
               </div>
               
@@ -158,6 +164,8 @@
       // Captura o valor atual de cada filtro com jQuery ($('#id').val())
       let marca   = $('#marca').val();    // 'M', 'F', 'O' ou '' (todos)
       let status  = $('#status').val();   // '1', '0' ou '' (todos)
+      let codigo  = $('#codigo').val();   // '1', '0' ou '' (todos) 
+
       
 
       // Feedback visual imediato: troca o conteúdo da tabela por
@@ -175,6 +183,7 @@
         data: {             // Objeto com todos os filtros que serão recebidos via $_POST
           marca:   marca,
           status:  status,
+          codigo:  codigo,
           
         },
         dataType: 'html',          // Espera HTML puro de volta (as linhas <tr>)

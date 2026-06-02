@@ -95,15 +95,36 @@ if (!isset($_SESSION))
 
                 <div class="perfil-usuario" style="display: flex; align-items: center; gap: 10px;">
                     <div style="text-align: right;">
+                        
                         <p style="font-size: 14px; margin: 0; font-weight: 700; color: #1e293b;">
-                            <?php echo htmlspecialchars($_SESSION['USER']['nome'] ?? 'Usuário'); ?>
+                            <?php 
+                                // Verifica se o nome social não está vazio. Se tiver conteúdo, usa ele. Se não, usa o nome real.
+                                $nome_exibicao = !empty($_SESSION['NOME_SOCIAL']) ? $_SESSION['NOME_SOCIAL'] : ($_SESSION['NAME'] ?? 'Usuário');
+                                
+                                echo htmlspecialchars($nome_exibicao);
+                            ?>
                         </p>
-                        <p style="font-size: 11px; margin: 0; color: #64748b; text-transform: uppercase; font-weight: 900;">Administrador</p>
+                        
+                        <p style="font-size: 11px; margin: 0; color: #64748b; text-transform: uppercase; font-weight: 900;">
+                            <?php 
+                                if (isset($_SESSION['TYPE'])) {
+                                    // Se for 1 exibe Administrador, senão exibe Comum
+                                    echo $_SESSION['TYPE'] == 1 ? 'Administrador' : 'Comum';
+                                } else {
+                                    echo 'Acesso Indefinido';
+                                }
+                            ?>
+                        </p>
+                        
                     </div>
                     
-                    <?php $foto_perfil = !empty($_SESSION['USER']['foto']) ? $_SESSION['USER']['foto'] : 'default-avatar.png'; ?>
-                    <img src="../images/<?php echo htmlspecialchars($foto_perfil); ?>" class="foto-perfil" alt="Avatar" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+                    <?php 
+                        // Se a sessão da foto tiver conteúdo, usa ela. Se estiver vazia, usa o avatar padrão.
+                        $foto_perfil = !empty($_SESSION['PHOTO']) ? '../images/' . $_SESSION['PHOTO'] : 'https://i.pravatar.cc/100';
+                    ?>
+                    <img src="<?php echo htmlspecialchars($foto_perfil); ?>" class="foto-perfil" alt="Avatar" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
                 </div>
+            
             </header>
 
             <div class="corpo-dashboard">

@@ -1018,9 +1018,10 @@ footer {
 
 .botoes-acao {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Força um a ficar em cima do outro */
     gap: 1rem;
-    width: 100%;
+    width: 60%;
+    margin: 0 auto; /* Empurra o bloco todo para o centro da tela */
 }
 
 .botao-comprar-agora {

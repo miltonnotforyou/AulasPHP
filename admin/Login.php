@@ -29,6 +29,11 @@ if(isset($_POST['usuario']) && $_POST['usuario'] != ''&& isset($_POST['senha']) 
                 $_SESSION['TYPE'] = $funcionario['tipo_acesso']; 
                 $_SESSION['NAME'] = $funcionario['nome'];
 
+                // ESTA LINHA para exibir a foto do usuário logado no painel administrativo, armazenando o caminho da foto na variável de sessão PHOTO:
+                $_SESSION['PHOTO'] = $funcionario['foto'];
+                // ESTA LINHA para exibir o nome social do usuário logado no painel administrativo, armazenando o nome social na variável de sessão NOME_SOCIAL:
+                $_SESSION['NOME_SOCIAL'] = $funcionario['nome_social'];
+
                 header("Location: Admin.php"); // Redireciona para a página de dashboard após o login bem-sucedido
             }
             else

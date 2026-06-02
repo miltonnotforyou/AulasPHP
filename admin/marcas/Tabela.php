@@ -8,7 +8,8 @@
 
   // Recebe o nome do marca e o status 
   $busca_marca = $_POST['marca'] ?? ''; 
-  $status      = $_POST['status'] ?? ''; 
+  $status      = $_POST['status'] ?? '';
+  $busca_codigo = $_POST['codigo'] ?? ''; 
 
   // ============================================================
   // 2. MONTAGEM DA QUERY SQL DE FORMA DINÂMICA
@@ -27,6 +28,11 @@
   // Filtro por STATUS 
   if ($status !== '') {
       $sql .= " AND status = '" . mysqli_real_escape_string($conexao, $status) . "'";
+  }
+
+  // Filtro por código - "LIKE" para buscar enquanto digita
+  if (!empty($busca_codigo)) {
+      $sql .= " AND codigo_marca LIKE '%" . mysqli_real_escape_string($conexao, $busca_codigo) . "%'";
   }
 
   // Ordena o resultado por nome em ordem crescente (A → Z)

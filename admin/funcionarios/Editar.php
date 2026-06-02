@@ -319,7 +319,7 @@
                     <select name="tipo_acesso" id="tipo_acesso" class="form-control" required>
                         <option value="">Selecione</option>
                         <option value="1"<?php if($funcionario['tipo_acesso'] == 1) echo ' selected'; ?>>Administrador</option>
-                        <option value="2"<?php if($funcionario['tipo_acesso'] == 0) echo ' selected'; ?>>Comum</option>
+                        <option value="0"<?php if($funcionario['tipo_acesso'] == 0) echo ' selected'; ?>>Comum</option>
                     </select>
                 </div>
 

@@ -11,7 +11,9 @@
 
   // Recebe o nome do cargo e o status (que estava faltando)
   $busca_cargo = $_POST['cargo'] ?? ''; 
-  $status      = $_POST['status'] ?? ''; 
+  $status      = $_POST['status'] ?? '';
+  $busca_codigo = $_POST['codigo'] ?? ''; 
+
 
   // ============================================================
   // 2. MONTAGEM DA QUERY SQL DE FORMA DINÂMICA
@@ -22,14 +24,24 @@
   // 3. ADIÇÃO CONDICIONAL DOS FILTROS NA QUERY
   // ============================================================
 
-  // Filtro por CARGO - Alterado de "=" para "LIKE" para buscar enquanto digita
+  // Filtro por CARGO - "LIKE" para buscar enquanto digita
   if (!empty($busca_cargo)) {
       $sql .= " AND nome LIKE '%" . mysqli_real_escape_string($conexao, $busca_cargo) . "%'";
   }
 
-  // Filtro por STATUS - Adicionado, pois estava faltando!
+  // Filtro por STATUS
   if ($status !== '') {
       $sql .= " AND status = '" . mysqli_real_escape_string($conexao, $status) . "'";
+  }
+
+  // Filtro por STATUS
+  if ($status !== '') {
+      $sql .= " AND status = '" . mysqli_real_escape_string($conexao, $status) . "'";
+  }
+
+  // Filtro por CÓDIGO
+  if (!empty($busca_codigo)) {
+      $sql .= " AND codigo_cargo LIKE '%" . mysqli_real_escape_string($conexao, $busca_codigo) . "%'";
   }
 
   // Ordena o resultado por nome em ordem crescente (A → Z)

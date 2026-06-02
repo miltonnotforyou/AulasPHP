@@ -73,6 +73,12 @@
                 </form>
               </div>
 
+              <div class="col-3">
+                <form action="">
+                  <input type="search" name="codigo" id="codigo" class="form-control" placeholder="categoria por código..." onkeyup="buscar()">
+                </form>
+              </div>
+
               
 
               <div class="col-3">
@@ -130,8 +136,9 @@
     function buscar() {
 
       // Captura o valor atual de cada filtro com jQuery ($('#id').val())
-      let categoria   = $('#categoria').val();    // 'M', 'F', 'O' ou '' (todos)
+      let categoria   = $('#categoria').val();    
       let status  = $('#status').val();   // '1', '0' ou '' (todos)
+      let codigo  = $('#codigo').val();  // Valor do campo de busca por código (pode ser vazio)
       
 
       // Feedback visual imediato: troca o conteúdo da tabela por
@@ -149,7 +156,7 @@
         data: {             // Objeto com todos os filtros que serão recebidos via $_POST
           categoria:   categoria,
           status:  status,
-          
+          codigo:  codigo
         },
         dataType: 'html',          // Espera HTML puro de volta (as linhas <tr>)
 
