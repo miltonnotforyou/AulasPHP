@@ -397,12 +397,18 @@ section {
     font-weight: bold;
     color: var(--primaria);
     margin-bottom: 5px;
+    line-height: 1.3; /* 1. Define a altura de cada linha */
+    height: calc(1.3em * 2); /* 2. Força a caixa a ter exatamente o tamanho de 2 linhas (1.3 x 2) */
+    display: -webkit-box;/* 3. Coloca os "3 pontinhos" se o nome tiver 3 linhas ou mais */
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .cartao-nome {
     font-size: 0.875rem;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 1; /* 3. Coloca os "3 pontinhos" se o nome tiver 2 linhas ou mais */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -411,6 +417,10 @@ section {
     color: var(--texto-suave);
     font-size: 0.875rem;
     margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Número máximo de linhas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .rodape-produto {
@@ -1221,13 +1231,20 @@ footer {
     font-size: 0.875rem;
 }
 
+
+
+/* Muda a cor das setas do carrossel para a cor primária */
+.slick-prev:before, .slick-next:before {
+    color: var(--primaria); 
+}
+
 /* ============================================================
    12. MEDIA QUERIES (Organizadas e Consolidadas)
    ============================================================ */
 
 /* --- A partir de 640px (Smartphones Grandes e Tablets) --- */
 @media (min-width: 640px) {
-    .grade-produtos {
+      .grade-produtos {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.25rem;
     }
@@ -1254,6 +1271,7 @@ footer {
 
 /* --- A partir de 1024px (Telas Grandes / Desktops) --- */
 @media (min-width: 1024px) {
+   
     .grade-produtos {
         grid-template-columns: repeat(4, 1fr);
         gap: 1.5rem;
@@ -1412,6 +1430,7 @@ footer {
         padding: 12px 20px;
         font-size: 0.875rem;
     }
+   
     .grade-produtos {
         grid-template-columns: 1fr;
     }

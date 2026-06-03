@@ -56,7 +56,7 @@
         
         <div class="card">
           <div class="card-header d-flex justify-content-between" style="background-color: #2b3d4f; color: white;">
-            <h4 class="m-0">Novo Produto 2</h4>
+            <h4 class="m-0">Novo Produto</h4>
             <a href="index.php" class="btn btn-light btn-sm" >
               <i class="bi bi-arrow-left-short"></i>
 

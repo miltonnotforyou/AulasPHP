@@ -3,7 +3,7 @@
 include_once './conexao/conecta.php'; 
 
 // Query usando os nomes EXATOS das colunas da sua tabela
-$sql = "SELECT codigo_produto, nome, descricao, preco_venda, foto FROM produto LIMIT 4";
+$sql = "SELECT * FROM produto WHERE status = 1 ORDER BY preco_venda LIMIT 8";
 
 // Executa a query. Se der erro, mostra o motivo na tela.
 $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . mysqli_error($conexao));
@@ -21,6 +21,10 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
 
     <!-- FontAwesome (ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
     <!-- Arquivo de Estilos CSS -->
     <link rel="stylesheet" href="./src/style.css" />
@@ -74,10 +78,11 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
                 <h2 class="titulo-destaque">Automatize o que importa. Viva o que é essencial!</h2>
                 <p class="descricao-destaque">Descubra o futuro da automação residencial com nossa curadoria exclusiva de dispositivos inteligentes.</p>
                 <div class="botoes-destaque">
-                  <button class="botao-primario">
+                  <a href="produtos.php"><button class="botao-primario">
                     Ver Coleção <i class="fa-solid fa-arrow-right"></i>
-                  </button>
-                  <button class="botao-contorno">Ofertas do Dia</button>
+                  </button></a>
+                  <a href="produtos.php?promocao=1"><button class="botao-contorno" >Ofertas do Dia</button></a>
+                  
                 </div>
               </div>
             </div>
@@ -98,7 +103,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
             </div>
 
             <!-- Grade de exibição dos produtos -->
-            <div class="grade-produtos">
+            <div class="carrossel-produtos">
               <?php 
               if (mysqli_num_rows($resultado) > 0): // Verifica se há produtos retornados pela query
                   while($produto = mysqli_fetch_assoc($resultado)): 
@@ -147,7 +152,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
                 </div>
               </div>
               <div class="acao-promocional">
-                <button class="botao-grande">Aproveitar Agora</button>
+              <a href="produtos.php"><button class="botao-grande">Aproveitar Agora</button></a>  
               </div>
             </div>
           </div>
@@ -259,6 +264,11 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
         </div>
       </footer>
     </div>
-
+    
+    <!-- Scripts JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="src/script2.js"></script>
+       
   </body>
 </html>

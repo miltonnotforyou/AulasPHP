@@ -249,12 +249,12 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
       
       <div class="grade-produtos">
         <?php 
-        // 1. Pegamos a categoria e o ID do produto atual (que já foram carregados no topo da página)
+        // 1. Categoria e o ID do produto atual (que já foram carregados no topo da página)
         $categoria_atual = $produto['codigo_categoria'];
         $codigo_atual = $produto['codigo_produto'];
 
-        // 2. Montamos a Query: Mesma categoria AND ID diferente do atual. Limitamos a 4 itens.
-        $sql_relacionados = "SELECT codigo_produto, nome, preco_venda, foto 
+        // 2. Query: Mesma categoria AND ID diferente do atual. Limitado a 4 itens.
+        $sql_relacionados = "SELECT codigo_produto, nome, preco_venda, foto, descricao 
                              FROM produto 
                              WHERE codigo_categoria = '$categoria_atual' 
                              AND codigo_produto != '$codigo_atual' 
@@ -262,7 +262,7 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
                              
         $query_relacionados = mysqli_query($conexao, $sql_relacionados);
 
-        // 3. Verificamos se o banco retornou algum produto relacionado
+        // 3. Verifica se o banco retornou algum produto relacionado
         if ($query_relacionados && mysqli_num_rows($query_relacionados) > 0): 
             while($relacionado = mysqli_fetch_assoc($query_relacionados)): 
                 // Formata o preço
@@ -277,6 +277,7 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
           </div>
           <div class="cartao-info">
             <p class="cartao-nome"><?php echo $relacionado['nome']; ?></p>
+            <p class="cartao-descricao"><?php echo $relacionado['descricao']; ?></p>
             <p class="cartao-preco">R$ <?php echo $precoRelacionado; ?></p>
           </div>
         </div>
@@ -380,7 +381,9 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 
 </body>
 
-<pre>
-  <?php print_r($produto); ?>
-</pre>
+          <!-- ## DICAS PARA O FUTURO ## -->
+          <!-- <pre>
+          <?php print_r($produto); ?>
+          </pre> -->
+        
 </html>

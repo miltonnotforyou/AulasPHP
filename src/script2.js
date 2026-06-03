@@ -43,3 +43,40 @@ document.addEventListener('DOMContentLoaded', () => {
         botaoCopiar.addEventListener('click', copiarCupom);
     }
 });
+
+
+// --- CÓDIGOS PARA O CARROSSEL DE PRODUTOS ---
+
+  $(document).ready(function()
+  {
+        $('.carrossel-produtos').slick({
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        
+        // --- CONFIGURAÇÕES DO AUTOMÁTICO ---
+        autoplay: true,         // O carrossel roda sozinho
+        autoplaySpeed: 3000,    // Espera 3 segundos em cada produto
+        pauseOnHover: true,     // PAUSA se o mouse estiver em cima do produto!
+        // -----------------------------------
+        
+        dots: true,
+        arrows: true,
+        responsive: [
+            {
+            breakpoint: 1024,
+            settings: { slidesToShow: 3 }
+            },
+            {
+            breakpoint: 768,
+            settings: { slidesToShow: 2 }
+            },
+            {
+            breakpoint: 480,
+            settings: { 
+                slidesToShow: 1,
+                arrows: false
+            }
+            }
+        ]
+        });
+});

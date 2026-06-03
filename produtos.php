@@ -1,37 +1,33 @@
 <?php
 // Inclui o arquivo de conexão com o banco de dados
-include_once './conexao/conecta.php'; 
+require_once __DIR__ . '/conexao/conecta.php';
 
-// Query usando os nomes EXATOS das colunas da tabela
-$sql = "SELECT codigo_produto, nome, descricao, preco_venda, foto FROM produto LIMIT 8";
+// Buscando todas as categorias ordenadas por nome
+$query_categorias = mysqli_query($conexao, "SELECT * FROM categoria ORDER BY nome ASC");
 
-// Executa a query. Se der erro, mostra o motivo na tela.
-$resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . mysqli_error($conexao));
+// Buscando todas as marcas ordenadas por nome
+$query_marcas = mysqli_query($conexao, "SELECT * FROM marca ORDER BY nome ASC");
 
-// 1. Inicia a query base com WHERE 1=1 para facilitar a concatenação
-$sql = "SELECT codigo_produto, nome, descricao, preco_venda, foto FROM produto WHERE 1=1";
+// Buscando o maior preço cadastrado para configurar o limite do Slider
+$query_preco = mysqli_query($conexao, "SELECT MAX(preco_venda) as max_preco FROM produto"); // Pega o maior preço de venda registrado na tabela de produtos
+$dados_preco = mysqli_fetch_assoc($query_preco); // Se o banco retornar um valor, usamos ele. Caso contrário, definimos um valor padrão (ex: R$ 5000)
+$preco_maximo_banco = $dados_preco['max_preco'] ? ceil($dados_preco['max_preco']) : 5000; // O ceil() arredonda para cima, garantindo que o slider tenha um limite inteiro e confortável para o usuário.
 
-// 2. Verifica se o filtro de MARCA foi acionado
-if (!empty($_GET['marca'])) {
-    $marca_id = mysqli_real_escape_string($conexao, $_GET['marca']);
-    $sql .= " AND codigo_marca = '$marca_id'";
+// Buscando produtos em promoção (status_promoção = 1)
+$query_promocoes = mysqli_query($conexao, "SELECT * FROM produto WHERE status_promocao = 1 ORDER BY nome ASC");
+
+/// 1. Inicia a query SEMPRE com WHERE 1=1 para permitir a adição segura do AND
+$sql = "SELECT * FROM produto WHERE 1=1 AND status = 1"; // O "AND status = 1" é um exemplo para filtrar apenas produtos ativos. Ajuste conforme sua estrutura de banco.
+
+// 2. Verifica se veio o aviso de promoção pela URL do botão da página inicial
+if (isset($_GET['promocao']) && $_GET['promocao'] == '1') {
+    $sql .= " AND status_promocao = 1";
 }
 
-// 3. Verifica se o filtro de PREÇO MÁXIMO foi acionado
-if (!empty($_GET['preco_max'])) {
-    $preco_max = (float)$_GET['preco_max'];
-    $sql .= " AND preco_venda <= $preco_max";
-}
+// 3. Adiciona a ordenação estritamente no FINAL da string
+$sql .= " ORDER BY nome ASC";
 
-// 4. Verifica se o filtro de CATEGORIA (checkboxes) foi acionado
-if (!empty($_GET['categoria'])) {
-    // Como é um array (vários checkboxes podem estar marcados), transformamos em uma string separada por vírgulas
-    $categorias = array_map('intval', $_GET['categoria']);
-    $lista_categorias = implode(',', $categorias);
-    $sql .= " AND codigo_categoria IN ($lista_categorias)";
-}
-
-// Executa a query final com os filtros aplicados
+// 4. Executa a query final
 $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . mysqli_error($conexao));
 ?>
 
@@ -46,6 +42,9 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
 
     <!-- FontAwesome (ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Script do jQuery Ajax -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- Arquivo de Estilos CSS -->
     <link rel="stylesheet" href="./src/style.css" />
@@ -91,59 +90,93 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-conteudo">
-        <form action="" method="GET">
+        <form id="form-filtros">
 
+    <!-- Promoções -->
         <div class="filtro-section">
+          <h3>Promoções</h3>
+          <div class="filtro-grid">
+            <label class="filtro-item">
+              <input type="checkbox" id="filtro-promocao" value="1" <?php echo (isset($_GET['promocao']) && $_GET['promocao'] == '1') ? 'checked' : ''; ?>>
+              <span style="color: #ef4444; font-weight: 600;">
+                <i class="fa-solid fa-tag"></i> Ofertas Especiais
+              </span> 
+            </label>
+          </div>
+        </div>
+
+    <!-- CATEGORIAS -->
+        <div class="filtro-section" style = "padding:30px 0 30px 0;">
           <h3>Categorias</h3>
           <div class="filtro-grid">
-            <label class="filtro-item">
-              <input type="checkbox" checked>
-              <span>Segurança</span>
-            </label>
-            <label class="filtro-item">
-              <input type="checkbox">
-              <span>Iluminação</span>
-            </label>
-            <label class="filtro-item">
-              <input type="checkbox">
-              <span>Conectividade</span>
-            </label>
-            <label class="filtro-item">
-              <input type="checkbox">
-              <span>Energia</span>
-            </label>
+            <?php 
+            // Verifica se a query funcionou e se existe pelo menos 1 categoria no banco
+            if ($query_categorias && mysqli_num_rows($query_categorias) > 0) 
+              // Inicia o loop: roda uma vez para cada categoria encontrada no banco
+              {
+                while($cat = mysqli_fetch_assoc($query_categorias)): 
+            ?>
+                <label class="filtro-item">
+                  <input type="checkbox" class="filtro-categoria" value="<?php echo $cat['codigo_categoria']; ?>">
+                  
+                  <span><?php echo $cat['nome']; ?></span> 
+                </label>
+            <?php 
+                endwhile; // Fim do loop das categorias
+              } else
+            // Mensagem de segurança caso a tabela de categorias esteja vazia
+            {                
+                echo "<p style='font-size: 12px; color: #666;'>Nenhuma categoria cadastrada.</p>";
+            }
+            ?>
           </div>
         </div>
 
-        <div class="filtro-section"> 
+    <!-- PREÇO -->
+        <div class="filtro-section" style = "padding:30px 0 30px 0;"> 
           <h3>Faixa de Preço</h3>
-          <input class="preco-slider" type="range" min="0" max="5000"> <!-- filtro de faixa de preço do sidebar -->          
+          <input class="preco-slider" type="range" min="0" max="<?php echo $preco_maximo_banco; ?>" value="<?php echo $preco_maximo_banco; ?>">       
+          
           <div class="preco-labels">
             <span>R$ 0</span>
-            <span>R$ 5.000</span>
+            <span>R$ <?php echo number_format($preco_maximo_banco, 2, ',', '.'); ?></span>
           </div>
         </div>
 
-        <div class="filtro-section">
+    <!-- MARCAS -->
+        <div class="filtro-section" style = "padding:30px 0 30px 0;">
           <h3>Marcas</h3>
           <div class="filtro-grid">
-            <label class="filtro-item">
-              <input type="radio" name="marca">
-              <span>SmartLife</span>
-            </label>
-            <label class="filtro-item">
-              <input type="radio" name="marca">
-              <span>Tuya</span>
-            </label>
-            <label class="filtro-item">
-              <input type="radio" name="marca">
-              <span>Sonoff</span>
-            </label>
+            <?php 
+            // Verifica se a query funcionou e se existem marcas cadastradas
+            if ($query_marcas && mysqli_num_rows($query_marcas) > 0) 
+              // Inicia o loop das marcas
+              {
+                while($marca = mysqli_fetch_assoc($query_marcas)): 
+            ?>
+                <label class="filtro-item">
+                  <input type="radio" class="filtro-marca" name="marca" value="<?php echo $marca['codigo_marca']; ?>">
+                  
+                  <span><?php echo $marca['nome']; ?></span>
+                </label>
+            <?php 
+                endwhile; // Fim do loop das marcas
+              } else 
+              // Mensagem de segurança caso a tabela de marcas esteja vazia
+              {
+                echo "<p style='font-size: 12px; color: #666;'>Nenhuma marca cadastrada.</p>";
+              }
+            ?>
           </div>
         </div>
+    
+    <!-- BOTÃO LIMPAR FILTROS -->
+        <button type="reset" class="botao-grande" onclick="setTimeout(buscar, 100)">Limpar Filtros</button>
+
         </form>
       </div>
     </aside>
+    
     <!-- Fim do SIDEBAR -->
 
     <!-- ÁREA DE PRODUTOS -->
@@ -225,6 +258,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
       <footer>
         <div class="caixa-conteudo">
           <div class="grade-rodape">
+
             <!-- Informações da marca e redes sociais -->
             <div class="informacao-rodape">
               <a href="/" class="logotipo-rodape">
@@ -302,19 +336,64 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
 
     </div>
     
-    <script>
-  // Pega o slider e o texto onde o valor vai aparecer
-  const precoSlider = document.querySelector('.preco-slider');
-  const precoLabel = document.querySelectorAll('.preco-labels span')[1]; // Pega o segundo span (o do valor máximo)
+    <!-- Script para funcionalidades do site -->
+  <script>
+    // Pega o slider e o texto onde o valor vai aparecer
+    const precoSlider = document.querySelector('.preco-slider');
+    const precoLabel = document.querySelectorAll('.preco-labels span')[1]; 
 
-  // Atualiza o texto sempre que o usuário arrastar o slider
-  if(precoSlider) {
-    precoSlider.addEventListener('input', function() {
-      // Formata o número para o padrão de moeda (ex: 5000 -> 5.000)
-      let valorFormatado = parseInt(this.value).toLocaleString('pt-BR');
-      precoLabel.textContent = 'R$ ' + valorFormatado;
+    // Atualiza o texto visualmente quando arrastar o slider
+    if(precoSlider) {
+      precoSlider.addEventListener('input', function() {
+        let valorFormatado = parseInt(this.value).toLocaleString('pt-BR');
+        precoLabel.textContent = 'R$ ' + valorFormatado;
+      });
+    }
+
+    // --- FUNÇÃO Buscar ---
+    function buscar() {
+        // 1. Pega todas as categorias marcadas (cria um Array)
+        var categoriasSelecionadas = [];
+        $('.filtro-categoria:checked').each(function() {
+            categoriasSelecionadas.push($(this).val());
+        });
+
+        // 2. Pega a marca selecionada (Radio button)
+        var marcaSelecionada = $('.filtro-marca:checked').val() || '';
+
+        // 3. Pega o valor do slider de preço
+        var precoMax = $('.preco-slider').val();
+
+        // ---> NOVIDADE: Verifica se a caixa de promoção está marcada <---
+      // Se estiver marcada, envia '1', se não, envia vazio ('')
+      var promocaoAtiva = $('#filtro-promocao').is(':checked') ? '1' : '';
+
+        // 4. Envia para o Tabela.php
+        $.ajax({
+          url: 'Tabela.php',
+          type: 'POST',
+          data: {
+            categoria: categoriasSelecionadas,
+            marca: marcaSelecionada,
+            preco_max: precoMax,
+            promocao: promocaoAtiva
+          },
+          success: function(data) {
+            // Atualiza a grade de produtos com os novos cartões
+            $('.grade-produtos').html(data);
+            
+            // Opcional: Atualiza o contador de "Exibindo X produtos" (se você criar um ID para ele)
+            // $('#contador-produtos').text($('.grade-produtos .cartao-produto').length);
+          }
+        });
+    }
+
+    // Aciona a busca automaticamente sempre que o usuário clicar em uma categoria, marca ou soltar o slider
+    $(document).ready(function() {
+        $('.filtro-categoria, .filtro-marca, #filtro-promocao').on('change', buscar);
+        $('.preco-slider').on('change', buscar); // 'change' no slider dispara quando solta o mouse
     });
-  }
-</script>
+  </script>
+
 </body>
 </html>
