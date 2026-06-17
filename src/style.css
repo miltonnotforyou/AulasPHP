@@ -1231,15 +1231,50 @@ footer {
     font-size: 0.875rem;
 }
 
-
-
 /* Muda a cor das setas do carrossel para a cor primária */
 .slick-prev:before, .slick-next:before {
     color: var(--primaria); 
 }
 
+/* Container geral da paginação para dar um espaço dos produtos */
+.paginacao-container {
+    width: 100%;
+    margin-top: 40px; 
+    margin-bottom: 40px;
+}
+
+/* Transforma a lista vertical em horizontal e remove as bolinhas */
+.pagination {
+    display: flex;
+    justify-content: center; /* Centraliza os botões */
+    list-style-type: none;   /* Remove as "bolinhas" da lista (bullets) */
+    padding: 0;
+    margin: 0;
+    gap: 8px;                /* Espaço entre um botão e outro */
+}
+
+/* Estilo dos links (os botões em si) */
+.page-link {
+    display: block;
+    padding: 8px 16px;
+    color: #333;             /* Cor do texto */
+    text-decoration: none;   /* Remove o sublinhado padrão dos links */
+    background-color: #fff;
+    border: 1px solid #ddd;  /* Borda cinza clara */
+    border-radius: 5px;      /* Bordas arredondadas */
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Efeito visual ao passar o mouse por cima do botão */
+.page-link:hover {
+    background-color: #f4f4f4;
+    border-color: #bbb;
+    color: #000;
+}
+
 /* ============================================================
-   12. MEDIA QUERIES (Organizadas e Consolidadas)
+   12. MEDIA QUERIES 
    ============================================================ */
 
 /* --- A partir de 640px (Smartphones Grandes e Tablets) --- */

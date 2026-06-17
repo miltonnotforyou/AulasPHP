@@ -42,10 +42,12 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
           </a>
 
           <!-- Barra de pesquisa de produtos -->
-          <div class="barra-pesquisa">
-            <i class="fa-solid fa-magnifying-glass icone-pesquisa"></i>
-            <input type="text" placeholder="Pesquisar dispositivos inteligentes..." />
-          </div>
+         <div class="barra-pesquisa">
+          <form action="busca.php" method="GET">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass icone-pesquisa"></i></button>
+            <input type="text" name="busca" placeholder="Pesquisar dispositivos inteligentes..." />            
+          </form>
+        </div>
 
           <!-- Ações do usuário (perfil, favoritos, carrinho) -->
           <div class="cabecalho-acoes">

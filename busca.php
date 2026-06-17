@@ -2,61 +2,44 @@
 // Inclui o arquivo de conexão com o banco de dados
 require_once __DIR__ . '/conexao/conecta.php';
 
-// 1. INICIALIZA AS CONDIÇÕES DOS FILTROS
-// Começamos com uma string vazia e vamos adicionando os filtros conforme o que vier na URL
-$condicoes = "";
-
-// Verifica se veio o aviso de promoção pela URL
-if (isset($_GET['promocao']) && $_GET['promocao'] == '1') {
-    $condicoes .= " AND status_promocao = 1";
-}
-
-// Verifica se existe uma busca (implementado no passo anterior)
-if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
-    $busca = mysqli_real_escape_string($conexao, $_GET['busca']);
-    $condicoes .= " AND nome LIKE '%$busca%'";
-}
-
-// (Você pode adicionar outros filtros aqui usando a mesma lógica do $condicoes .= " AND ...")
+if(isset($_GET['busca']) && $_GET['busca'] != '') 
+{
+  $busca = $_GET['busca']; // Pega o termo de busca enviado pela barra de pesquisa
+}  
 
 
-// 2. CONTA O TOTAL DE PRODUTOS (Respeitando os filtros criados acima)
-// Cria uma query SQL para contar o número de produtos ativos E que atendam aos filtros
-$sql_count = "SELECT COUNT(*) AS quantidade FROM produto WHERE status = 1" . $condicoes; 
-$query_count = mysqli_query($conexao, $sql_count); 
-$linha = mysqli_fetch_assoc($query_count); 
-// A variável $quantidade agora contém o número Y (total de produtos filtrados)
-$quantidade = $linha['quantidade']; 
+$sql_count = "SELECT COUNT(*) AS quantidade FROM produto WHERE nome LIKE '%$busca%'"; // Cria uma query SQL para contar o número total de produtos cadastrados na tabela "produto". O resultado da contagem será retornado em uma coluna chamada "quantidade".
+$query_count = mysqli_query($conexao, $sql_count); // Executa a query de contagem no banco de dados. O resultado será um conjunto de dados com uma única linha e uma coluna chamada 'quantidade', que contém o número total de produtos cadastrados.
+$linha = mysqli_fetch_assoc($query_count); // Pega a primeira linha do resultado da query, que contém a contagem total de produtos.
+$quantidade = $linha['quantidade']; // A variável $quantidade agora contém o número total de produtos cadastrados no banco de dados. Você pode usar essa variável para exibir a quantidade de produtos ou para configurar a paginação, por exemplo.
+
+$buscapag = "&busca=" . $busca; //
 
 
-// 3. CONFIGURAÇÕES DA PAGINAÇÃO
-if(isset($_GET['pagina']) && !empty($_GET['pagina'])) {
-    $paginaAtual = (int)$_GET['pagina']; 
-} else {
+if(isset($_GET['pagina']) && !empty($_GET['pagina'])) 
+  {
+    $paginaAtual = $_GET['pagina']; // Verifica se a variável 'pagina' foi passada pela URL e se não está vazia. Se for verdade, atribui o valor da página atual à variável $paginaAtual. Isso é útil para implementar a funcionalidade de paginação, permitindo que o usuário navegue entre diferentes páginas de produtos.
+  } 
+else 
+  {
     $paginaAtual = 1; // Página padrão
-}
+  }
 
-// Lógica para manter os filtros na URL ao trocar de página
-$parametros_get = $_GET;
-unset($parametros_get['pagina']); // Remove a página atual para montar a base
-$query_string = http_build_query($parametros_get); // Monta os filtros (ex: busca=lampada&promocao=1)
-// Base da URL para a paginação inteligente
-$url = "?" . ($query_string ? $query_string . "&" : "") . "pagina="; 
+  $url = "?pagina="; // Base da URL para a paginação. O número da página será adicionado a essa string para criar os links de navegação entre as páginas de produtos.
 
-$paginaQuantidade = 16; // Quantidade de produtos por página
+  //Quantidade de produtos por página
+  $paginaQuantidade = 16; // Define a quantidade de produtos que serão exibidos por página. Isso é importante para controlar a quantidade de produtos mostrados ao usuário e para calcular o número total de páginas necessárias para exibir todos os produtos cadastrados.
 
-// Valor inicial para o LIMIT da query SQL
-$valorInicial = ($paginaAtual * $paginaQuantidade) - $paginaQuantidade; 
+  //Valor inicial para o LIMIT da query SQL
+  $valorInicial = ($paginaAtual * $paginaQuantidade) - $paginaQuantidade; // Calcula o valor inicial para a cláusula LIMIT da query SQL. Isso determina a partir de qual registro os produtos serão exibidos na página atual. Por exemplo, se a página atual for 2 e a quantidade por página for 8, o valor inicial será 8, o que significa que os produtos exibidos começarão a partir do nono registro (índice 8) da tabela de produtos.
 
-$paginaFinal = ceil($quantidade / $paginaQuantidade); 
-if ($paginaFinal == 0) $paginaFinal = 1; // Evita que a página final seja 0 caso a busca não retorne nada
+  $paginaFinal = ceil($quantidade / $paginaQuantidade); // Calcula o número total de páginas necessárias para exibir todos os produtos cadastrados. A função ceil() é usada para arredondar para cima, garantindo que mesmo que haja um número de produtos que não seja exatamente divisível pela quantidade por página, uma página adicional será criada para exibir os produtos restantes.
 
-$paginaInicial = 1; 
-$paginaProxima = $paginaAtual + 1; 
-$paginaAnterior = $paginaAtual - 1; 
+  $paginaInicial = 1; // Define a página inicial para a navegação. Normalmente, a página inicial é 1, mas isso pode ser ajustado conforme necessário.
+  $paginaProxima = $paginaAtual + 1; // Calcula o número da próxima página. Isso é útil para criar um link de navegação para a próxima página de produtos.
+  $paginaAnterior = $paginaAtual - 1; // Calcula o número da página anterior. Isso é útil para criar um link de navegação para a página anterior de produtos.
 
 
-// 4. QUERIES SECUNDÁRIAS (Sidebar)
 // Buscando todas as categorias ordenadas por nome
 $query_categorias = mysqli_query($conexao, "SELECT * FROM categoria ORDER BY nome ASC");
 
@@ -64,16 +47,24 @@ $query_categorias = mysqli_query($conexao, "SELECT * FROM categoria ORDER BY nom
 $query_marcas = mysqli_query($conexao, "SELECT * FROM marca ORDER BY nome ASC");
 
 // Buscando o maior preço cadastrado para configurar o limite do Slider
-$query_preco = mysqli_query($conexao, "SELECT MAX(preco_venda) as max_preco FROM produto"); 
-$dados_preco = mysqli_fetch_assoc($query_preco); 
-$preco_maximo_banco = $dados_preco['max_preco'] ? ceil($dados_preco['max_preco']) : 5000; 
+$query_preco = mysqli_query($conexao, "SELECT MAX(preco_venda) as max_preco FROM produto"); // Pega o maior preço de venda registrado na tabela de produtos
+$dados_preco = mysqli_fetch_assoc($query_preco); // Se o banco retornar um valor, usamos ele. Caso contrário, definimos um valor padrão (ex: R$ 5000)
+$preco_maximo_banco = $dados_preco['max_preco'] ? ceil($dados_preco['max_preco']) : 5000; // O ceil() arredonda para cima, garantindo que o slider tenha um limite inteiro e confortável para o usuário.
+
+// Buscando produtos em promoção (status_promoção = 1)
+$query_promocoes = mysqli_query($conexao, "SELECT * FROM produto WHERE status_promocao = 1 ORDER BY nome ASC");
+
+/// 1. Inicia a query SEMPRE com WHERE 1=1 para permitir a adição segura do AND
+$sql = "SELECT * FROM produto WHERE status = 1 AND nome LIKE '%$busca%' LIMIT $valorInicial, $paginaQuantidade"; // A cláusula "WHERE 1=1" é uma técnica comum para facilitar a construção dinâmica de consultas SQL. Ela permite que você adicione condições adicionais usando "AND" sem se preocupar com a sintaxe, pois "1=1" é sempre verdadeiro e não afeta o resultado da consulta. O "AND status = 1" é um exemplo para filtrar apenas produtos ativos, mas você pode ajustar essa condição conforme a estrutura do seu banco de dados e os critérios que deseja aplicar.
 
 
-// 5. QUERY PRINCIPAL (Buscando os produtos da página atual)
-// Junta o WHERE base (status = 1), os filtros dinâmicos e, por fim, o LIMIT da paginação
-$sql = "SELECT * FROM produto WHERE status = 1 " . $condicoes . " LIMIT $valorInicial, $paginaQuantidade"; 
+// 2. Verifica se veio o aviso de promoção pela URL do botão da página inicial
+if (isset($_GET['promocao']) && $_GET['promocao'] == '1') {
+    $sql .= " AND status_promocao = 1";
+}
 
-// Executa a query final
+
+// 3. Executa a query final
 $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . mysqli_error($conexao));
 ?>
 
@@ -114,7 +105,6 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
           </form>
         </div>
 
-       
           <!-- Ações do usuário (perfil, favoritos, carrinho) -->
           <div class="cabecalho-acoes">
             <button class="botao-icone">
@@ -137,7 +127,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
   <div class="catalogo-container caixa-conteudo">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+  <aside class="sidebar">
       <div class="sidebar-conteudo">
         <form id="form-filtros">
 
@@ -224,7 +214,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
 
         </form>
       </div>
-    </aside>
+  </aside>
     
     <!-- Fim do SIDEBAR -->
 
@@ -233,13 +223,8 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
 
       <!-- Barra de ferramentas -->
       <div class="barra-ferramentas">
-      <?php if ($quantidade > 0): ?>
-        <p>Exibindo <span><?php echo mysqli_num_rows($resultado); ?></span> de <?php echo $quantidade; ?> produtos</p>
-      <?php else: ?>
-        <p>Nenhum produto encontrado para estes filtros.</p>
-      <?php endif; ?>
-    
-        
+        <!--Exibe a quantidade de produtos mostrados na página atual e o total de produtos cadastrados no banco de dados. A variável $paginaQuantidade representa o número de produtos exibidos por página, enquanto $quantidade representa o total de produtos disponíveis. -->
+        <p>Exibindo <span><?php echo mysqli_num_rows($resultado); ?></span> de <?php echo $quantidade; ?> produtos</p> 
         <div class="organizar-container">
           <label class="organizar-label">Ordenar por:</label>
           <select class="organizar-select">
@@ -254,8 +239,10 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
       <!-- Cabeçalho da seção -->
       <div class="cabecalho-secao">
         <div class="titulo-secao">
-          <h1>Dispositivos Inteligentes</h1>
-          <p>Transforme seu ambiente com o que há de mais avançado em conectividade e automação residencial</p>
+          <h1 style="color: #0f172a; font-weight: 600;">
+              Sua busca: <span style="color: var(--texto-suave);"><?php echo isset($_GET['busca']) ? htmlspecialchars($_GET['busca']) : ''; ?></span>
+          </h1>
+       
         </div>
         <nav class="breadcrumbs">
           <a href="index.php">Home</a>
@@ -296,7 +283,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
                   endwhile; 
               else: 
               ?>
-                  <p>Nenhum produto em destaque no momento.</p>
+                  <p style="color: red;">Nenhum produto encontrado no momento.</p>
               <?php endif; ?>
             </div>
       <!-- fim .grade-produtos -->
@@ -313,13 +300,13 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
              
           <?php if($paginaAtual != $paginaInicial){ ?>
             <li class="page-item">
-              <a class="page-link" href="<?php echo $url . $paginaInicial?>">Início</a>
+              <a class="page-link" href="<?php echo $url . $paginaInicial . $buscapag ?>">Início</a>
             </li>
           <?php }?>
 
           <?php if($paginaAtual >= 2){ ?>  
           <li class="page-item">
-              <a class="page-link" href="<?php echo $url . $paginaAnterior ?> " aria-label="Previous">
+              <a class="page-link" href="<?php echo $url . $paginaAnterior . $buscapag ?> " aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
@@ -327,13 +314,13 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
              
             <?php if($paginaAtual != $paginaFinal){ ?> 
              <li class="page-item">
-                <a class="page-link" href="<?php echo $url . $paginaProxima ?>" aria-label="Next">
+                <a class="page-link" href="<?php echo $url . $paginaProxima . $buscapag ?>" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
                 </a>
               </li>
 
               <li class="page-item">
-                <a class="page-link" href="<?php echo $url . $paginaFinal ?>">Final</a>
+                <a class="page-link" href="<?php echo $url . $paginaFinal . $buscapag ?>">Final</a>
               </li>
            <?php }?> 
 
