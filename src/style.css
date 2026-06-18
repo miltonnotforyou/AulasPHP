@@ -13,7 +13,7 @@
 }
 
 html, body {
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
 }
 
@@ -47,6 +47,17 @@ img {
     --branco: #ffffff;
     --borda: #e2e8f0;
     --sombra: rgba(0, 0, 0, 0.05);
+}
+
+/* ---VARIÁVEIS DO TEMA ESCURO --- */
+[data-theme="dark"] {
+    --primaria: #044966;       /* Um azul mais claro e vibrante para destacar no fundo escuro */
+    --fundo-claro: #2b3d4f;    /* Fundo da página bem escuro (Azul marinho quase preto) */
+    --texto-escuro: #f8fafc;   /* Texto principal claro (Quase branco) */
+    --texto-suave: #94a3b8;    /* Texto secundário acinzentado */
+    --branco: #1e293b;         /* Fundo dos cartões e caixas (Um tom mais claro que o fundo) */
+    --borda: #334155;          /* Linhas divisórias adaptadas para o modo escuro */
+    --sombra: rgba(0, 0, 0, 0.4); /* Sombras mais fortes para criar profundidade no escuro */
 }
 
 body {
@@ -825,6 +836,8 @@ footer {
     cursor: pointer;
     font-size: 0.9rem;
     color: var(--texto-escuro);
+    padding: 10px 0; /* <-- ISSO AQUI FAZ A MÁGICA no mobile e desktop */
+    border-bottom: 1px solid #f1f5f9; /* Uma linhazinha sutil para separar */
 }
 
 .filtro-item input[type="checkbox"],
@@ -969,12 +982,15 @@ footer {
     border-radius: 12px;
     overflow: hidden;
     border: 2px solid transparent;
-    cursor: pointer;
     flex-shrink: 0;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.3s ease-in-out;
 }
 
-.miniatura.ativa {
-    border-color: var(--primaria);
+.miniatura:hover, .miniatura.ativa {
+  opacity: 1;
+  border: 2px solid var(--primaria); /* ou a cor do seu tema */
 }
 
 .miniatura img {
@@ -1273,6 +1289,10 @@ footer {
     color: #000;
 }
 
+.mobile-only {
+    display: none; /* Esconde botões no desktop */
+}
+
 /* ============================================================
    12. MEDIA QUERIES 
    ============================================================ */
@@ -1344,105 +1364,233 @@ footer {
 
 /* --- Até 768px (Smartphones e Tablets) --- */
 @media (max-width: 768px) {
+    /* =========================================
+       1. CABEÇALHO E NAVEGAÇÃO (MOBILE - COM LUPA)
+       ========================================= */
+    header {
+        padding: 8px 0; 
+    }
+    
     .cabecalho-conteudo {
         flex-wrap: wrap;
     }
+
+    .logotipo-img {
+        height: 40px; 
+        border-radius: 8px;
+    }
+
+    .cabecalho-acoes {
+        gap: 5px; 
+    }
+
+    /* Estilo para a nova lupa do mobile */
+    .botao-pesquisa-mobile {
+        display: flex;
+    }
+
+    .botao-carrinho {
+        padding: 6px 10px; 
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    .contador-carrinho {
+        width: 18px; 
+        height: 18px; 
+        font-size: 0.65rem;
+    }
+
+    /* Barra de pesquisa Oculta por padrão no mobile */
     .barra-pesquisa {
+        display: none; 
         order: 3;
         flex-basis: 100%;
         max-width: 100%; 
-        margin-top: 10px;
+        margin-top: 15px; 
+        padding-bottom: 5px;
     }
-    .logotipo-img {
-        height: 55px;
-        border-radius: 14px;
+    
+    /* Classe que o JavaScript vai adicionar para mostrar a barra */
+    .barra-pesquisa.ativa {
+        display: block;
+        animation: deslizarBaixo 0.3s ease;
     }
-    .cabecalho-acoes {
-        gap: 8px;
+
+    /* Animação suave ao abrir a pesquisa */
+    @keyframes deslizarBaixo {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
+    
+    .barra-pesquisa input {
+        padding: 10px 15px 10px 40px; 
+        font-size: 0.85rem;
+    }
+    
+    .icone-pesquisa {
+        left: 12px;
+    }
+
+    .mobile-only {
+        display: flex;
+    }
+
+    /* =========================================
+       2. LAYOUTS GERAIS E TEXTOS
+       ========================================= */
     .cabecalho-secao {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
     }
-    .sidebar-conteudo {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem 1rem;
-        padding: 1.25rem;
-    }
-    .sidebar-conteudo .filtro-section:nth-child(2) {
-        grid-column: 1 / -1; 
-    }
+    
     .titulo-secao h1 {
         font-size: 1.8rem;
     }
+
     .cartao-destaque {
         min-height: 380px;
         border-radius: 20px;
     }
+    
     .titulo-destaque {
         font-size: 2rem;
     }
+    
     .descricao-destaque {
         font-size: 1rem;
     }
+    
     .conteudo-destaque {
         padding: 35px 25px;
         gap: 18px;
     }
+
     .banner-promocional {
         flex-direction: column;
         text-align: center;
         padding: 30px 20px;
         border-radius: 20px;
     }
+    
     .texto-promocional h2 {
         font-size: 1.75rem;
     }
+
     .nossa-missao {
         border-radius: 30px;
         margin: 30px 0;
         padding: 50px 0;
     }
+    
     .conteudo-missao {
         grid-template-columns: 1fr;
         gap: 40px;
     }
+    
     .texto-missao h2 {
         font-size: 2rem;
     }
+
+    /* =========================================
+       3. PÁGINA DE PRODUTOS
+       ========================================= */
     .secao-produto {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+    
     .titulo-produto {
         font-size: 1.75rem;
     }
+    
     .botoes-acao {
         flex-direction: column;
     }
+
+    /* =========================================
+       4. MENU LATERAL DE FILTROS (OFF-CANVAS)
+       ========================================= */
+    .botao-abrir-filtros {
+        width: 100%;
+        background-color: var(--branco);
+        border: 1px solid var(--borda);
+        color: var(--primaria);
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px var(--sombra);
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%; 
+        width: 85%; 
+        max-width: 350px;
+        height: 100vh;
+        background-color: var(--fundo-claro);
+        z-index: 1000;
+        transition: left 0.3s ease-in-out;
+        overflow-y: auto; 
+        box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+    }
+
+    .sidebar.ativa {
+        left: 0;
+    }
+
+    .sidebar-conteudo {
+        border: none; 
+        box-shadow: none;
+        display: flex; 
+        flex-direction: column;
+        padding: 1.25rem;
+    }
+
+    .botao-fechar-filtros {
+        align-self: flex-end;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: var(--texto-suave);
+        padding: 10px;
+    }
+
+    /* =========================================
+       5. RODAPÉ
+       ========================================= */
     .grade-rodape {
         grid-template-columns: 1fr;
         gap: 30px;
     }
+    
     .rodape-inferior {
         flex-direction: column;
         align-items: center;
         gap: 20px;
     }
+    
     .informacao-rodape,
     .coluna-rodape {
         align-items: center;
         text-align: center;
     }
+    
     .lista-contato li {
         justify-content: center;
     }
+    
     .links-sociais {
         justify-content: center;
     }
 }
+
 
 /* --- Até 480px (Smartphones Menores) --- */
 @media (max-width: 480px) {

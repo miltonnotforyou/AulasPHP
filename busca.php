@@ -107,17 +107,26 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
 
           <!-- Ações do usuário (perfil, favoritos, carrinho) -->
           <div class="cabecalho-acoes">
-            <button class="botao-icone">
-              <i class="fa-regular fa-user"></i>
+
+          <button class="botao-icone" id="btn-tema" title="Alternar Tema">
+              <i class="fa-solid fa-moon"></i>
             </button>
-            <button class="botao-icone">
-              <i class="fa-regular fa-heart"></i>
-            </button>
-            <button class="botao-carrinho">
-              <i class="fa-solid fa-cart-shopping"></i>
-              <span class="contador-carrinho">10</span>
-            </button>
-          </div>
+  
+          <button class="botao-icone botao-pesquisa-mobile mobile-only">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+
+          <button class="botao-icone">
+            <i class="fa-regular fa-user"></i>
+          </button>
+          <button class="botao-icone">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+          <button class="botao-carrinho">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="contador-carrinho">10</span>
+          </button>
+        </div>
         </div>
       </header>
         <!-- Fim do Cabeçalho -->
@@ -266,7 +275,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
                   <!-- Link para a página de detalhes do produto, passando o código do produto como parâmetro -->
                   <a href="detalhes.php?id=<?php echo $produto['codigo_produto']; ?>">  
                     <!-- // Exibe a imagem do produto, usando o caminho armazenado na coluna 'foto' da tabela. -->
-                    <img src="./Produtos/<?php echo $produto['foto']; ?>" alt="<?php echo $produto['nome']; ?>"/>  
+                    <img src="./images/<?php echo $produto['foto']; ?>" alt="<?php echo $produto['nome']; ?>"/>  
                   </a>
                 </div>
                 <h4 class="nome-produto"><?php echo $produto['nome']; ?></h4>
@@ -415,63 +424,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
     </div>
     
     <!-- Script para funcionalidades do site -->
-  <script>
-    // Pega o slider e o texto onde o valor vai aparecer
-    const precoSlider = document.querySelector('.preco-slider');
-    const precoLabel = document.querySelectorAll('.preco-labels span')[1]; 
-
-    // Atualiza o texto visualmente quando arrastar o slider
-    if(precoSlider) {
-      precoSlider.addEventListener('input', function() {
-        let valorFormatado = parseInt(this.value).toLocaleString('pt-BR');
-        precoLabel.textContent = 'R$ ' + valorFormatado;
-      });
-    }
-
-    // --- FUNÇÃO Buscar ---
-    function buscar() {
-        // 1. Pega todas as categorias marcadas (cria um Array)
-        var categoriasSelecionadas = [];
-        $('.filtro-categoria:checked').each(function() {
-            categoriasSelecionadas.push($(this).val());
-        });
-
-        // 2. Pega a marca selecionada (Radio button)
-        var marcaSelecionada = $('.filtro-marca:checked').val() || '';
-
-        // 3. Pega o valor do slider de preço
-        var precoMax = $('.preco-slider').val();
-
-        // ---> NOVIDADE: Verifica se a caixa de promoção está marcada <---
-      // Se estiver marcada, envia '1', se não, envia vazio ('')
-      var promocaoAtiva = $('#filtro-promocao').is(':checked') ? '1' : '';
-
-        // 4. Envia para o Tabela.php
-        $.ajax({
-          url: 'Tabela.php',
-          type: 'POST',
-          data: {
-            categoria: categoriasSelecionadas,
-            marca: marcaSelecionada,
-            preco_max: precoMax,
-            promocao: promocaoAtiva
-          },
-          success: function(data) {
-            // Atualiza a grade de produtos com os novos cartões
-            $('.grade-produtos').html(data);
-            
-            // Opcional: Atualiza o contador de "Exibindo X produtos" (se você criar um ID para ele)
-            // $('#contador-produtos').text($('.grade-produtos .cartao-produto').length);
-          }
-        });
-    }
-
-    // Aciona a busca automaticamente sempre que o usuário clicar em uma categoria, marca ou soltar o slider
-    $(document).ready(function() {
-        $('.filtro-categoria, .filtro-marca, #filtro-promocao').on('change', buscar);
-        $('.preco-slider').on('change', buscar); // 'change' no slider dispara quando solta o mouse
-    });
-  </script>
+  <script src="src/script2.js"></script>
 
 </body>
 </html>

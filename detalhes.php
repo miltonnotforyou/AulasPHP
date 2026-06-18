@@ -94,6 +94,9 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 
           <!-- Ações do usuário (perfil, favoritos, carrinho) -->
           <div class="cabecalho-acoes">
+            <button class="botao-icone" id="btn-tema" title="Alternar Tema">
+              <i class="fa-solid fa-moon"></i>
+            </button>
             <button class="botao-icone">
               <i class="fa-regular fa-user"></i>
             </button>
@@ -129,13 +132,28 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
       <!-- Galeria -->
       <div class="galeria">
         <div class="imagem-principal">
-          <img src="./Produtos/<?php echo $produto['foto']; ?>" alt="<?php echo $produto['nome']; ?>"/> 
+          <img id="img-destaque" src="./images/<?php echo $produto['foto']; ?>" alt="<?php echo $produto['nome']; ?>"/> 
         </div>
+        
         <div class="miniaturas">
-          <div class="miniatura ativa">
-            <img src="./Produtos/<?php echo $produto['foto']; ?>" alt="<?php echo $produto['nome']; ?>"/> 
+          <?php if (!empty($produto['foto'])): ?>
+          <div class="miniatura ativa" onclick="trocarImagem(this, '<?php echo $produto['foto']; ?>')">
+            <img src="./images/<?php echo $produto['foto']; ?>" alt="Foto 1 de <?php echo $produto['nome']; ?>"/> 
           </div>
-         
+          <?php endif; ?>
+
+          <?php 
+          for ($i = 2; $i <= 6; $i++) {
+              $colunaFoto = 'foto' . $i;
+              if (!empty($produto[$colunaFoto])) {
+          ?>
+              <div class="miniatura" onclick="trocarImagem(this, '<?php echo $produto[$colunaFoto]; ?>')">
+                <img src="./images/<?php echo $produto[$colunaFoto]; ?>" alt="Foto <?php echo $i; ?> de <?php echo $produto['nome']; ?>"/>
+              </div>
+          <?php 
+              }
+          } 
+          ?>
         </div>
       </div>
       <!-- fim .galeria -->
@@ -381,11 +399,11 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
     
     </div>
 
-</body>
+  <!-- Script para funcionalidades do site -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
+  <script src="src/script2.js"></script>
 
-          <!-- ## DICAS PARA O FUTURO ## -->
-          <!-- <pre>
-          <?php print_r($produto); ?>
-          </pre> -->
+</body>
+       
         
 </html>

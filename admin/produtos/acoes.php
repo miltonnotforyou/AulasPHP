@@ -21,15 +21,43 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_produto')
     $_preco_promocao    = (isset($_POST['preco_promocao']) && $_POST['preco_promocao'] !== '') ? str_replace(',', '.', $_POST['preco_promocao']) : 0;
     $_codigo_marca      = mysqli_real_escape_string($conexao, $_POST['marca']);          
     $_codigo_categoria  = mysqli_real_escape_string($conexao, $_POST['categoria']);      
-    ################################## Upload da foto do produto ##########################
-    $foto = basename($_FILES['foto']['name']);
-    $tmp = $_FILES['foto']['tmp_name'];
-    $caminho_final = '../../images/' . $foto;
-    move_uploaded_file($tmp, $caminho_final);
+    ################################## Upload das fotos do produto ##########################
+    // Criamos um array com todas as imagens que devem ser enviadas vazias por padrão
+    $nomes_fotos = ['foto' => '', 'foto2' => '', 'foto3' => '', 'foto4' => '', 'foto5' => '', 'foto6' => ''];
 
-    // Corrigido: Passando '$_codigo_marca' no final da query
-    $sql = "INSERT INTO produto VALUES (0, '$_nome', '$_descricao', '$_qtde_estoque', '$_preco_custo', '$_lucro', '$_preco_venda', $_status_promocao, '$_desconto_promocao', '$_preco_promocao', '$foto', NOW(), 1, '$_codigo_marca', '$_codigo_categoria' )";
-    
+    // Lógica dinâmica para fazer upload de todas as fotos que foram preenchidas
+    foreach ($nomes_fotos as $campo => $nome_atual) {
+        if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] === UPLOAD_ERR_OK) {
+            // Adiciona um timestamp (time()) no nome para evitar arquivos com o mesmo nome se sobrescrevendo
+            $nome_arquivo = time() . '_' . basename($_FILES[$campo]['name']);
+            $caminho_final = '../../images/' . $nome_arquivo;
+            
+            if (move_uploaded_file($_FILES[$campo]['tmp_name'], $caminho_final)) {
+                $nomes_fotos[$campo] = $nome_arquivo; // Guarda o nome da foto que foi salva
+            }
+        }
+    }
+
+    // Passamos os nomes das fotos do array para variáveis para o SQL
+    $foto = $nomes_fotos['foto'];
+    $foto2 = $nomes_fotos['foto2'];
+    $foto3 = $nomes_fotos['foto3'];
+    $foto4 = $nomes_fotos['foto4'];
+    $foto5 = $nomes_fotos['foto5'];
+    $foto6 = $nomes_fotos['foto6'];
+
+    // QUERY DE INSERT (com colunas explícitas)
+    $sql = "INSERT INTO produto (
+        nome, descricao, qtde_estoque, preco_custo, lucro, preco_venda, 
+        status_promocao, desconto_promocao, preco_promocao, 
+        foto, foto2, foto3, foto4, foto5, foto6, 
+        data_cadastro, status, codigo_marca, codigo_categoria
+    ) VALUES (
+        '$_nome', '$_descricao', '$_qtde_estoque', '$_preco_custo', '$_lucro', '$_preco_venda', 
+        $_status_promocao, '$_desconto_promocao', '$_preco_promocao', 
+        '$foto', '$foto2', '$foto3', '$foto4', '$foto5', '$foto6', 
+        NOW(), 1, '$_codigo_marca', '$_codigo_categoria'
+    )";
     try {
         if(mysqli_query($conexao, $sql)) {
             $_SESSION['mensagem'] = "Produto cadastrado com sucesso!";
@@ -70,30 +98,41 @@ if(isset($_POST['editar']) && $_POST['editar'] === 'editar_produto')
     // Tratamento seguro evitando erro fatal no SQL quando o $_POST vier vazio
     $desconto_promocao = (isset($_POST['desconto_promocao']) && $_POST['desconto_promocao'] !== '') ? str_replace(',', '.', $_POST['desconto_promocao']) : 0; 
     $preco_promocao    = (isset($_POST['preco_promocao']) && $_POST['preco_promocao'] !== '') ? str_replace(',', '.', $_POST['preco_promocao']) : 0;
-    ############################### Lógica para upload da nova foto ###############################
-    $foto = '';
-    // Verifica se o array de arquivo existe e se algum arquivo foi enviado sem erros
-    if(isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-        $foto = basename($_FILES['foto']['name']);
-        $tmp = $_FILES['foto']['tmp_name'];
-        $caminho_final = '../../images/' . $foto;
-        move_uploaded_file($tmp, $caminho_final);
+    ############################### Lógica para upload das novas fotos ###############################
+    $update_fotos = ""; // Variável que vai armazenar apenas as fotos que forem alteradas
+
+    $campos_fotos = ['foto', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6'];
+
+    foreach ($campos_fotos as $campo) {
+        if(isset($_FILES[$campo]) && $_FILES[$campo]['error'] === UPLOAD_ERR_OK) {
+            $nome_arquivo = time() . '_' . basename($_FILES[$campo]['name']);
+            $caminho_final = '../../images/' . $nome_arquivo;
+            
+            if (move_uploaded_file($_FILES[$campo]['tmp_name'], $caminho_final)) {
+                // Concatena na query de UPDATE apenas se uma foto nova foi enviada neste campo
+                $update_fotos .= ", $campo = '$nome_arquivo'";
+            }
+        }
     }
 
-    ######################## UPDATE no banco de dados ########################
+   ######################## UPDATE no banco de dados ########################
     
     $sql = "UPDATE produto SET 
-    nome = '$nome', descricao = '$descricao', qtde_estoque = '$qtde_estoque', preco_custo = '$preco_custo', lucro = '$lucro', preco_venda = '$preco_venda', status_promocao = $status_promocao, desconto_promocao = '$desconto_promocao', preco_promocao = '$preco_promocao', codigo_marca = $codigo_marca, codigo_categoria = $codigo_categoria, status = $status";
+    nome = '$nome', descricao = '$descricao', qtde_estoque = '$qtde_estoque', 
+    preco_custo = '$preco_custo', lucro = '$lucro', preco_venda = '$preco_venda', 
+    status_promocao = $status_promocao, desconto_promocao = '$desconto_promocao', 
+    preco_promocao = '$preco_promocao', codigo_marca = $codigo_marca, 
+    codigo_categoria = $codigo_categoria, status = $status";
     
-    // Verifica se uma nova foto foi enviada. Se sim, adiciona ela na query.
-    if(!empty($foto))
-    {
-        $sql .= ", foto = '$foto'"; 
-    }
+    // Adiciona as fotos novas na query (se houver)
+    $sql .= $update_fotos; 
 
     // Finaliza a query restringindo ao produto específico
     $sql .= " WHERE codigo_produto = $codigo_produto";
 
+    // =====================================================================
+    // Executando a query no banco de dados e gerando a mensagem
+    // =====================================================================
     try {
         if(mysqli_query($conexao, $sql)) {
             $_SESSION['mensagem'] = "Produto atualizado com sucesso!";

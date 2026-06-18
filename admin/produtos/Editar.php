@@ -96,122 +96,134 @@ if(!empty($nome_foto) && file_exists($caminho_fisico)) {
 
                     <div class="col-md-9">
                         <div class="row">
+                            
                             <div class="col-md-4 mt-2">
-                                <label for="foto">Foto do Produto</label>
+                                <label for="foto">Foto Principal (Capa)</label>
                                 <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
+                                <small class="text-muted" style="font-size: 0.75rem;">Deixe em branco para manter a atual.</small>
                             </div>
-                    
-                            <div class="col-md-5 mt-2">
+                            <div class="col-md-4 mt-2">
+                                <label for="foto2">Foto Extra 1</label>
+                                <input type="file" name="foto2" id="foto2" class="form-control" accept="image/*">
+                                <small class="text-muted" style="font-size: 0.75rem;">Deixe em branco para manter a atual.</small>
+                            </div>
+                            <div class="col-md-4 mt-2">
+                                <label for="foto3">Foto Extra 2</label>
+                                <input type="file" name="foto3" id="foto3" class="form-control" accept="image/*">
+                                <small class="text-muted" style="font-size: 0.75rem;">Deixe em branco para manter a atual.</small>
+                            </div>
+                            <div class="col-md-4 mt-2">
+                                <label for="foto4">Foto Extra 3</label>
+                                <input type="file" name="foto4" id="foto4" class="form-control" accept="image/*">
+                            </div>
+                            <div class="col-md-4 mt-2">
+                                <label for="foto5">Foto Extra 4</label>
+                                <input type="file" name="foto5" id="foto5" class="form-control" accept="image/*">
+                            </div>
+                            <div class="col-md-4 mt-2">
+                                <label for="foto6">Foto Extra 5</label>
+                                <input type="file" name="foto6" id="foto6" class="form-control" accept="image/*">
+                            </div>
+
+                            <div class="col-12 mt-3"><hr class="text-secondary"></div>
+
+                            <div class="col-md-7 mt-2">
                                 <label for="nome"><strong class="text-danger">*</strong> Nome</label>
                                 <input type="text" name="nome" id="nome" class="form-control" maxlength="60" required value="<?php echo htmlspecialchars($produto['nome']); ?>">
                             </div>
-
-                            <div class="col-md-3 mt-2">
+                            <div class="col-md-2 mt-2">
                                 <label for="status">Status</label>
                                 <select name="status" id="status" class="form-control">
                                     <option value="1" <?php if($produto['status'] == 1) echo 'selected'; ?>>Ativo</option>
                                     <option value="0" <?php if($produto['status'] == 0) echo 'selected'; ?>>Inativo</option>
                                 </select>
                             </div>
-
-                            <div class="col-md-2 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="data_cadastro"><strong class="text-danger">*</strong> Data Cadastro</label>
                                 <input type="date" name="data_cadastro" id="data_cadastro" class="form-control" value="<?php echo date('Y-m-d', strtotime($produto['data_cadastro'])); ?>" readonly>
                             </div>
 
-                            <div class="col-md-2 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="preco_custo"><strong class="text-danger">*</strong> Preço de Custo</label>
                                 <input type="number" name="preco_custo" id="preco_custo" class="form-control" step="0.01" min="0" required oninput="calcularLucro()" value="<?php echo $produto['preco_custo']; ?>">
                             </div>
-
-                             <div class="col-md-2 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="lucro"><strong class="text-danger">*</strong> Lucro %</label>
                                 <input type="number" name="lucro" id="lucro" class="form-control" step="0.01" min="0" required oninput="calcularLucro()" value="<?php echo $produto['lucro']; ?>">
                             </div>
-
-                            <div class="col-md-2 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="preco_venda"><strong class="text-danger">*</strong> Preço de Venda</label>
                                 <input type="number" name="preco_venda" id="preco_venda" class="form-control" step="0.01" min="0" readonly value="<?php echo $produto['preco_venda']; ?>">
                             </div>
-
-                            <div class="col-md-2 mt-2">
-                                <label for="qtde_estoque"><strong class="text-danger">*</strong> Quantidade em Estoque</label>
+                            <div class="col-md-3 mt-2">
+                                <label for="qtde_estoque"><strong class="text-danger">*</strong> Estoque</label>
                                 <input type="number" name="qtde_estoque" id="qtde_estoque" class="form-control" min="0" required value="<?php echo $produto['qtde_estoque']; ?>">
                             </div>
                             
-                            <div class="col-md-12 mt-2"> 
-                                <div class="row">
-                                    <div class="col-md-2 mt-2">                    
-                                        <label for="status_promocao">Status Promoção</label>
-                                        <select name="status_promocao" id="status_promocao" class="form-control" onchange="desabilitar()">
-                                            
-                                            <option value="1" <?php if($produto['status_promocao'] == 1) echo 'selected'; ?>>Ativo</option>
-                                            <option value="0" <?php if($produto['status_promocao'] == 0) echo 'selected'; ?>>Inativo</option>                                                            
-                                        </select>
-                                    </div>
+                            <div class="col-md-2 mt-2">                    
+                                <label for="status_promocao">Status Promo</label>
+                                <select name="status_promocao" id="status_promocao" class="form-control" onchange="desabilitar()">
+                                    <option value="1" <?php if($produto['status_promocao'] == 1) echo 'selected'; ?>>Ativo</option>
+                                    <option value="0" <?php if($produto['status_promocao'] == 0) echo 'selected'; ?>>Inativo</option>                                                            
+                                </select>
+                            </div>
 
-                                    <div class="col-md-2 mt-2"> 
-                                        <label for="desconto_promocao"> Desconto %</label>
-                                        <input type="number" name="desconto_promocao" id="desconto_promocao" class="form-control" oninput="calcularPrecoPromocao()" value="<?php echo $produto['desconto_promocao']; ?>">
-                                    </div>
+                            <div class="col-md-2 mt-2"> 
+                                <label for="desconto_promocao"> Desc %</label>
+                                <input type="number" name="desconto_promocao" id="desconto_promocao" class="form-control" oninput="calcularPrecoPromocao()" value="<?php echo $produto['desconto_promocao']; ?>">
+                            </div>
 
-                                    <div class="col-md-2 mt-2">
-                                        <label for="preco_promocao">Preço Promoção</label>
-                                        <input type="number" name="preco_promocao" id="preco_promocao" class="form-control" step="0.01" min="0" readonly value="<?php echo $produto['preco_promocao']; ?>">
-                                    </div>
+                            <div class="col-md-2 mt-2">
+                                <label for="preco_promocao">Preço Promo</label>
+                                <input type="number" name="preco_promocao" id="preco_promocao" class="form-control" step="0.01" min="0" readonly value="<?php echo $produto['preco_promocao']; ?>">
+                            </div>
 
-                                    <div class="col-md-3 mt-2">
-                                        <label for="marca"><strong class="text-danger">*</strong>Marca</label>
-                                        <select name="marca" id="marca" class="form-control" required>
-                                            <option value="">Selecione</option>
-                                            <?php 
-                                                $sql_marca = "SELECT codigo_marca, nome FROM marca WHERE status = 1";
-                                                $query_marca = mysqli_query($conexao, $sql_marca);
-                                                if($query_marca){
-                                                    foreach($query_marca as $marca) {
-                                                        // Marca como selected se for a marca salva no banco para este produto
-                                                        $selecionado = ($produto['codigo_marca'] == $marca['codigo_marca']) ? 'selected' : '';
-                                                        echo '<option value="' . $marca['codigo_marca'] . '" ' . $selecionado . '>' . $marca['nome'] . '</option>';
-                                                    }
-                                                }
-                                            ?>
-                                        </select>                         
-                                    </div>
+                            <div class="col-md-3 mt-2">
+                                <label for="marca"><strong class="text-danger">*</strong>Marca</label>
+                                <select name="marca" id="marca" class="form-control" required>
+                                    <option value="">Selecione</option>
+                                    <?php 
+                                        $sql_marca = "SELECT codigo_marca, nome FROM marca WHERE status = 1";
+                                        $query_marca = mysqli_query($conexao, $sql_marca);
+                                        if($query_marca){
+                                            foreach($query_marca as $marca) {
+                                                $selecionado = ($produto['codigo_marca'] == $marca['codigo_marca']) ? 'selected' : '';
+                                                echo '<option value="' . $marca['codigo_marca'] . '" ' . $selecionado . '>' . $marca['nome'] . '</option>';
+                                            }
+                                        }
+                                    ?>
+                                </select>                         
+                            </div>
 
-                                    <div class="col-md-3 mt-2">
-                                        <label for="categoria"><strong class="text-danger">*</strong> Categoria</label>
-                                        <select name="categoria" id="categoria" class="form-control" required>
-                                            <option value="">Selecione</option>
-                                            <?php 
-                                                $sql_categoria = "SELECT codigo_categoria, nome FROM categoria WHERE status = 1";
-                                                $query_categoria = mysqli_query($conexao, $sql_categoria);
-                                                if($query_categoria){
-                                                    foreach($query_categoria as $categoria) {
-                                                        // Marca como selected se for a categoria salva no banco para este produto
-                                                        $selecionado = ($produto['codigo_categoria'] == $categoria['codigo_categoria']) ? 'selected' : '';
-                                                        echo '<option value="' . $categoria['codigo_categoria'] . '" ' . $selecionado . '>' . $categoria['nome'] . '</option>';
-                                                    }
-                                                }
-                                            ?>
-                                        </select>                         
-                                    </div>
-                                </div>
+                            <div class="col-md-3 mt-2">
+                                <label for="categoria"><strong class="text-danger">*</strong> Categoria</label>
+                                <select name="categoria" id="categoria" class="form-control" required>
+                                    <option value="">Selecione</option>
+                                    <?php 
+                                        $sql_categoria = "SELECT codigo_categoria, nome FROM categoria WHERE status = 1";
+                                        $query_categoria = mysqli_query($conexao, $sql_categoria);
+                                        if($query_categoria){
+                                            foreach($query_categoria as $categoria) {
+                                                $selecionado = ($produto['codigo_categoria'] == $categoria['codigo_categoria']) ? 'selected' : '';
+                                                echo '<option value="' . $categoria['codigo_categoria'] . '" ' . $selecionado . '>' . $categoria['nome'] . '</option>';
+                                            }
+                                        }
+                                    ?>
+                                </select>                         
+                            </div>
 
-                                <div class="col-12 mt-2">
-                                    <label for="descricao">Descrição:</label>
-                                    <textarea name="descricao" id="descricao" class="form-control" maxlength="100"><?php echo htmlspecialchars($produto['descricao']); ?></textarea>
+                            <div class="col-12 mt-3">
+                                <label for="descricao">Descrição:</label>
+                                <textarea name="descricao" id="descricao" class="form-control" maxlength="100" rows="3"><?php echo htmlspecialchars($produto['descricao']); ?></textarea>
 
-                                    <input type="hidden" name="editar" value="editar_produto"> 
-                                    <input type="hidden" name="codigo_produto" value="<?php echo $codigo; ?>"> 
+                                <input type="hidden" name="editar" value="editar_produto"> 
+                                <input type="hidden" name="codigo_produto" value="<?php echo $codigo; ?>"> 
 
-                                    <input type="submit" value="Editar" class="btn btn-dark mt-3">
-                                </div>
-                            </div> 
-                        </div> 
-                    </div> 
-                </div> 
-            </form> 
-          </div>
+                                <button type="submit" class="btn btn-dark mt-3 px-4">Salvar Alterações</button>
+                            </div>
+
+                        </div> </div> </div> </form> 
+          </div> ```
         </div>
         
         <?php 

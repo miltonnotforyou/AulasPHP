@@ -51,13 +51,21 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
 
           <!-- Ações do usuário (perfil, favoritos, carrinho) -->
           <div class="cabecalho-acoes">
+            <button class="botao-icone" id="btn-tema" title="Alternar Tema">
+              <i class="fa-solid fa-moon"></i>
+            </button>
+  
+            <button class="botao-icone botao-pesquisa-mobile mobile-only">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
             <button class="botao-icone">
               <i class="fa-regular fa-user"></i>
             </button>
             <button class="botao-icone">
               <i class="fa-regular fa-heart"></i>
             </button>
-            <button class="botao-icone botao-carrinho">
+            <button class="botao-carrinho">
               <i class="fa-solid fa-cart-shopping"></i>
               <span class="contador-carrinho">10</span>
             </button>
@@ -118,7 +126,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
                   <!-- Link para a página de detalhes do produto, passando o código do produto como parâmetro -->
                   <a href="detalhes.php?id=<?php echo $produto['codigo_produto']; ?>">  
                     <!-- // Exibe a imagem do produto, usando o caminho armazenado na coluna 'foto' da tabela. -->
-                    <img src="./Produtos/<?php echo $produto['foto']; ?>" alt="<?php echo $produto['nome']; ?>"/>  
+                    <img src="./images/<?php echo $produto['foto']; ?>" alt="<?php echo $produto['nome']; ?>"/>  
                   </a>
                 </div>
                 <h4 class="nome-produto"><?php echo $produto['nome']; ?></h4>
