@@ -224,7 +224,7 @@ if(!empty($nome_foto) && file_exists($caminho_fisico)) {
                             </div>
 
                         </div> </div> </div> </form> 
-          </div> ```
+          </div>
         </div>
         
         <?php 
