@@ -93,7 +93,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
       <header>
         <div class="caixa-conteudo cabecalho-conteudo">
           <!-- Logotipo com imagem -->
-          <a href="/" class="logotipo">
+          <a href="index.php" class="logotipo">
             <img src="./logo/logotipo_light.png" alt="IOT STORE Logo" class="logotipo-img">
           </a>
 

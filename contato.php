@@ -10,8 +10,14 @@
     <!-- FontAwesome (ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
     <!-- Arquivo de Estilos CSS -->
     <link rel="stylesheet" href="./src/style.css" />
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="../IOT_Store/logo/logotipo_light.png" type="image/x-icon">
   </head>
   <body>
     <!-- Container principal que envolve todo o site -->
@@ -26,13 +32,23 @@
           </a>
 
           <!-- Barra de pesquisa de produtos -->
-          <div class="barra-pesquisa">
-            <i class="fa-solid fa-magnifying-glass icone-pesquisa"></i>
-            <input type="text" placeholder="Pesquisar dispositivos inteligentes..." />
-          </div>
+         <div class="barra-pesquisa">
+          <form action="busca.php" method="GET">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass icone-pesquisa"></i></button>
+            <input type="text" name="busca" placeholder="Pesquisar dispositivos inteligentes..." />            
+          </form>
+        </div>
 
           <!-- Ações do usuário (perfil, favoritos, carrinho) -->
           <div class="cabecalho-acoes">
+            <button class="botao-icone" id="btn-tema" title="Alternar Tema">
+              <i class="fa-solid fa-moon"></i>
+            </button>
+  
+            <button class="botao-icone botao-pesquisa-mobile mobile-only">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
             <button class="botao-icone">
               <i class="fa-regular fa-user"></i>
             </button>
@@ -62,54 +78,54 @@
                 <h2 class="titulo-destaque">Automatize o que importa. Viva o que é essencial!</h2>
                 <p class="descricao-destaque">Descubra o futuro da automação residencial com nossa curadoria exclusiva de dispositivos inteligentes.</p>
                 <div class="botoes-destaque">
-                  <button class="botao-primario">
+                  <a href="produtos.php"><button class="botao-primario">
                     Ver Coleção <i class="fa-solid fa-arrow-right"></i>
-                  </button>
-                  <button class="botao-contorno">Ofertas do Dia</button>
+                  </button></a>
+                  <a href="produtos.php?promocao=1"><button class="botao-contorno" >Ofertas do Dia</button></a>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-            <!-- Incio do Conteúdo -->
-            <section id="conteudo">
-                <!-- CONTEUDO DA PAGINA EMPRESA -->
-                <div class="cabecalho">
+            <!-- Início do Conteúdo -->
+            <section id="conteudo" class="secao-contato caixa-conteudo">
+                <div class="cabecalho-secao-contato">
                     <h2>Entre em Contato Conosco</h2>
                     <p>Tem alguma dúvida? Podemos te ajudar com consultores especializados!</p>
                 </div>
 
-                <!-- FORMULARIO -->
-                  <div class="contato">
-                    <form action="">
-                        <label for="nome">Nome</label>
-                        <input type="text" name="nome" id="nome" placeholder="Insira seu Nome" class="txtform" required>
+                <div class="grid-contato">
+                    <!-- Formulário -->
+                    <div class="cartao-contato">
+                        <form action="">
+                            <div class="grupo-form">
+                                <label for="nome">Nome</label>
+                                <input type="text" name="nome" id="nome" placeholder="Insira seu nome" class="txtform" required>
+                            </div>
 
-                        <br>
-                        
-                        <label for="email">E-mail</label>
-                        <input type="email" name="email" id="email" placeholder="Insira seu e-mail" class="txtform" required>
+                            <div class="grupo-form">
+                                <label for="email">E-mail</label>
+                                <input type="email" name="email" id="email" placeholder="Insira seu e-mail" class="txtform" required>
+                            </div>
 
-                        <br>
-                        
-                        <label for="menssagem">Menssagem</label>
-                        <textarea name="menssagem" id="menssagem" placeholder="Digite sua Menssagem" class="txtMensagem"></textarea>
+                            <div class="grupo-form">
+                                <label for="mensagem">Mensagem</label>
+                                <textarea name="mensagem" id="mensagem" placeholder="Digite sua mensagem" class="txtMensagem" required></textarea>
+                            </div>
 
-                        <br>
+                            <button type="submit" class="btn-form">
+                                Enviar Mensagem <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
 
-                        <input type="submit" value="Enviar" class="btn-form">
-
-
-                    </form>
-                  </div>
-
-                  <div class="contato">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3656.488756743989!2d-46.68472682388314!3d-23.58679816252868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5744e0ebff5b%3A0x769bf4a32f914782!2sGoogle%20S%C3%A3o%20Paulo!5e0!3m2!1spt-BR!2sbr!4v1763577875527!5m2!1spt-BR!2sbr"style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="mapa"></iframe>
-
-                  </div>
-
-                  
+                    <!-- Mapa -->
+                    <div class="cartao-mapa">
+                       
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m23!1m12!1m3!1d14719.714655301615!2d-47.655361!3d-22.7308927!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m8!3e6!4m0!4m5!1s0x94c631a09ac7b2e1%3A0x197834b105f878e3!2sSenac%20Piracicaba%20-%20R.%20Santa%20Cruz%2C%201148%20-%20Alto%2C%20Piracicaba%20-%20SP%2C%2013419-030%2C%20Brasil!3m2!1d-22.7285295!2d-47.6455872!5e0!3m2!1spt-BR!2sbr!4v1782924489659!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="mapa"></iframe>
+                    </div>
+                </div>
             </section>
             <!-- Final do Conteúdo -->
 
@@ -136,7 +152,7 @@
                   <p>Suporte Técnico</p>
                 </div>
               </div>
-              <a href="#" class="saiba-mais">
+              <a href="sobreNos.php" class="saiba-mais">
                 Saiba mais sobre nós <i class="fa-solid fa-arrow-right"></i>
               </a>
             </div>
@@ -169,7 +185,7 @@
             <div class="coluna-rodape">
               <h4>Institucional</h4>
               <ul>
-                <li><a href="#">Sobre Nós</a></li>
+                <li><a href="sobreNos.php">Sobre Nós</a></li>
                 <li><a href="#">Minha Conta</a></li>
                 <li><a href="#">Trabalhe Conosco</a></li>
                 <li><a href="#">Blog Tech</a></li>
@@ -222,6 +238,11 @@
         </div>
       </footer>
     </div>
+
+  <!-- Scripts JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="src/script2.js"></script>
 
   </body>
 </html>

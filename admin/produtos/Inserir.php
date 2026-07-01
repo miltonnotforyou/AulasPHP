@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="../../assets/css/dashboard.min.css">
   <link rel="stylesheet" href="../../assets/css/styles.min.css">
 
-  <!-- FAVICON -->
-  <link rel="shortcut icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+ <!-- FAVICON -->
+    <link rel="shortcut icon" href="../../logo/logotipo_light.png" type="image/x-icon">
 
 </head>
 

@@ -26,9 +26,10 @@ if (!isset($_SESSION))
   <!-- CUSTOMIZAÇÃO DO TEMPLATE -->
   <link rel="stylesheet" href="../assets/css/signin.min.css">
   <link rel="stylesheet" href="../assets/css/styles.min.css">
+  
 
   <!-- FAVICON -->
-  <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../../logo/logotipo_light.png" type="image/x-icon">
 
 
 </head>
@@ -36,7 +37,9 @@ if (!isset($_SESSION))
 
   <main class="form-signin text-center">
     <!-- Formulário de login -->
-    <form action="login.php" method="POST"> 
+   
+    <form action="login.php" method="POST">      
+      <img class="mb-4" src="../logo/logotipo_light.png" alt="Logo da IOT Store" width="72" height="72">
       <h2 class="h3 mb-3 text-light">Faça seu Login</h2>
      <!-- Campos de entrada para usuário e senha, ambos com validação de preenchimento obrigatório -->
       <input type="text" class="form-control mb-2" name="usuario" placeholder="Usuário" required autofocus>
@@ -44,9 +47,16 @@ if (!isset($_SESSION))
       <input type="password" class="form-control" name="senha" placeholder="Senha" required>
 
       <button class="w-100 btn btn-lg btn-dark" type="submit">Login</button>
+      
+      <h2 class="titulo-destaque">Automatize o que importa. Viva o que é essencial!</h2> 
 
     </form>
 
+              
+             
+                              
+                                 
+                
     <div class="pt-2 text-light">
       <?php 
       // Verificando se há mensagens de erro armazenadas na sessão e exibindo-as para o usuário

@@ -12,6 +12,8 @@
 
     <!-- Arquivo de Estilos CSS -->
     <link rel="stylesheet" href="./src/style.css" />
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="../IOT_Store/logo/logotipo_light.png" type="image/x-icon">
 </head>
 <body>
     

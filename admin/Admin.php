@@ -48,8 +48,8 @@ if (!isset($_SESSION))
   <link rel="stylesheet" href="../custom/css/style.css">
 
 
-  <!-- FAVICON -->
-  <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+   <!-- FAVICON -->
+    <link rel="shortcut icon" href="../logo/logotipo_light.png" type="image/x-icon">
 
 
 </head>

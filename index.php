@@ -28,6 +28,9 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
 
     <!-- Arquivo de Estilos CSS -->
     <link rel="stylesheet" href="./src/style.css" />
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="../IOT_Store/logo/logotipo_light.png" type="image/x-icon">
+
   </head>
   <body>
     <!-- Container principal que envolve todo o site -->
@@ -194,6 +197,107 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
             </div>
           </div>
         </section>
+
+      <!-- Seção de Sobre Nós -->
+
+        <section class="secao-sobre-loja caixa-conteudo">
+          
+          <div class="grade-sobre-topo">
+            
+            <div class="cartao-sobre-missao">
+              <span class="etiqueta-sobre">Quem Somos</span>
+              <h2 class="titulo-sobre-grande">Nossa Missão</h2>
+              <p class="texto-sobre-descricao">
+                Somos apaixonados por trazer inovação e soluções inteligentes para o seu dia a dia. Nosso objetivo é transformar sua experiência em casa com tecnologia de ponta, oferecendo produtos de automação residencial que garantem conforto, segurança e praticidade absoluta em cada detalhe.
+              </p>
+              
+              <div class="estatisticas-sobre">
+                <div class="dado-sobre">
+                  <div class="numero-sobre">10k+</div>
+                  <div class="legenda-sobre">Produtos Vendidos</div>
+                </div>
+                <div class="dado-sobre">
+                  <div class="numero-sobre">24h</div>
+                  <div class="legenda-sobre">Suporte Especializado</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cartao-imagem-sobre">
+              <img src="./images/termostato.png" alt="Tecnologia residencial" class="img-fundo-sobre">
+              <div class="camada-escura-sobre"></div>
+              
+              <div class="caixa-flutuante-glass">
+                <div class="icone-destaque-sobre">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <h4 class="titulo-glass">Tecnologia que Sente</h4>
+                <p class="texto-glass">Dispositivos inteligentes que antecipam suas necessidades térmicas e luminosas de forma invisível.</p>
+              </div>
+            </div>
+            
+          </div>
+
+          <div class="pilares-sobre">
+            <div class="cabecalho-pilares">
+              <h2>Inovação, Qualidade e Compromisso</h2>
+              <p>Nossos pilares garantem que cada interação com a tecnologia seja excepcional, duradoura e focada em melhorar sua rotina.</p>
+            </div>
+
+            <div class="grade-pilares">
+              <div class="cartao-pilar">
+                <div class="icone-pilar"><i class="fa-solid fa-lightbulb"></i></div>
+                <h3>Inovação</h3>
+                <p>Buscamos constantemente as últimas tendências em automação residencial e conectividade para manter sua casa na vanguarda.</p>
+              </div>
+
+              <div class="cartao-pilar">
+                <div class="icone-pilar"><i class="fa-solid fa-certificate"></i></div>
+                <h3>Qualidade</h3>
+                <p>Selecionamos produtos testados sob rigorosos padrões para garantir durabilidade, longevidade e performance impecável.</p>
+              </div>
+
+              <div class="cartao-pilar">
+                <div class="icone-pilar"><i class="fa-solid fa-handshake"></i></div>
+                <h3>Compromisso</h3>
+                <p>Estamos ao seu lado desde a escolha dos dispositivos até o suporte diário, garantindo uma jornada suave e satisfatória.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="linha-tempo-sobre">
+            <div class="cabecalho-tempo">
+              <i class="fa-regular fa-calendar-days"></i>
+              <h3>Nossa Trajetória</h3>
+            </div>
+            
+            <div class="grade-trajetoria">
+              <div class="item-trajetoria">
+                <span class="ano-trajetoria">O Início</span>
+                <h4>A Fundação</h4>
+                <p>Nascimento da IOT STORE com o desejo de democratizar o acesso à automação residencial de qualidade.</p>
+              </div>
+              <div class="item-trajetoria">
+                <span class="ano-trajetoria">Expansão</span>
+                <h4>Catálogo Completo</h4>
+                <p>Lançamento oficial da nossa plataforma com uma curadoria exclusiva de dispositivos inteligentes.</p>
+              </div>
+              <div class="item-trajetoria">
+                <span class="ano-trajetoria">Conquista</span>
+                <h4>Referência Local</h4>
+                <p>Estabelecimento como uma marca de confiança, entregando soluções integradas e suporte técnico avançado.</p>
+              </div>
+              <div class="item-trajetoria">
+                <span class="ano-trajetoria">O Futuro</span>
+                <h4>Evolução Contínua</h4>
+                <p>Busca constante por novas tendências para tornar os ambientes cada vez mais conectados e eficientes.</p>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- fim da seção Sobre Nós -->
       </main>
 
       <!-- Rodapé do site -->

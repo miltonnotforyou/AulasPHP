@@ -51,6 +51,8 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 
     <!-- Arquivo de Estilos CSS -->
     <link rel="stylesheet" href="./src/style.css" />
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="../IOT_Store/logo/logotipo_light.png" type="image/x-icon">
 </head>
 <body>
     
@@ -80,7 +82,7 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
       <header>
         <div class="caixa-conteudo cabecalho-conteudo">
           <!-- Logotipo com imagem -->
-          <a href="/" class="logotipo">
+          <a href="index.php" class="logotipo">
             <img src="./logo/logotipo_light.png" alt="IOT STORE Logo" class="logotipo-img">
           </a>
 
