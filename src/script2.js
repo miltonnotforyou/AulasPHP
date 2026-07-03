@@ -1,15 +1,16 @@
-/**
+/*
  * ARQUIVO DE LÓGICA JAVASCRIPT - IOT STORE
  * Este arquivo contém as interações dinâmicas do site.
  */
 
 // ============================================================
-// 1. FUNÇÕES GERAIS
+// -----------------FUNÇÕES PRINCIPAIS-------------------------
 // ============================================================
 
-/**
- * Função para copiar o código do cupom de desconto para a área de transferência.
- */
+// ============================================================
+// 1. Função para copiar o código do cupom de desconto para a área de transferência.
+// ============================================================
+
 function copiarCupom() {
     const cupom = "IOT10"; // Código do cupom
     
@@ -50,9 +51,9 @@ function trocarImagem(elementoMiniatura, nomeArquivoImagem) {
     elementoMiniatura.classList.add('ativa');
   }
 
-/**
- * Função para buscar os produtos no banco via AJAX (Filtros)
- */
+// ============================================================
+// 3. Função para buscar os produtos no banco via AJAX (Filtros)
+// ============================================================
 function buscar() {
     // Pega as categorias marcadas
     var categoriasSelecionadas = [];
@@ -65,9 +66,12 @@ function buscar() {
     var precoMax = $('.preco-slider').val();
     var promocaoAtiva = $('#filtro-promocao').is(':checked') ? '1' : '';
 
+    // Pega o que foi digitado na barra de pesquisa do admin
+    var termoPesquisa = $('#termo-pesquisa').val();
+
     // Envia para o Tabela.php e atualiza a grade
     $.ajax({
-        url: 'Tabela.php',
+        url: '../Tabela.php',
         type: 'POST',
         data: {
             categoria: categoriasSelecionadas,
@@ -82,51 +86,141 @@ function buscar() {
 }
 
 // ============================================================
-// 2. INICIALIZAÇÃO DE EVENTOS (Ao carregar a página)
+// 4. Função para pesquisar dentro do Painel Administrativo 
 // ============================================================
+function buscarAdmin() {
+    var termoPesquisa = $('#termo-pesquisa').val();
+
+    // Se o campo de pesquisa estiver vazio
+    if (termoPesquisa.trim() === '') {
+        $('#area-resultados-pesquisa').hide().html(''); // Limpa e esconde a área de busca
+        $('.corpo-dashboard').show(); // Mostra o dashboard original com gráficos
+        return;
+    }
+
+    // Se tiver algo digitado, envia pro PHP
+    $.ajax({
+        url: '../BuscaAdmin.php', 
+        type: 'POST',
+        data: { pesquisa: termoPesquisa },
+        success: function(data) {
+            $('.corpo-dashboard').hide(); // Esconde o dashboard original
+            $('#area-resultados-pesquisa').show().html(data); // Injeta e mostra a tabela
+        }
+    });
+}
+
+// ============================================================
+// 5. Função para inicializar os gráficos do Dashboard usando Chart.js  
+// ============================================================
+
+function inicializarGraficosDashboard() {
+// --- GRÁFICO DE BARRAS (Vendas) ---
+    const canvasVendas = document.getElementById('graficoVendas');
+    
+    // Verifica se o elemento existe (evita erros em páginas que não têm o dashboard)
+    if (canvasVendas) {
+        // Faz o parse do JSON que foi colocado no atributo data-* pelo PHP
+        const rotulosVendas = JSON.parse(canvasVendas.getAttribute('data-rotulos') || '[]');
+        const dadosVendas = JSON.parse(canvasVendas.getAttribute('data-valores') || '[]');
+
+        new Chart(canvasVendas, {
+            type: 'bar',
+            data: {
+                labels: rotulosVendas.length > 0 ? rotulosVendas : ['Sem dados'],
+                datasets: [{
+                    label: 'Faturamento Mensal (R$)',
+                    data: dadosVendas.length > 0 ? dadosVendas : [0],
+                    backgroundColor: '#1d4ed8',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+
+// --- GRÁFICO DE ROSCA (Categorias) ---
+    const canvasCat = document.getElementById('graficoCategorias');
+    
+    if (canvasCat) {
+        const rotulosCat = JSON.parse(canvasCat.getAttribute('data-rotulos') || '[]');
+        const dadosCat = JSON.parse(canvasCat.getAttribute('data-valores') || '[]');
+
+        new Chart(canvasCat, {
+            type: 'doughnut',
+            data: {
+                labels: rotulosCat,
+                datasets: [{
+                    data: dadosCat,
+                    backgroundColor: ['#152738', '#1d4ed8', '#64748b', '#b45309', '#cbd5e1'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                cutout: '70%'
+            }
+        });
+    }
+}
+
+// =========================================================================
+// -----------INICIALIZAÇÃO DE EVENTOS (Ao carregar a página)---------------
+// =========================================================================
 
 $(document).ready(function() {
 
     // ============================================================
     // --- LÓGICA DO TEMA CLARO/ESCURO (DARK MODE) ---
     // ============================================================
-    const btnTema = document.getElementById('btn-tema');
-    const iconeTema = btnTema ? btnTema.querySelector('i') : null;
+    const btnTema = document.getElementById('btn-tema'); // Pega o botão de alternar tema
+    const iconeTema = btnTema ? btnTema.querySelector('i') : null; // Pega o ícone dentro do botão
     const htmlElement = document.documentElement; // Pega a tag <html>
 
     if (btnTema) {
         // 1. Verifica qual é o tema salvo ou a preferência do sistema
-        const temaSalvo = localStorage.getItem('tema');
-        const prefereEscuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const temaSalvo = localStorage.getItem('tema'); // Pega o tema salvo no localStorage (se houver)
+        const prefereEscuro = window.matchMedia('(prefers-color-scheme: dark)').matches; // Verifica se o usuário prefere o tema escuro pelo sistema operacional
 
         // 2. Aplica o tema inicial
         if (temaSalvo === 'dark' || (!temaSalvo && prefereEscuro)) {
-            htmlElement.setAttribute('data-theme', 'dark');
-            iconeTema.classList.replace('fa-moon', 'fa-sun');
+            htmlElement.setAttribute('data-theme', 'dark'); // Aplica o tema escuro
+            iconeTema.classList.replace('fa-moon', 'fa-sun'); // Muda o ícone para o sol (indicando que está no modo escuro)
         }
 
         // 3. Evento de clique no botão
         btnTema.addEventListener('click', function() {
             // Se o tema atual for dark, muda para claro. Se for claro, muda para dark.
             if (htmlElement.getAttribute('data-theme') === 'dark') {
-                htmlElement.removeAttribute('data-theme');
-                iconeTema.classList.replace('fa-sun', 'fa-moon');
+                htmlElement.removeAttribute('data-theme'); // Remove o atributo para voltar ao tema claro
+                iconeTema.classList.replace('fa-sun', 'fa-moon'); // Muda o ícone para a lua (indicando que está no modo claro)
                 localStorage.setItem('tema', 'light'); // Salva a escolha
             } else {
-                htmlElement.setAttribute('data-theme', 'dark');
-                iconeTema.classList.replace('fa-moon', 'fa-sun');
+                htmlElement.setAttribute('data-theme', 'dark'); // Aplica o tema escuro
+                iconeTema.classList.replace('fa-moon', 'fa-sun'); // Muda o ícone para o sol (indicando que está no modo escuro)
                 localStorage.setItem('tema', 'dark'); // Salva a escolha
             }
         });
     }
-
+// ============================================================
     // --- COPIAR CUPOM ---
+// ============================================================
     const botaoCopiar = document.querySelector('.botao-cupom');
     if (botaoCopiar) {
         botaoCopiar.addEventListener('click', copiarCupom);
     }
 
+// ============================================================
     // --- CARROSSEL DE PRODUTOS ---
+// ============================================================
     if ($('.carrossel-produtos').length > 0) { // Só executa se o carrossel existir na página
         $('.carrossel-produtos').slick({
             slidesToShow: 4,
@@ -143,8 +237,9 @@ $(document).ready(function() {
             ]
         });
     }
-
+// ============================================================
     // --- BARRA DE PESQUISA (MOBILE) ---
+// ============================================================
     $('.botao-pesquisa-mobile').click(function() {
         $('.barra-pesquisa').toggleClass('ativa');
         
@@ -153,7 +248,9 @@ $(document).ready(function() {
         }
     });
 
+// ============================================================
     // --- MENU LATERAL DE FILTROS (MOBILE) ---
+// ============================================================
     $('.botao-abrir-filtros').click(function() {
         $('.sidebar').addClass('ativa');
     });
@@ -162,7 +259,9 @@ $(document).ready(function() {
         $('.sidebar').removeClass('ativa');
     });
 
+// ============================================================
     // --- ATUALIZAÇÃO VISUAL DO SLIDER DE PREÇO ---
+// ============================================================
     const precoSlider = document.querySelector('.preco-slider');
     const precoLabel = document.querySelectorAll('.preco-labels span')[1]; 
 
@@ -172,10 +271,20 @@ $(document).ready(function() {
             precoLabel.textContent = 'R$ ' + valorFormatado;
         });
     }
-
+// ============================================================
     // --- DISPARO AUTOMÁTICO DA BUSCA (FILTROS) ---
+// ============================================================
+    // Dispara a busca quando o usuário altera qualquer filtro (categoria, marca, promoção ou preço)
     $('.filtro-categoria, .filtro-marca, #filtro-promocao').on('change', buscar);
-    $('.preco-slider').on('change', buscar); 
+    $('.preco-slider').on('change', buscar);
+
+    // Dispara a busca em tempo real enquanto o usuário digita na barra de pesquisa do admin
+    $('#termo-pesquisa').on('input', buscarAdmin);
+
+// ============================================================
+    // --- INICIALIZAÇÃO DO DASHBOARD ADMIN ---
+// ============================================================
+    inicializarGraficosDashboard();
 
 });
 

@@ -9,6 +9,22 @@ $promocao = $_POST['promocao'] ?? '';
 
 $sql = "SELECT * FROM produto WHERE 1=1";
 
+// Filtros pesquisa ADMIN
+// Recebe os dados do AJAX (junto com categoria, marca, etc)
+$termo_pesquisa = isset($_POST['pesquisa']) ? $_POST['pesquisa'] : '';
+
+// Exemplo da sua consulta base
+$sql = "SELECT * FROM produto WHERE status = 1";
+
+// Se o usuário digitou algo, adicionamos a condição LIKE na consulta
+if (!empty($termo_pesquisa)) {
+    // Escapar a string é importante para segurança contra SQL Injection
+    $termo_seguro = $conexao->real_escape_string($termo_pesquisa);
+    
+    // Filtra para ver se o nome do produto ou a descrição contêm o termo digitado
+    $sql .= " AND (nome LIKE '%$termo_seguro%' OR descricao LIKE '%$termo_seguro%')";
+}
+
 // Filtro de Categorias (Transforma o array em string separada por vírgula)
 if (!empty($categorias)) {
     $lista_categorias = implode(',', array_map('intval', $categorias)); // Garante que os valores sejam inteiros para evitar SQL Injection

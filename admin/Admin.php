@@ -24,6 +24,73 @@ if (!isset($_SESSION))
     ];
     $data_hoje = date('d') . ' de ' . $meses[date('m')] . ' de ' . date('Y');
 
+   
+
+    // 2. CONSULTAS PARA OS CARTÕES DE METAS
+    // Total de Vendas (Soma da coluna 'valor_total' da tabela 'venda')
+    $sql_vendas = "SELECT SUM(valor_total) as total FROM venda"; 
+    $res_vendas = $conexao->query($sql_vendas);
+    $total_vendas = $res_vendas->fetch_assoc()['total'] ?? 0;
+
+    // Dispositivos Ativos (Soma do estoque da tabela 'produto' onde status = 1)
+    $sql_produtos = "SELECT SUM(qtde_estoque) as total FROM produto WHERE status = 1";
+    $res_produtos = $conexao->query($sql_produtos);
+    $total_produtos = $res_produtos->fetch_assoc()['total'] ?? 0;
+
+    // Novos Clientes (Total de clientes ativos)
+    $sql_clientes = "SELECT COUNT(*) as total FROM cliente WHERE status = 1";
+    $res_clientes = $conexao->query($sql_clientes);
+    $total_clientes = $res_clientes->fetch_assoc()['total'] ?? 0;
+
+    // Total de Pedidos (Como não há coluna status na tabela venda, pegamos o total de pedidos gerados)
+    $sql_pedidos = "SELECT COUNT(*) as total FROM venda";
+    $res_pedidos = $conexao->query($sql_pedidos);
+    $total_pedidos = $res_pedidos->fetch_assoc()['total'] ?? 0;
+
+
+    // 3. CONSULTA PARA A TABELA DE PEDIDOS RECENTES
+    $sql_recentes = "SELECT v.codigo_venda, c.nome as cliente_nome, v.forma_pagamento, v.valor_total 
+                    FROM venda v
+                    INNER JOIN cliente c ON v.codigo_cliente = c.codigo_cliente
+                    ORDER BY v.codigo_venda DESC LIMIT 5";
+    $res_recentes = $conexao->query($sql_recentes);
+
+
+    // 4. CONSULTA PARA O GRÁFICO DE BARRAS (Vendas por Mês)
+    $sql_grafico_vendas = "SELECT MONTHNAME(data_venda) as mes, SUM(valor_total) as total 
+                        FROM venda 
+                        GROUP BY MONTH(data_venda) 
+                        ORDER BY MONTH(data_venda) ASC LIMIT 6";
+    $res_graf_vendas = $conexao->query($sql_grafico_vendas);
+
+    $meses_venda = [];
+    $valores_venda = [];
+    if ($res_graf_vendas && $res_graf_vendas->num_rows > 0) {
+        while($linha = $res_graf_vendas->fetch_assoc()) {
+            $meses_venda[] = $linha['mes'];
+            $valores_venda[] = $linha['total'];
+        }
+    }
+
+    // 5. CONSULTA PARA O GRÁFICO DE ROSCA (Estoque por Categoria)
+    // Pega o nome da categoria e soma a quantidade em estoque dos produtos vinculados a ela
+    $sql_grafico_cat = "SELECT c.nome as categoria, SUM(p.qtde_estoque) as qtd_estoque 
+                        FROM produto p 
+                        INNER JOIN categoria c ON p.codigo_categoria = c.codigo_categoria 
+                        WHERE p.status = 1
+                        GROUP BY c.codigo_categoria 
+                        ORDER BY qtd_estoque DESC LIMIT 5";
+    $res_graf_cat = $conexao->query($sql_grafico_cat);
+
+    $nomes_categorias = [];
+    $qtd_categorias = [];
+    if ($res_graf_cat && $res_graf_cat->num_rows > 0) {
+        while($linha = $res_graf_cat->fetch_assoc()) {
+            $nomes_categorias[] = $linha['categoria'];
+            $qtd_categorias[] = $linha['qtd_estoque'];
+        }
+    }
+    
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +157,7 @@ if (!isset($_SESSION))
             <header class="cabecalho-superior">
                 <div class="barra-pesquisa">
                     <i class="bi bi-search"></i>
-                    <input type="text" placeholder="Pesquisar sistemas, dispositivos...">
+                    <input type="text" id="termo-pesquisa" placeholder="Pesquisar clientes, produtos, vendas...">
                 </div>
 
                 <div class="perfil-usuario" style="display: flex; align-items: center; gap: 10px;">
@@ -127,6 +194,14 @@ if (!isset($_SESSION))
             
             </header>
 
+            <!-- Pesquisa oculta por padrão -->
+
+            <div id="area-resultados-pesquisa" style="display: none;"></div>
+
+            <div class="corpo-dashboard">
+
+            <!-- Conteúdo Principal Graficos -->
+
             <div class="corpo-dashboard">
                 <div class="cabecalho-corpo">
                     <div class="titulo">
@@ -139,17 +214,15 @@ if (!isset($_SESSION))
                     </div>
                 </div>
 
-                <!-- Cartões de Metas -->
                 <div class="grade-metas">
                     <article class="cartao-metas">
                         <div class="cabecalho-metas">
                             <div class="caixa-icone" style="background: #eff6ff; color: #1d4ed8;">
                                 <i class="bi bi-cash-stack"></i>
                             </div>
-                            <span class="etiqueta-tendencia">+12%</span>
                         </div>
-                        <h3>Total de Vendas</h3>
-                        <p class="valor">R$ 45.280,00</p>
+                        <h3>Faturamento</h3>
+                        <p class="valor">R$ <?php echo number_format($total_vendas, 2, ',', '.'); ?></p>
                     </article>
 
                     <article class="cartao-metas">
@@ -157,10 +230,9 @@ if (!isset($_SESSION))
                             <div class="caixa-icone" style="background: #f1f5f9; color: #475569;">
                                 <i class="bi bi-cpu"></i>
                             </div>
-                            <span class="etiqueta-tendencia">+5%</span>
                         </div>
-                        <h3>Dispositivos Ativos</h3>
-                        <p class="valor">1.240</p>
+                        <h3>Itens em Estoque</h3>
+                        <p class="valor"><?php echo number_format($total_produtos, 0, ',', '.'); ?></p>
                     </article>
 
                     <article class="cartao-metas">
@@ -168,139 +240,89 @@ if (!isset($_SESSION))
                             <div class="caixa-icone" style="background: #fffbeb; color: #b45309;">
                                 <i class="bi bi-person-plus"></i>
                             </div>
-                            <span class="etiqueta-tendencia">+8%</span>
                         </div>
-                        <h3>Novos Clientes</h3>
-                        <p class="valor">156</p>
+                        <h3>Clientes Ativos</h3>
+                        <p class="valor"><?php echo number_format($total_clientes, 0, ',', '.'); ?></p>
                     </article>
 
                     <article class="cartao-metas">
                         <div class="cabecalho-metas">
                             <div class="caixa-icone" style="background: #fef2f2; color: #b91c1c;">
-                                <i class="bi bi-clock-history"></i>
+                                <i class="bi bi-cart-check"></i>
                             </div>
-                            <span class="etiqueta-tendencia" style="color: #b91c1c; background: #fee2e2;">Atenção</span>
                         </div>
-                        <h3>Pedidos Pendentes</h3>
-                        <p class="valor">24</p>
+                        <h3>Total de Pedidos</h3>
+                        <p class="valor"><?php echo $total_pedidos; ?></p>
                     </article>
                 </div>
 
-                 <!-- Grade de Gráficos -->
-                <div class="grade-graficos">
-                    <!-- Desempenho de Vendas -->
-                    <div class="cartao-grafico">
-                        <div class="cabecalho-grafico">
-                            <h3>Desempenho de Vendas</h3>
-                            <a href="#" class="link-exportar"><button class="btn btn-dark btn-sm">Exportar Relatório</button></a>
-                        </div>
-                        <div class="container-barras">
-                            <div class="coluna-barra">
-                                <div class="barra barra-jun" style="height: 35%;"></div>
-                                <span class="rotulo-mes">Jun</span>
-                            </div>
-                            <div class="coluna-barra">
-                                <div class="barra barra-jul" style="height: 55%;"></div>
-                                <span class="rotulo-mes">Jul</span>
-                            </div>
-                            <div class="coluna-barra">
-                                <div class="barra barra-ago" style="height: 45%;"></div>
-                                <span class="rotulo-mes">Ago</span>
-                            </div>
-                            <div class="coluna-barra">
-                                <div class="barra barra-set" style="height: 85%;"></div>
-                                <span class="rotulo-mes">Set</span>
-                            </div>
-                            <div class="coluna-barra">
-                                <div class="barra barra-out" style="height: 100%;"></div>
-                                <span class="rotulo-mes">Out</span>
-                            </div>
-                        </div>
+                <div class="grade-graficos" style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;">
+    
+                <div class="cartao-grafico" style="flex: 2; min-width: 300px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <div class="cabecalho-grafico" style="margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 16px;">Desempenho de Vendas</h3>
                     </div>
-
-                    <!-- Distribuição por Categoria -->
-                    <div class="cartao-grafico">
-                        <div class="cabecalho-grafico">
-                            <h3>Distribuição por Categoria</h3>
-                        </div>
-                        <div class="container-rosca">
-                            <div class="rosca-grafico">
-                                <div class="rosca-texto">
-                                    <span class="numero">1.2k</span>
-                                    <span class="unidade">Unidades</span>
-                                </div>
-                            </div>
-                            <div class="legenda-rosca">
-                                <div class="item-legenda">
-                                    <div class="categoria">
-                                        <div class="ponto-cor" style="background: #152738;"></div>
-                                        Segurança
-                                    </div>
-                                    <span class="porcentagem">42%</span>
-                                </div>
-                                <div class="item-legenda">
-                                    <div class="categoria">
-                                        <div class="ponto-cor" style="background: #64748b;"></div>
-                                        Iluminação
-                                    </div>
-                                    <span class="porcentagem">28%</span>
-                                </div>
-                                <div class="item-legenda">
-                                    <div class="categoria">
-                                        <div class="ponto-cor" style="background: #443621;"></div>
-                                        Centrais (Hubs)
-                                    </div>
-                                    <span class="porcentagem">18%</span>
-                                </div>
-                                <div class="item-legenda">
-                                    <div class="categoria">
-                                        <div class="ponto-cor" style="background: #cbd5e1;"></div>
-                                        Sensores
-                                    </div>
-                                    <span class="porcentagem">12%</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="graficoVendas" 
+                                data-rotulos='<?php echo json_encode($meses_venda); ?>' 
+                                data-valores='<?php echo json_encode($valores_venda); ?>'>
+                        </canvas>
                     </div>
                 </div>
 
-                <!-- Tabela de Pedidos -->
+                <div class="cartao-grafico" style="flex: 1; min-width: 300px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <div class="cabecalho-grafico" style="margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 16px;">Estoque por Categoria</h3>
+                    </div>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="graficoCategorias" 
+                                data-rotulos='<?php echo json_encode($nomes_categorias); ?>' 
+                                data-valores='<?php echo json_encode($qtd_categorias); ?>'>
+                        </canvas>
+                    </div>
+                </div>
+
+            </div>
+
                 <div class="cartao-pedidos-recentes">
                     <div class="cabecalho-tabela">
                         <h3 style="font-size: 18px; font-weight: 900;">Pedidos Recentes</h3>
-                        <button class="btn btn-dark btn-sm">Ver Todos</button>
                     </div>
                     <div style="overflow-x: auto;">
-                        <table class="tabela-dados">
+                        <table class="tabela-dados" style="width: 100%; border-collapse: collapse;">
                             <thead>
-                                <tr>
-                                    <th>Código Venda</th>
-                                    <th>Cliente</th>
-                                    <th>Produto</th>
-                                    <th>Status</th>
-                                    <th style="text-align: right;">Valor</th>
+                                <tr style="border-bottom: 1px solid #e2e8f0; text-align: left;">
+                                    <th style="padding: 12px;">Código Venda</th>
+                                    <th style="padding: 12px;">Cliente</th>
+                                    <th style="padding: 12px;">Pagamento</th>
+                                    <th style="padding: 12px; text-align: right;">Valor</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td style="font-weight: 700; color: #152738;">#NX-8234</td>
-                                    <td>Chilindrina de las Nieves</td>
-                                    <td>Smart Hub Pro v2</td>
-                                    <td><span class="badge-status status-entregue">Entregue</span></td>
-                                    <td style="text-align: right; font-weight: 900;">R$ 849,00</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 700; color: #152738;">#NX-8235</td>
-                                    <td>Florinda Meza</td>
-                                    <td>Kit Iluminação WiFi</td>
-                                    <td><span class="badge-status status-processando">Processando</span></td>
-                                    <td style="text-align: right; font-weight: 900;">R$ 1.250,00</td>
-                                </tr>
+                                <?php 
+                                if ($res_recentes && $res_recentes->num_rows > 0): 
+                                    while($pedido = $res_recentes->fetch_assoc()): 
+                                ?>
+                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                        <td style="padding: 12px; font-weight: 700; color: #152738;">VD-<?php echo str_pad($pedido['codigo_venda'], 4, '0', STR_PAD_LEFT); ?></td>
+                                        <td style="padding: 12px;"><?php echo htmlspecialchars($pedido['cliente_nome']); ?></td>
+                                        <td style="padding: 12px;"><span style="background:#e2e8f0; padding:4px 8px; border-radius:4px; font-size:12px;"><?php echo $pedido['forma_pagamento'] ?: 'N/A'; ?></span></td>
+                                        <td style="padding: 12px; text-align: right; font-weight: 900;">R$ <?php echo number_format($pedido['valor_total'], 2, ',', '.'); ?></td>
+                                    </tr>
+                                <?php 
+                                    endwhile; 
+                                else: 
+                                ?>
+                                    <tr>
+                                        <td colspan="4" style="padding: 20px; text-align: center; color: #64748b;">Nenhuma venda registrada ainda.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+                       
       </main>
               <footer class="cabecalho-superior p-5 mt-1">
                 <div class="titulo">
@@ -323,5 +345,10 @@ if (!isset($_SESSION))
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- BOOTSTRAP JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <!-- CHART.JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- SCRIPTS PERSONALIZADOS -->
+  <script src="../src/script2.js"></script>
+    
 </body>
 </html>

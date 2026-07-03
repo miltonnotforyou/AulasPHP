@@ -1983,6 +1983,15 @@ footer {
         font-size: 1.2rem;
         color: var(--texto-suave);
         padding: 10px;
+        background-color: var(--branco);
+        color: var(--primaria);
+        padding: 15px 30px;
+        border-radius: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.3s;
     }
 
     /* =========================================
