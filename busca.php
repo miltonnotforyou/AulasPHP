@@ -117,7 +117,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
           </button>
 
           <button class="botao-icone">
-            <i class="fa-regular fa-user"></i>
+            <a href="./admin/Index.php"><i class="fa-regular fa-user"></i></a>
           </button>
           <button class="botao-icone">
             <i class="fa-regular fa-heart"></i>

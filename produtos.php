@@ -17,8 +17,6 @@ if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
     $condicoes .= " AND nome LIKE '%$busca%'";
 }
 
-// (Você pode adicionar outros filtros aqui usando a mesma lógica do $condicoes .= " AND ...")
-
 
 // 2. CONTA O TOTAL DE PRODUTOS (Respeitando os filtros criados acima)
 // Cria uma query SQL para contar o número de produtos ativos E que atendam aos filtros
@@ -129,7 +127,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
           </button>
 
           <button class="botao-icone">
-            <i class="fa-regular fa-user"></i>
+            <a href="./admin/Index.php"><i class="fa-regular fa-user"></i></a>
           </button>
           <button class="botao-icone">
             <i class="fa-regular fa-heart"></i>

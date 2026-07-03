@@ -61,7 +61,7 @@ if ($query && mysqli_num_rows($query) > 0) {
         <div class="cartao-produto">
             <div class="imagem-produto">
                 <a href="detalhes.php?id=' . $produto['codigo_produto'] . '">  
-                    <img src="./Produtos/' . $produto['foto'] . '" alt="' . $produto['nome'] . '"/>  
+                    <img src="./images/' . $produto['foto'] . '" alt="' . $produto['nome'] . '"/>  
                 </a>
             </div>
             <h4 class="nome-produto">' . $produto['nome'] . '</h4>
