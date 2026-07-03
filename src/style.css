@@ -51,13 +51,16 @@ img {
 
 /* ---VARIÁVEIS DO TEMA ESCURO --- */
 [data-theme="dark"] {
-    --primaria: #044966;       /* Um azul mais claro e vibrante para destacar no fundo escuro */
-    --fundo-claro: #2b3d4f;    /* Fundo da página bem escuro (Azul marinho quase preto) */
-    --texto-escuro: #f8fafc;   /* Texto principal claro (Quase branco) */
-    --texto-suave: #94a3b8;    /* Texto secundário acinzentado */
-    --branco: #1e293b;         /* Fundo dos cartões e caixas (Um tom mais claro que o fundo) */
-    --borda: #334155;          /* Linhas divisórias adaptadas para o modo escuro */
-    --sombra: rgba(0, 0, 0, 0.4); /* Sombras mais fortes para criar profundidade no escuro */
+    /* Usamos um azul vibrante para garantir que os botões "Comprar" e os ícones fiquem bem visíveis */
+    /*--primaria: #5998a6; /*Turquesa Mudo */
+    /*--primaria: #6488a8; /*Azul Metálico */
+    --primaria: #4a7c9d; /*Azul Aço */
+    --fundo-claro: #0f172a; 
+    --texto-escuro: #f8fafc;
+    --texto-suave: #94a3b8;       
+    --branco: #2b3d4f;    
+    --borda: #334155;          
+    --sombra: rgba(0, 0, 0, 0.6); 
 }
 
 body {
@@ -368,7 +371,7 @@ section {
 
 .imagem-produto,
 .cartao-imagem {
-    background-color: #f8fafc;
+    background-color: var(--fundo-claro);
     border-radius: 15px;
     aspect-ratio: 1;
     overflow: hidden;
@@ -475,8 +478,8 @@ section {
    ============================================================ */
 
 .banner-promocional {
-    background-color: #e2e8f0;
-    border: 2px solid #cbd5e1;
+    background-color: var(--branco);
+    border: 2px solid var(--borda);
     border-radius: 30px;
     padding: 50px;
     display: flex;
@@ -500,10 +503,10 @@ section {
 
 .caixa-cupom {
     display: inline-flex;
-    background-color: var(--branco);
+    background-color: var(--fundo-claro);
     padding: 10px;
     border-radius: 12px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--borda);
 }
 
 .codigo-cupom {
@@ -1082,11 +1085,12 @@ footer {
 }
 
 .calculo-frete {
-    background-color: #f1f5f9;
+    background-color: var(--branco);
     padding: 1.5rem;
     border-radius: 12px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #f1f5f9;
 }
+
 
 .frete-titulo {
     display: flex;
@@ -1127,7 +1131,8 @@ footer {
     gap: 1rem;
 }
 
-.recurso-item {
+.recurso-item 
+{
     background-color: var(--branco);
     padding: 1rem;
     border-radius: 12px;
@@ -1166,15 +1171,20 @@ footer {
 }
 
 .tabela-especificacoes {
-    width: 100%;
-    border-collapse: collapse;
+   
+    background-color: var(--branco);
+    padding: 1rem;
     border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--borda);
+    border: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+
 }
 
 .tabela-especificacoes tr {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--borda);
 }
 
 .tabela-especificacoes tr:last-child {
@@ -1187,7 +1197,7 @@ footer {
 }
 
 .tabela-col-label {
-    background-color: #f8fafc;
+    background-color: var(--branco);
     color: var(--texto-claro);
     font-weight: 700;
     width: 30%;
@@ -1545,6 +1555,28 @@ footer {
     line-height: 1.6;
 }
 
+/* 1. Escurece a película por cima da foto */
+[data-theme="dark"] .camada-escura-sobre {
+    background-color: rgba(15, 23, 42, 0.65); 
+}
+
+/* Revela a foto suavemente no hover */
+[data-theme="dark"] .cartao-imagem-sobre:hover .camada-escura-sobre {
+    background-color: rgba(15, 23, 42, 0.4); 
+}
+
+/* 2. Adapta a caixa de vidro flutuante para o modo noturno */
+[data-theme="dark"] .caixa-flutuante-glass {
+    background-color: rgba(43, 61, 79, 0.85); 
+    border: 1px solid rgba(255, 255, 255, 0.05); 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); 
+}
+
+/* 3. Ajusta o quadradinho do ícone para dar contraste na caixa escura */
+[data-theme="dark"] .icone-destaque-sobre {
+    background-color: rgba(255, 255, 255, 0.08); 
+}
+
 /* --- Pilares Fundamentais --- */
 .pilares-sobre {
     padding: 3rem 0;
@@ -1680,6 +1712,62 @@ footer {
     font-size: 0.75rem;
     color: var(--texto-suave);
     line-height: 1.5;
+}
+
+/* ============================================================
+   CORREÇÕES DO BANNER E RODAPÉ NO MODO ESCURO
+   ============================================================ */
+
+/* --- 1. BANNER PRINCIPAL --- */
+/* Força o texto do banner a ser branco puro, garantindo leitura sobre a imagem de fundo */
+[data-theme="dark"] .conteudo-destaque {
+    color: #ffffff;
+}
+
+/* Ajuste dos botões do banner para não sumirem no fundo escuro */
+[data-theme="dark"] .botao-primario {
+    background-color: var(--primaria); 
+    color: #ffffff;
+}
+
+[data-theme="dark"] .botao-contorno {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .botao-contorno:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- 2. RODAPÉ (FOOTER) --- */
+/* Escurece o fundo do rodapé para integrar melhor com o modo noturno da loja */
+[data-theme="dark"] footer {
+    background-color: #080f1e; /* Um tom de azul quase preto, mais escuro que o fundo da página */
+    border-top: 1px solid var(--borda);
+    color: var(--texto-suave);
+}
+
+/* Garante que o logotipo, títulos das colunas e selos fiquem bem claros */
+[data-theme="dark"] .logotipo-rodape,
+[data-theme="dark"] .coluna-rodape h4,
+[data-theme="dark"] .selo-pagamento {
+    color: var(--texto-escuro); /* No modo escuro, essa variável é quase branca (#f8fafc) */
+}
+
+/* Melhora o destaque dos links do rodapé ao passar o mouse */
+[data-theme="dark"] .coluna-rodape a:hover {
+    color: var(--primaria); 
+}
+
+/* Ajusta as cores das redes sociais (LinkedIn, Facebook, etc.) */
+[data-theme="dark"] .botao-social {
+    color: var(--texto-escuro);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .botao-social:hover {
+    background-color: var(--primaria);
+    color: #ffffff;
 }
 
 /* --- Responsividade --- */

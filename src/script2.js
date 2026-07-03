@@ -71,7 +71,7 @@ function buscar() {
 
     // Envia para o Tabela.php e atualiza a grade
     $.ajax({
-        url: '../Tabela.php',
+        url: 'Tabela.php',
         type: 'POST',
         data: {
             categoria: categoriasSelecionadas,
