@@ -69,8 +69,8 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
               <i class="fa-regular fa-heart"></i>
             </button>
             <button class="botao-carrinho">
-              <i class="fa-solid fa-cart-shopping"></i>
-              <span class="contador-carrinho">10</span>
+              <a href="carrinho.php"><i class="fa-solid fa-cart-shopping"></i></a>
+              <span class="contador-carrinho"></span>
             </button>
           </div>
         </div>

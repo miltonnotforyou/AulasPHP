@@ -84,23 +84,23 @@
                                 <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
                             </div>
                             <div class="col-md-4 mt-2">
-                                <label for="foto2">Foto Extra 1</label>
+                                <label for="foto2">Foto 2</label>
                                 <input type="file" name="foto2" id="foto2" class="form-control" accept="image/*">
                             </div>
                             <div class="col-md-4 mt-2">
-                                <label for="foto3">Foto Extra 2</label>
+                                <label for="foto3">Foto 3</label>
                                 <input type="file" name="foto3" id="foto3" class="form-control" accept="image/*">
                             </div>
                             <div class="col-md-4 mt-2">
-                                <label for="foto4">Foto Extra 3</label>
+                                <label for="foto4">Foto 4</label>
                                 <input type="file" name="foto4" id="foto4" class="form-control" accept="image/*">
                             </div>
                             <div class="col-md-4 mt-2">
-                                <label for="foto5">Foto Extra 4</label>
+                                <label for="foto5">Foto 5</label>
                                 <input type="file" name="foto5" id="foto5" class="form-control" accept="image/*">
                             </div>
                             <div class="col-md-4 mt-2">
-                                <label for="foto6">Foto Extra 5</label>
+                                <label for="foto6">Foto 6</label>
                                 <input type="file" name="foto6" id="foto6" class="form-control" accept="image/*">
                             </div>
 
