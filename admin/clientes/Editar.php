@@ -207,6 +207,10 @@
                             <label for="email"><strong class="text-danger">*</strong> Email</label>
                             <input type="email" name="email" id="email" class="form-control" placeholder="exemplo@dominio.com" required value="<?php echo htmlspecialchars($cliente['email']); ?>">
                         </div>
+                         <div class="col-md-3 mt-2">
+                                    <label for="senha"><strong class="text-danger">*</strong> Senha</label>
+                                    <input type="password" name="senha" id="senha" class="form-control" minlength="6" required>
+                        </div>
 
                         <div class="col-3 mt-2">
                             <label for="status">Status</label>

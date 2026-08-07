@@ -14,6 +14,10 @@ if (!isset($_SESSION))
 
 if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_cliente') 
     {
+    // Proteção básica contra SQL Injection e captura dos Dados de Acesso
+    $email = mysqli_real_escape_string($conexao, trim($_POST['email']));
+    $senha_pura = $_POST['senha'];
+    $senha_criptografada = password_hash($senha_pura, PASSWORD_DEFAULT);
    
     $nome = mysqli_real_escape_string($conexao, $_POST['nome']);
     $nome_social = mysqli_real_escape_string($conexao, $_POST['nome_social']);
@@ -31,11 +35,13 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_cliente')
     $telefone_residencial = mysqli_real_escape_string($conexao, $_POST['telefone_residencial']);
     $telefone_celular = mysqli_real_escape_string($conexao, $_POST['telefone_celular']);
     $email = mysqli_real_escape_string($conexao, $_POST['email']);
+    $senha = mysqli_real_escape_string($conexao, $_POST['senha']);
+    $senha_criptografada = password_hash($senha, PASSWORD_DEFAULT);
         
     
     ########################Insert no banco de dados########################
 
-    $sql_insert = "INSERT INTO cliente VALUES (0,'$nome', '$nome_social', '$data_nascimento', '$sexo', '$CPF', '$RG', '$endereco', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$telefone_residencial', '$telefone_celular', '$email', 1, NOW())";
+    $sql_insert = "INSERT INTO cliente VALUES (0,'$nome', '$nome_social', '$data_nascimento', '$sexo', '$CPF', '$RG', '$endereco', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$telefone_residencial', '$telefone_celular', '$email', '$senha_criptografada', 1, NOW())";
 
     try {
         if(mysqli_query($conexao, $sql_insert)) {
@@ -56,6 +62,11 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_cliente')
 
 if(isset($_POST['editar']) && $_POST['editar'] === 'editar_cliente') 
 {
+    // Proteção básica contra SQL Injection e captura dos Dados de Acesso
+    $email = mysqli_real_escape_string($conexao, trim($_POST['email']));
+    $senha_pura = $_POST['senha'];
+    $senha_criptografada = password_hash($senha_pura, PASSWORD_DEFAULT);
+
     // 1. Recebe o ID do cliente e o Status (forçando para número inteiro por segurança)
     $codigo_cliente = intval($_POST['codigo_cliente']);
     $status = intval($_POST['status']);
@@ -77,11 +88,13 @@ if(isset($_POST['editar']) && $_POST['editar'] === 'editar_cliente')
     $telefone_residencial = mysqli_real_escape_string($conexao, $_POST['telefone_residencial']);
     $telefone_celular = mysqli_real_escape_string($conexao, $_POST['telefone_celular']);
     $email = mysqli_real_escape_string($conexao, $_POST['email']);
+    $senha = mysqli_real_escape_string($conexao, $_POST['senha']);
+    $senha_criptografada = password_hash($senha, PASSWORD_DEFAULT);
         
     
     ########################Update no banco de dados########################
    
-    $sql_update = "UPDATE cliente SET nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', sexo = '$sexo', cpf = '$CPF', rg = '$RG', endereco = '$endereco', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', email = '$email', status = $status 
+    $sql_update = "UPDATE cliente SET nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', sexo = '$sexo', cpf = '$CPF', rg = '$RG', endereco = '$endereco', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', email = '$email', senha = '$senha_criptografada', status = $status 
     WHERE codigo_cliente = $codigo_cliente";
 
     try {

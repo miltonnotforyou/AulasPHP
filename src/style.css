@@ -1793,6 +1793,18 @@ footer {
     .grade-trajetoria {
         grid-template-columns: 1fr;
     }
+
+    .cabecalho-lista-produtos 
+    { display: none !important; }
+        .item-carrinho { flex-direction: column !important; align-items: stretch !important; gap: 15px; }
+        .detalhes-produto { width: 100% !important; }
+        .valores-produto { display: flex !important; justify-content: space-between !important; align-items: center !important; border-top: 1px dashed #e2e8f0; padding-top: 15px; width: 100% !important; }
+        .valores-produto > div { text-align: left !important; flex: none !important; }
+        .linha-pagamento { flex-direction: column !important; }
+        .linha-pagamento select, .linha-pagamento button { width: 100% !important; margin-top: 10px; }
+        .frete-input-grupo { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .frete-input-grupo input, .frete-input-grupo button { width: 100% !important; border-radius: 6px !important; }
+      
 }
 
 /* ============================================================

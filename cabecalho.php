@@ -1,3 +1,17 @@
+<?php
+// Garante que a sessão está ativa para lermos o carrinho
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+// Lógica para contar os itens do carrinho
+$total_itens_carrinho = 0;
+if (isset($_SESSION['carrinho']) && !empty($_SESSION['carrinho'])) {
+    // array_sum soma todas as quantidades salvas (ex: 2 Lâmpadas + 1 Hub = 3 itens)
+    $total_itens_carrinho = array_sum($_SESSION['carrinho']);
+}
+?>
+
 <header>
   <div class="caixa-conteudo cabecalho-conteudo">
     <!-- Logotipo com imagem -->
@@ -25,14 +39,17 @@
       </button>
 
       <button class="botao-icone">
-        <a href="./admin/Index.php"><i class="fa-regular fa-user"></i></a>
+        <a href="login_cliente.php"><i class="fa-regular fa-user"></i></a>
       </button>
-      <button class="botao-icone">
-        <i class="fa-regular fa-heart"></i>
-      </button>
+      
       <button class="botao-carrinho">
         <a href="carrinho.php"><i class="fa-solid fa-cart-shopping"></i></a>
-        <span class="contador-carrinho"></span>
+        
+        <!-- O contador só aparece se houver itens no carrinho -->
+        <?php if ($total_itens_carrinho > 0): ?>
+            <span class="contador-carrinho"><?php echo $total_itens_carrinho; ?></span>
+        <?php endif; ?>
+        
       </button>
     </div>
   </div>

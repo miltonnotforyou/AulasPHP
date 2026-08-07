@@ -223,6 +223,12 @@
                     <input type="email" name="email" id="email" class="form-control" placeholder="exemplo@dominio.com" required>
                 </div>
 
+                <div class="col-4 mt-2">
+                  <label>Senha *</label>
+                  <!-- Novo campo de senha para o cliente -->
+                  <input type="password" name="senha" class="form-control" minlength="6" required>
+                </div>
+
                 <div class="col-3 mt-2">
                     <label for="status">Status</label>
                     <select name="status" id="status" class="form-control" disabled>

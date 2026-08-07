@@ -185,12 +185,19 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
         </div>
 
         <div class="botoes-acao">
-          <button class="botao-comprar-agora">
-            <i class="fas fa-shopping-bag"></i> Comprar Agora
-          </button>
-          <button class="botao-no-carrinho">
-            <i class="fas fa-cart-plus"></i> No Carrinho
-          </button>
+          <!-- Botão Comprar Agora -->
+          <a href="carrinho.php?id=<?php echo $produto['codigo_produto']; ?>" style="text-decoration: none; flex: 1;">
+              <button class="botao-comprar-agora" style="width: 100%;">
+                <i class="fas fa-shopping-bag"></i> Comprar Agora
+              </button>
+          </a>
+
+          <!-- Botão No Carrinho -->
+          <a href="carrinho.php?id=<?php echo $produto['codigo_produto']; ?>" style="text-decoration: none; flex: 1;">
+              <button class="botao-no-carrinho" style="width: 100%;">
+                <i class="fas fa-cart-plus"></i> No Carrinho
+              </button>
+          </a>
         </div>
 
         <div class="calculo-frete">

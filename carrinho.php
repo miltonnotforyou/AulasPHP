@@ -2,235 +2,283 @@
 // Inclui o arquivo de conexão com o banco de dados
 include_once './conexao/conecta.php';
 
-// Iniciando a sessão para gerenciar o estado de autenticação do usuário e os itens do carrinho
+// Iniciando a sessão para gerenciar o estado de autenticação e os itens do carrinho
 if (!isset($_SESSION)) {
     session_start();
 }
 
 $produto = null;
 
-// Verifica se um ID foi passado na URL (ex: quando o usuário clica em "Adicionar ao Carrinho")
-if(isset($_GET['id']) && !empty($_GET['id'])) {
+// ==========================================
+// 1. LÓGICA DE ADICIONAR ITEM AO CARRINHO
+// ==========================================
+// Verifica se um ID foi passado na URL e NÃO é uma ação de remover
+if(isset($_GET['id']) && !empty($_GET['id']) && !isset($_GET['acao'])) {
     
     $codigo = intval($_GET['id']); 
     
-    $sql = "SELECT p.*, c.nome AS nome_categoria, m.nome AS nome_marca 
-            FROM produto p
-            LEFT JOIN categoria c ON p.codigo_categoria = c.codigo_categoria
-            LEFT JOIN marca m ON p.codigo_marca = m.codigo_marca
-            WHERE p.codigo_produto = $codigo"; 
-
+    $sql = "SELECT p.* FROM produto p WHERE p.codigo_produto = $codigo"; 
     $query = mysqli_query($conexao, $sql) or die("Erro na Query: " . mysqli_error($conexao)); 
     $produto = mysqli_fetch_assoc($query);
 
-    // Se um ID foi passado, mas não existe no banco, você pode avisar o usuário
-    if(!$produto) {
-        $erro_produto = "Produto não encontrado.";
+    if($produto) {
+        if (!isset($_SESSION['carrinho'])) {
+            $_SESSION['carrinho'] = array();
+        }
+        if (isset($_SESSION['carrinho'][$codigo])) {
+            $_SESSION['carrinho'][$codigo] += 1;
+        } else {
+            $_SESSION['carrinho'][$codigo] = 1;
+        }
+    }
+    
+    // REDIRECIONAMENTO VITAL: Limpa a URL para evitar duplicidade ao dar F5
+    header("Location: carrinho.php");
+    exit;
+}
+
+// ==========================================
+// 2. LÓGICA DE REMOÇÃO DE ITEM
+// ==========================================
+if (isset($_GET['acao']) && $_GET['acao'] == 'remover' && isset($_GET['id'])) {
+    $codigo_remover = intval($_GET['id']);
+    
+    // Remove o item específico do carrinho
+    if (isset($_SESSION['carrinho'][$codigo_remover])) {
+        unset($_SESSION['carrinho'][$codigo_remover]);
+    }
+    
+    // Se o carrinho ficar vazio, também removemos os cupons para evitar lixo na sessão
+    if (empty($_SESSION['carrinho'])) {
+        unset($_SESSION['cupom_desconto']);
+        unset($_SESSION['cupom_nome']);
+    }
+    
+    // Redireciona para limpar a URL
+    header("Location: carrinho.php");
+    exit;
+}
+
+// ==========================================
+// 3. LÓGICA DE APLICAÇÃO DE CUPOM
+// ==========================================
+if (isset($_POST['aplicar_cupom']) && !empty($_POST['codigo_cupom'])) {
+    $codigo_digitado = strtoupper(trim($_POST['codigo_cupom']));
+    
+    if ($codigo_digitado === 'IOT10') {
+        $_SESSION['cupom_desconto'] = 0.10; // 10% de desconto
+        $_SESSION['cupom_nome'] = 'IOT10';
+        $mensagem_cupom = "<span style='color: #10b981; font-weight: bold;'>Cupom IOT10 aplicado com sucesso (10% OFF)!</span>";
     } else {
-        // 1 Se o carrinho ainda não existir na sessão, criamos um array vazio
-            if (!isset($_SESSION['carrinho'])) {
-                $_SESSION['carrinho'] = array();
-            }
-
-            // 2️ Verifica se o produto já está no carrinho
-            if (isset($_SESSION['carrinho'][$codigo])) {
-                // Se já estiver, apenas aumentamos a quantidade em 1
-                $_SESSION['carrinho'][$codigo] += 1;
-            } else {
-                // Se não estiver, adicionamos ao carrinho com a quantidade inicial de 1
-                $_SESSION['carrinho'][$codigo] = 1;
-            }
-                }
-            }
-
+        $mensagem_cupom = "<span style='color: #ef4444; font-weight: bold;'>Cupom inválido ou expirado.</span>";
+    }
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOT STORE - Tecnologia de Ponta</title>
-
+    <title>IOT STORE - Seu Carrinho</title>
     <meta name="author" content="Milton Silva">
-
     <!-- FontAwesome (ícones) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
     <!-- Arquivo de Estilos CSS -->
     <link rel="stylesheet" href="./src/style.css" />
-    <!-- FAVICON -->
     <link rel="shortcut icon" href="../IOT_Store/logo/logotipo_light.png" type="image/x-icon">
 </head>
 <body>
     
     <div class="site-container">
-      <?php 
-      // Verifica se o ID do produto foi passado na URL
-          if(isset($_GET['codigo_produto']) && $_GET['codigo_produto'] != '')          
-          {
-              $codigo = intval($_GET['codigo_produto']); // Recebe o código via GET
-              $sql = "SELECT p.*, c.nome AS nome_categoria, m.nome AS nome_marca 
-                      FROM produto p
-                      LEFT JOIN categoria c ON p.codigo_categoria = c.codigo_categoria
-                      LEFT JOIN marca m ON p.codigo_marca = m.codigo_marca
-                      WHERE p.codigo_produto = '$codigo'";
-              
-
-              $query = mysqli_query($conexao, $sql); 
-              $produto = mysqli_fetch_assoc($query);
-              if(!$produto) {
-                  echo "<p>Produto não encontrado.</p>";
-                  exit;
-              }
-          }      
-      ?>
-
-          <!-- Cabeçalho-->
-  <?php
-    #Início cabecalho
-   include('cabecalho.php');
-    #Final cabecalho
-  ?>
-      
+        <!-- Cabeçalho-->
+        <?php include('cabecalho.php'); ?>
         <!-- Fim do Cabeçalho -->
+    <!-- Conteudo principal -->
+      <main class="conteudo-principal">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumbs">
+        <a href="index.php">Inicio</a>
+        <span class="separador">/</span>
+        <span class="atual">Carrinho</span>
+      </nav>
 
-      <main>
-    <div class="conteudo-principal">
-  
-    <!-- Breadcrumb(Mapa do Site) -->
-    <nav class="breadcrumbs">
-      <a href="index.php">Inicio</a>
-      <span class="separador">/</span>
-      <a href="carrinho.php">Carrinho</a>
-      <span class="separador">/</span>
-      <span class="atual"><?php echo $produto['nome']; ?></span>
-    </nav>
+      <section class="secao-titulo-pagina" style="margin-bottom: 2rem;">
+        <h1 class="titulo-produto" style="font-size: 2rem;">Seu Carrinho</h1>
+        <p style="color: #64748b; font-size: 1.1rem;">Revise seus itens e finalize sua compra com segurança.</p>
+      </section>
 
-      <!-- ==================== CONTEÚDO PRINCIPAL (CARRINHO) ==================== -->
-  <main class="container-principal">
-    
-    <!-- Seção do Título da Página -->
-    <section class="secao-titulo-pagina">
-      <h1 class="titulo-pagina">Seu Carrinho</h1>
-      <p class="subtitulo-pagina">Revise seus itens e finalize sua compra com segurança.</p>
-    </section>
+      <section class="secao-produto" style="display: block; background: transparent; padding: 0;"> 
 
-    <!-- Estrutura do Carrinho em Grade (Layout Principal) -->
-    <div class="grade-carrinho">
-      
-      <!-- LADO ESQUERDO: Lista de Produtos Adicionados -->
-     <section class="lista-itens-carrinho">
-    <?php
-    
-    // Verifica se o carrinho existe e se tem itens
-    if (isset($_SESSION['carrinho']) && count($_SESSION['carrinho']) > 0): 
-        $valor_total = 0;
-        // Percorre cada item do carrinho
-        // $codigo_produto é a chave (ID) e $quantidade é o valor salvo
-        foreach ($_SESSION['carrinho'] as $codigo_produto => $quantidade):
+        <!-- ÁREA 1: LISTA DE PRODUTOS -->
+        <div style="background-color: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px;">
+          
+          <?php
+          $valor_total = 0; 
+          if (isset($_SESSION['carrinho']) && count($_SESSION['carrinho']) > 0): 
+          ?>
             
-            // 1. Fazemos um SELECT no banco buscando o produto por este $codigo_produto
-            $sql = "SELECT * FROM produto WHERE codigo_produto = $codigo_produto";
-            $query = mysqli_query($conexao, $sql);
-            $produto = mysqli_fetch_assoc($query);
+            <div class="cabecalho-lista-produtos" style="display: flex; justify-content: space-between; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px; font-weight: bold; color: #475569;">
+              <div style="flex: 2;">Produto</div>
+              <div style="flex: 1; text-align: center;">Quantidade</div>
+              <div style="flex: 1; text-align: right;">Subtotal</div>
+            </div>
 
-            // 2. Formatamos o preço
-            $precoFormatado = number_format($produto['preco_venda'], 2, ',', '.');
-            $valor_total += $produto['preco_venda'] * $quantidade;
+            <?php foreach ($_SESSION['carrinho'] as $codigo_produto => $quantidade):
+              $sql = "SELECT * FROM produto WHERE codigo_produto = $codigo_produto";
+              $query = mysqli_query($conexao, $sql);
+              $produto = mysqli_fetch_assoc($query);
 
-            // 3. Calculamos o subtotal do item (preço * quantidade)
-            $subtotal_item = $produto['preco_venda'] * $quantidade;
-            $subtotalFormatado = number_format($subtotal_item, 2, ',', '.');
-    ?>
+              $subtotal_item = $produto['preco_venda'] * $quantidade;
+              $valor_total += $subtotal_item; 
+            ?>
+              
+              <article class="item-carrinho" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 20px;">
+                
+                <div class="detalhes-produto" style="display: flex; align-items: center; gap: 20px; flex: 2;">
+                  <div style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; flex-shrink: 0;">
+                    <img src="./images/<?php echo $produto['foto']; ?>" alt="<?php echo $produto['nome']; ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                  </div>
+                  <div>
+                    <h3 style="font-size: 1.1rem; margin: 0 0 5px 0; color: #1e293b;"><?php echo $produto['nome']; ?></h3>
+                    <a href="carrinho.php?acao=remover&id=<?php echo $codigo_produto; ?>" style="color: #ef4444; font-size: 0.85rem; text-decoration: none;">
+                      <i class="fa-solid fa-trash-can"></i> Remover
+                    </a>
+                  </div>
+                </div>
+
+                <div class="valores-produto" style="display: flex; flex: 2; justify-content: space-between;">
+                  <div style="flex: 1; text-align: center; font-weight: bold; color: #475569;">
+                    <?php echo $quantidade; ?> un.
+                  </div>
+
+                  <div style="flex: 1; text-align: right;">
+                    <span style="font-size: 1.2rem; font-weight: bold; color: var(--primaria);">
+                      R$ <?php echo number_format($subtotal_item, 2, ',', '.'); ?>
+                    </span>
+                  </div>
+                </div>
+
+              </article>
             
-            <!-- Aqui entra o seu HTML do cartão do produto (usando os dados de $produto e $quantidade) -->
-            <article class="cartao-produto">
-                <!-- Imagem, Titulo, etc... -->
-                <span class="numero-quantidade"><?php echo $quantidade; ?></span>
-            </article>
-          
-    <?php 
-        endforeach; 
-    else: 
-    ?>
-        <p>Seu carrinho está vazio.</p>
-    <?php endif; ?>
-</section>
+            <?php endforeach; else: ?>
+              
+              <div style="text-align: center; padding: 40px 20px;">
+                <i class="fa-solid fa-cart-shopping" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
+                <h3 style="color: #475569; margin-bottom: 10px;">Seu carrinho está vazio no momento.</h3>
+                <a href="produtos.php" class="botao-comprar-agora" style="display: inline-block; width: auto; padding: 10px 25px; text-decoration: none; margin-top: 15px;">
+                  Continuar Comprando
+                </a>
+              </div>
 
-      <!-- LADO DIREITO: Coluna Lateral (Resumo, Frete e Cupom) -->
-      <aside class="coluna-lateral">
-        
-        <!-- CAIXA 1: Resumo do Pedido -->
-        <div class="caixa-resumo">
-          <h2 class="titulo-resumo">Resumo do Pedido</h2>
-          
-          <div class="linha-resumo">
-            <span>Subtotal (3 itens)</span>
-            <strong><?php echo number_format($valor_total, 2, ',', '.'); ?></strong>
-          </div>
-          
-          <div class="linha-resumo">
-            <span>Desconto</span>
-            <strong style="color: var(--cor-principal);">- R$ 0,00</strong>
-          </div>
-          
-          <div class="linha-resumo">
-            <span>Frete</span>
-            <strong>A calcular</strong>
-          </div>
-          
-          <div class="linha-resumo linha-total">
-            <span>Total</span>
-            <span class="preco-total"><?php echo number_format($valor_total, 2, ',', '.'); ?></span>
-          </div>
-
-          <a href="finaliza_compra.php" class="link-botao">
-            <button class="botao-finalizar-compra">
-              Finalizar Compra
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </a>
-
-        <!-- CAIXA 2: Cálculo de Frete e Cupom -->
-        <div class="caixa-resumo">
-          <!-- Cálculo de Frete -->
-          <div class="grupo-ferramenta">
-            <label for="campo-cep" class="etiqueta-ferramenta">CÁLCULO DE FRETE</label>
-            <div class="campo-com-botao">
-              <input type="text" id="campo-cep" class="campo-texto" placeholder="00000-000">
-              <button class="botao-secundario">OK</button>
-            </div>
-          </div>
-
-          <hr class="divisor">
-
-          <!-- Cupom de Desconto -->
-          <div class="grupo-ferramenta">
-            <label for="campo-cupom" class="etiqueta-ferramenta">CUPOM DE DESCONTO</label>
-            <div class="campo-com-botao">
-              <input type="text" id="campo-cupom" class="campo-texto" placeholder="Insira o código">
-              <button class="botao-secundario">Aplicar</button>
-            </div>
-          </div>
+          <?php endif; ?>
         </div>
+        <!-- FIM DA ÁREA 1 -->
 
-      </aside>
+        <?php if ($valor_total > 0): ?>
+          
+          <!-- ÁREA 2: FORMULÁRIOS E RESUMO -->
+          <!-- A troca do grid-template-columns para auto-fit torna isso responsivo automaticamente -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; align-items: start;">
+            
+            <!-- Coluna da Esquerda: Ferramentas (Frete/Cupom) -->
+            <div style="background-color: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+              
+              <div class="calculo-frete" style="margin-bottom: 25px;">
+                <p class="frete-titulo" style="font-weight: bold; margin-bottom: 8px;"><i class="fas fa-truck"></i> Calcular Frete</p>
+                <div class="frete-input-grupo" style="display: flex; gap: 5px;">
+                  <input type="text" placeholder="00000-000" style="flex: 1; min-width: 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                  <button class="botao-frete" style="padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; background: #e2e8f0;">OK</button>
+                </div>
+              </div>
 
-    </div>
+              <form action="carrinho.php" method="POST">
+                <div class="calculo-frete">
+                  <p class="frete-titulo" style="font-weight: bold; margin-bottom: 8px;"><i class="fas fa-ticket"></i> Cupom de Desconto</p>
+                  <div class="frete-input-grupo" style="display: flex; gap: 5px;">
+                    <input type="text" name="codigo_cupom" placeholder="Insira o código" value="<?php echo isset($_SESSION['cupom_nome']) ? $_SESSION['cupom_nome'] : ''; ?>" style="flex: 1; min-width: 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                    <button type="submit" name="aplicar_cupom" class="botao-frete" style="background-color: #64748b; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">Aplicar</button>
+                  </div>
+                </div>
+                <?php if(isset($mensagem_cupom)) echo "<p style='margin-top: 10px; font-size: 0.9rem;'>$mensagem_cupom</p>"; ?>
+              </form>
 
-  </main>  
-  <!-- fim .conteudo-principal -->
+            </div>
 
+            <!-- Coluna da Direita: Finalização e Resumo -->
+            <div style="background-color: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+              
+              <h3 style="margin-bottom: 20px; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Resumo</h3>
+              
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #475569;">
+                <span>Subtotal</span>
+                <strong>R$ <?php echo number_format($valor_total, 2, ',', '.'); ?></strong>
+              </div>
 
-        <!-- Rodapé do site -->
+              <?php 
+              $valor_desconto = 0;
+              $valor_final = $valor_total;
+
+              if(isset($_SESSION['cupom_desconto'])) {
+                  $valor_desconto = $valor_total * $_SESSION['cupom_desconto'];
+                  $valor_final = $valor_total - $valor_desconto;
+              ?>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #10b981; font-weight: bold;">
+                    <span>Desconto (<?php echo $_SESSION['cupom_nome']; ?>)</span>
+                    <span>- R$ <?php echo number_format($valor_desconto, 2, ',', '.'); ?></span>
+                  </div>
+              <?php } ?>
+              
+              <div style="display: flex; justify-content: space-between; font-size: 1.3rem; margin-bottom: 25px; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                <span style="color: #1e293b; font-weight: bold;">Total</span>
+                <span style="color: var(--primaria); font-weight: 900;">R$ <?php echo number_format($valor_final, 2, ',', '.'); ?></span>
+              </div>
+
+              <?php if(isset($_SESSION['CLIENTE_ID'])): ?>
+                <form action="finaliza_compra.php" method="POST">
+                  
+                  <input type="hidden" name="valor_desconto" value="<?php echo $valor_desconto; ?>">
+
+                  <div style="margin-bottom: 20px;">
+                    <label for="forma_pagamento" style="display:block; margin-bottom: 8px; font-weight: bold; color: #475569; font-size: 0.9rem;">Forma de Pagamento:</label>
+                    
+                    <div class="linha-pagamento" style="display: flex; gap: 10px; align-items: stretch;">
+                        <select name="forma_pagamento" id="forma_pagamento" required style="flex: 1; min-width: 0; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; background-color: #f8fafc; font-size: 1rem; color: #334155;">
+                            <option value="" selected disabled>Selecione...</option>
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                            <option value="Cartão de Débito">Cartão de Débito</option>
+                            <option value="Dinheiro">Boleto Bancário</option>
+                        </select>
+
+                        <button type="submit" class="botao-comprar-agora" style="white-space: nowrap; padding: 12px 20px; margin: 0; display: flex; align-items: center; justify-content: center; height: auto; flex-shrink: 0;">
+                            Finalizar Compra <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                        </button>
+                    </div>
+                  </div> 
+                </form>
+              <?php else: ?>
+                <a href="login_cliente.php" style="text-decoration: none;">
+                  <button class="botao-no-carrinho" style="width: 100%;">
+                    Faça login para finalizar <i class="fa-solid fa-user" style="margin-left: 8px;"></i>
+                  </button>
+                </a>
+              <?php endif; ?>
+
+            </div>
+          </div>
+        <?php endif; ?>
+      </section>
+    </main>
+
+       
+         <!-- Rodapé do site -->
       <footer>
         <div class="caixa-conteudo">
           <div class="grade-rodape">
             <!-- Informações da marca e redes sociais -->
             <div class="informacao-rodape">
-              <a href="/" class="logotipo-rodape">
+              <a href="index.php" class="logotipo-rodape">
                 <div class="logotipo-rodape-icone">
                  <img src="./logo/logotipo_light.png" alt="IOT STORE Logo" class="logotipo-img"> 
                 </div>
@@ -301,15 +349,9 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
           </div>
         </div>
       </footer>
-      <!-- Fim Rodapé do site --> 
-    
     </div>
 
-  <!-- Script para funcionalidades do site -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
-  <script src="src/script2.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
+    <script src="src/script2.js"></script>
 </body>
-       
-        
 </html>
