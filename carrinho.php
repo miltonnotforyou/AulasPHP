@@ -178,19 +178,26 @@ if (isset($_POST['aplicar_cupom']) && !empty($_POST['codigo_cupom'])) {
         <?php if ($valor_total > 0): ?>
           
           <!-- ÁREA 2: FORMULÁRIOS E RESUMO -->
-          <!-- A troca do grid-template-columns para auto-fit torna isso responsivo automaticamente -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; align-items: start;">
+         
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; align-items: start;">
             
             <!-- Coluna da Esquerda: Ferramentas (Frete/Cupom) -->
             <div style="background-color: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
               
-              <div class="calculo-frete" style="margin-bottom: 25px;">
-                <p class="frete-titulo" style="font-weight: bold; margin-bottom: 8px;"><i class="fas fa-truck"></i> Calcular Frete</p>
-                <div class="frete-input-grupo" style="display: flex; gap: 5px;">
-                  <input type="text" placeholder="00000-000" style="flex: 1; min-width: 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
-                  <button class="botao-frete" style="padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; background: #e2e8f0;">OK</button>
-                </div>
+            <div class="calculo-frete" style="margin-bottom: 25px;">
+              <p class="frete-titulo" style="font-weight: bold; margin-bottom: 8px;"><i class="fas fa-truck"></i> Calcular Frete</p>
+              
+              <div class="frete-input-grupo" style="display: flex; gap: 5px;">
+                
+                <input type="text" id="cep-destino" name="cep_destino" placeholder="00000-000" style="flex: 1; min-width: 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                
+              
+                <button type="button" id="btn-frete" class="botao-frete" style="padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; background: #e2e8f0;">OK</button>
               </div>
+              
+              <!-- Div vazia onde os resultados da API vão ser injetados pelo JavaScript -->
+              <div id="resultado-frete" style="margin-top: 15px;"></div>
+            </div>
 
               <form action="carrinho.php" method="POST">
                 <div class="calculo-frete">
@@ -205,68 +212,77 @@ if (isset($_POST['aplicar_cupom']) && !empty($_POST['codigo_cupom'])) {
 
             </div>
 
-            <!-- Coluna da Direita: Finalização e Resumo -->
-            <div style="background-color: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-              
-              <h3 style="margin-bottom: 20px; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Resumo</h3>
-              
-              <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #475569;">
-                <span>Subtotal</span>
-                <strong>R$ <?php echo number_format($valor_total, 2, ',', '.'); ?></strong>
-              </div>
-
-              <?php 
-              $valor_desconto = 0;
-              $valor_final = $valor_total;
-
-              if(isset($_SESSION['cupom_desconto'])) {
-                  $valor_desconto = $valor_total * $_SESSION['cupom_desconto'];
-                  $valor_final = $valor_total - $valor_desconto;
-              ?>
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #10b981; font-weight: bold;">
-                    <span>Desconto (<?php echo $_SESSION['cupom_nome']; ?>)</span>
-                    <span>- R$ <?php echo number_format($valor_desconto, 2, ',', '.'); ?></span>
-                  </div>
-              <?php } ?>
-              
-              <div style="display: flex; justify-content: space-between; font-size: 1.3rem; margin-bottom: 25px; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
-                <span style="color: #1e293b; font-weight: bold;">Total</span>
-                <span style="color: var(--primaria); font-weight: 900;">R$ <?php echo number_format($valor_final, 2, ',', '.'); ?></span>
-              </div>
-
-              <?php if(isset($_SESSION['CLIENTE_ID'])): ?>
-                <form action="finaliza_compra.php" method="POST">
-                  
-                  <input type="hidden" name="valor_desconto" value="<?php echo $valor_desconto; ?>">
-
-                  <div style="margin-bottom: 20px;">
-                    <label for="forma_pagamento" style="display:block; margin-bottom: 8px; font-weight: bold; color: #475569; font-size: 0.9rem;">Forma de Pagamento:</label>
-                    
-                    <div class="linha-pagamento" style="display: flex; gap: 10px; align-items: stretch;">
-                        <select name="forma_pagamento" id="forma_pagamento" required style="flex: 1; min-width: 0; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; background-color: #f8fafc; font-size: 1rem; color: #334155;">
-                            <option value="" selected disabled>Selecione...</option>
-                            <option value="Pix">Pix</option>
-                            <option value="Cartão de Crédito">Cartão de Crédito</option>
-                            <option value="Cartão de Débito">Cartão de Débito</option>
-                            <option value="Dinheiro">Boleto Bancário</option>
-                        </select>
-
-                        <button type="submit" class="botao-comprar-agora" style="white-space: nowrap; padding: 12px 20px; margin: 0; display: flex; align-items: center; justify-content: center; height: auto; flex-shrink: 0;">
-                            Finalizar Compra <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
-                        </button>
-                    </div>
-                  </div> 
-                </form>
-              <?php else: ?>
-                <a href="login_cliente.php" style="text-decoration: none;">
-                  <button class="botao-no-carrinho" style="width: 100%;">
-                    Faça login para finalizar <i class="fa-solid fa-user" style="margin-left: 8px;"></i>
-                  </button>
-                </a>
-              <?php endif; ?>
-
-            </div>
+            <!-- Coluna da Direita: Finalização e Resumo -->       
+        <div style="background-color: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          
+          <h3 style="margin-bottom: 20px; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Resumo</h3>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #475569;">
+            <span>Subtotal</span>
+            <strong>R$ <?php echo number_format($valor_total, 2, ',', '.'); ?></strong>
           </div>
+
+          <?php 
+          $valor_desconto = 0;
+          $valor_final = $valor_total;
+
+          if(isset($_SESSION['cupom_desconto'])) {
+              $valor_desconto = $valor_total * $_SESSION['cupom_desconto'];
+              $valor_final = $valor_total - $valor_desconto;
+          ?>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #10b981; font-weight: bold;">
+                <span>Desconto (<?php echo $_SESSION['cupom_nome']; ?>)</span>
+                <span>- R$ <?php echo number_format($valor_desconto, 2, ',', '.'); ?></span>
+              </div>
+          <?php } ?>
+
+          <!-- LINHA DO FRETE -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #475569;">
+            <span>Frete <small id="nome-frete-selecionado" style="font-weight: normal; font-size: 0.8rem;"></small></span>
+            <strong id="valor-frete-display">R$ 0,00</strong>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; font-size: 1.3rem; margin-bottom: 25px; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+            <span style="color: #1e293b; font-weight: bold;">Total</span>
+            <!-- ID para o JS alterar o Total -->
+            <span id="valor-total-display" style="color: var(--primaria); font-weight: 900;">R$ <?php echo number_format($valor_final, 2, ',', '.'); ?></span>
+          </div>
+
+          <?php if(isset($_SESSION['CLIENTE_ID'])): ?>
+            <form action="finaliza_compra.php" method="POST">
+              
+              <input type="hidden" name="valor_desconto" value="<?php echo $valor_desconto; ?>">
+              <!-- NOVOS CAMPOS OCULTOS QUE O JS VAI PREENCHER COM O FRETE -->
+              <input type="hidden" name="valor_frete" id="input-valor-frete" value="0">
+              <input type="hidden" name="nome_frete" id="input-nome-frete" value="">
+
+              <div style="margin-bottom: 20px;">
+                <label for="forma_pagamento" style="display:block; margin-bottom: 8px; font-weight: bold; color: #475569; font-size: 0.9rem;">Forma de Pagamento:</label>
+                
+                <div class="linha-pagamento" style="display: flex; gap: 10px; align-items: stretch;">
+                    <select name="forma_pagamento" id="forma_pagamento" required style="flex: 1; min-width: 0; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; background-color: #f8fafc; font-size: 1rem; color: #334155;">
+                        <option value="" selected disabled>Selecione...</option>
+                        <option value="Pix">Pix</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Cartão de Débito">Cartão de Débito</option>
+                        <option value="Boleto Bancário">Boleto Bancário</option>
+                    </select>
+
+                    <button type="submit" class="botao-comprar-agora" style="white-space: nowrap; padding: 12px 20px; margin: 0; display: flex; align-items: center; justify-content: center; height: auto; flex-shrink: 0;">
+                        Finalizar Compra <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                    </button>
+                </div>
+              </div> 
+            </form>
+          <?php else: ?>
+            <a href="login_cliente.php" style="text-decoration: none;">
+              <button class="botao-no-carrinho" style="width: 100%;">
+                Faça login para finalizar <i class="fa-solid fa-user" style="margin-left: 8px;"></i>
+              </button>
+            </a>
+          <?php endif; ?>
+
+        </div>
         <?php endif; ?>
       </section>
     </main>
@@ -353,5 +369,92 @@ if (isset($_POST['aplicar_cupom']) && !empty($_POST['codigo_cupom'])) {
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
     <script src="src/script2.js"></script>
+    ########################## Calcula Frete ####################
+      <script>
+        // Passa o valor base do PHP para o JavaScript
+          var totalBase = <?php echo $valor_final; ?>;
+
+          $(document).ready(function() {
+              
+              // Dispara o cálculo quando clicar no botão OK
+              $('#btn-frete').click(function(e) {
+                  e.preventDefault();
+                  
+                  var cep = $('#cep-destino').val().replace(/\D/g, ''); 
+                  if(cep.length !== 8) {
+                      alert('Por favor, digite um CEP válido com 8 números.');
+                      return;
+                  }
+
+                  $('#resultado-frete').html('<div style="text-align: center; color: #64748b; padding: 10px;"><i class="fas fa-spinner fa-spin"></i> Consultando transportadoras...</div>');
+
+                  $.ajax({
+                      url: 'calcula_frete.php',
+                      method: 'POST',
+                      data: { cep_destino: cep },
+                      dataType: 'json',
+                      success: function(response) {
+                          var htmlResultado = '';
+                          
+                          if(response.erro) {
+                              $('#resultado-frete').html('<span style="color: #ef4444; font-size: 0.9rem;">' + response.erro + '</span>');
+                              return;
+                          }
+
+                          if(response.length > 0) {
+                              htmlResultado += '<ul style="list-style: none; padding: 0; margin: 0; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden;">';
+                              
+                              $.each(response, function(index, transportadora) {
+                                  if(!transportadora.error && transportadora.price) {
+                                      htmlResultado += `
+                                          <li style="border-bottom: 1px solid #e2e8f0; background: #f8fafc; transition: background 0.2s;">
+                                              <label style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; cursor: pointer; width: 100%; margin: 0;">
+                                                  <div style="display: flex; align-items: center; gap: 10px;">
+                                                      <input type="radio" name="escolha_frete" class="radio-frete" value="${transportadora.price}" data-nome="${transportadora.company.name} (${transportadora.name})" required>
+                                                      <div style="display: flex; flex-direction: column;">
+                                                          <strong style="color: #1e293b; font-size: 0.95rem;">${transportadora.company.name}</strong>
+                                                          <span style="color: #64748b; font-size: 0.8rem;">${transportadora.name} - Até ${transportadora.delivery_time} dias úteis</span>
+                                                      </div>
+                                                  </div>
+                                                  <span style="color: var(--primaria); font-weight: 900; font-size: 1.1rem;">R$ ${transportadora.price.replace('.', ',')}</span>
+                                              </label>
+                                          </li>
+                                      `;
+                                  }
+                              });
+                              
+                              htmlResultado += '</ul>';
+                              $('#resultado-frete').html(htmlResultado);
+
+                              // --- MÁGICA DA SOMA DO FRETE ---
+                              $('.radio-frete').change(function() {
+                                  var valorFrete = parseFloat($(this).val());
+                                  var nomeFrete = $(this).data('nome');
+                                  
+                                  // Soma o total base (com ou sem cupom) com o frete
+                                  var totalFinal = totalBase + valorFrete;
+
+                                  // Atualiza os textos na tela
+                                  $('#valor-frete-display').text('R$ ' + valorFrete.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+                                  $('#valor-total-display').text('R$ ' + totalFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+                                  $('#nome-frete-selecionado').text('- ' + nomeFrete);
+
+                                  // Alimenta os campos ocultos pro banco de dados
+                                  $('#input-valor-frete').val(valorFrete);
+                                  $('#input-nome-frete').val(nomeFrete);
+                              });
+                              // --------------------------------
+                              
+                          } else {
+                              $('#resultado-frete').html('<span style="color: #ef4444; font-size: 0.9rem;">CEP não encontrado ou área sem cobertura.</span>');
+                          }
+                      },
+                      error: function() {
+                          $('#resultado-frete').html('<span style="color: #ef4444; font-size: 0.9rem;">Erro de conexão. Verifique se o arquivo calcula_frete.php está na mesma pasta.</span>');
+                      }
+                  });
+              });
+          });
+      </script>
 </body>
 </html>

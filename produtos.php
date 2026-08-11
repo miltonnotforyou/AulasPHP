@@ -270,7 +270,7 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
                 <div class="rodape-produto">
                   <span class="preco-produto">R$ <?php echo $precoFormatado; ?></span>
                   
-                  <!-- Envolvendo o botão do carrinho com a tag de link -->
+                  <!-- botão do carrinho com a tag de link -->
                   <a href="carrinho.php?id=<?php echo $produto['codigo_produto']; ?>">
                       <button class="botao-adicionar-carrinho">
                         <i class="fa-solid fa-cart-shopping"></i>

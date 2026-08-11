@@ -200,12 +200,19 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
           </a>
         </div>
 
-        <div class="calculo-frete">
-          <p class="frete-titulo"><i class="fas fa-truck"></i> Calcular Frete</p>
-          <div class="frete-input-grupo">
-            <input type="text" placeholder="00000-000">
-            <button class="botao-frete">OK</button>
+        <div class="calculo-frete" style="margin-bottom: 20px;">
+          <p class="frete-titulo" style="font-weight: bold; margin-bottom: 8px;"><i class="fas fa-truck"></i> Calcular Frete</p>
+          
+          <div class="frete-input-grupo" style="display: flex; gap: 5px;">
+            <!-- Adicionado ID cep-destino -->
+            <input type="text" id="cep-destino" placeholder="00000-000" style="flex: 1; min-width: 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+            
+            <!-- Adicionado ID btn-frete e mudado type para button -->
+            <button type="button" id="btn-frete" class="botao-frete" style="padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; background: #e2e8f0; color: #334155; font-weight: bold;">OK</button>
           </div>
+          
+          <!-- Div onde os resultados da API vão aparecer -->
+          <div id="resultado-frete" style="margin-top: 15px;"></div>
         </div>
 
         <div class="grade-recursos">
@@ -385,6 +392,73 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
   <!-- Script para funcionalidades do site -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
   <script src="src/script2.js"></script>
+
+  <!-- Script de Cálculo de Frete para a Página de Detalhes -->
+    <script>
+      $(document).ready(function() {
+          
+          $('#btn-frete').click(function(e) {
+              e.preventDefault();
+              
+              var cep = $('#cep-destino').val().replace(/\D/g, ''); 
+              if(cep.length !== 8) {
+                  alert('Por favor, digite um CEP válido com 8 números.');
+                  return;
+              }
+
+              // Mensagem de carregamento
+              $('#resultado-frete').html('<div style="text-align: center; color: #64748b; padding: 10px;"><i class="fas fa-spinner fa-spin"></i> Consultando transportadoras...</div>');
+
+              $.ajax({
+                  url: 'calcula_frete.php',
+                  method: 'POST',
+                  data: { cep_destino: cep },
+                  dataType: 'json',
+                  success: function(response) {
+                      var htmlResultado = '';
+                      
+                      if(response.erro) {
+                          $('#resultado-frete').html('<span style="color: #ef4444; font-size: 0.9rem;">' + response.erro + '</span>');
+                          return;
+                      }
+
+                      if(response.length > 0) {
+                          htmlResultado += '<ul style="list-style: none; padding: 0; margin: 0; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden;">';
+                          
+                          $.each(response, function(index, transportadora) {
+                              if(!transportadora.error && transportadora.price) {
+                                  // Na página de detalhes, apenas listamos as opções (sem radio buttons)
+                                  htmlResultado += `
+                                      <li style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+                                          <div style="display: flex; flex-direction: column;">
+                                              <strong style="color: #1e293b; font-size: 0.95rem;">${transportadora.company.name}</strong>
+                                              <span style="color: #64748b; font-size: 0.8rem;">${transportadora.name} - Até ${transportadora.delivery_time} dias úteis</span>
+                                          </div>
+                                          <span style="color: var(--primaria); font-weight: 900; font-size: 1.1rem;">R$ ${transportadora.price.replace('.', ',')}</span>
+                                      </li>
+                                  `;
+                              }
+                          });
+                          
+                          htmlResultado += '</ul>';
+                          
+                          if(htmlResultado.indexOf('<li') === -1) {
+                              $('#resultado-frete').html('<span style="color: #ef4444; font-size: 0.9rem;">Nenhuma opção disponível.</span>');
+                          } else {
+                              $('#resultado-frete').html(htmlResultado);
+                          }
+                          
+                      } else {
+                          $('#resultado-frete').html('<span style="color: #ef4444; font-size: 0.9rem;">CEP não encontrado ou área sem cobertura.</span>');
+                      }
+                  },
+                  error: function() {
+                      $('#resultado-frete').html('<span style="color: #ef4444; font-size: 0.9rem;">Erro de conexão com o servidor.</span>');
+                  }
+              });
+          });
+      });
+    </script>
 
 </body>
        

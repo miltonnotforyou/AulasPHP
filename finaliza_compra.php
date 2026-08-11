@@ -11,12 +11,13 @@ if (!isset($_SESSION)) {
 $codigo_cliente = intval($_SESSION['CLIENTE_ID']); 
 $forma_pagamento = mysqli_real_escape_string($conexao, $_POST['forma_pagamento']);
 $codigo_funcionario = 19; 
-$observacao = 'Venda web via ' . $forma_pagamento;
 
-// Recebendo o desconto do formulário
+// Capturando desconto e frete dos campos ocultos
 $desconto = isset($_POST['valor_desconto']) ? floatval($_POST['valor_desconto']) : 0;
+$valor_frete = isset($_POST['valor_frete']) ? floatval($_POST['valor_frete']) : 0;
+$nome_frete = isset($_POST['nome_frete']) ? mysqli_real_escape_string($conexao, $_POST['nome_frete']) : '';
 
-// 3. CALCULANDO O TOTAL (Antes de inserir na Venda)
+// 3. CALCULANDO O TOTAL
 $valor_total_bruto = 0;
 foreach ($_SESSION['carrinho'] as $codigo_produto => $quantidade) {
     $cod = intval($codigo_produto);
@@ -27,6 +28,23 @@ foreach ($_SESSION['carrinho'] as $codigo_produto => $quantidade) {
         $valor_total_bruto += ($produto['preco_venda'] * intval($quantidade));
     }
 }
+
+// Aplica a subtração do desconto e SOMA o frete
+$valor_total_liquido = ($valor_total_bruto - $desconto) + $valor_frete;
+
+// Formata os valores para o padrão do Banco de Dados (com ponto)
+$valor_total_bd = number_format($valor_total_liquido, 2, '.', '');
+$desconto_bd = number_format($desconto, 2, '.', '');
+
+// Salva a transportadora escolhida na observação
+$observacao = 'Venda web via ' . $forma_pagamento;
+if (!empty($nome_frete)) {
+    $observacao .= ' | Frete: ' . $nome_frete . ' (R$ ' . number_format($valor_frete, 2, ',', '.') . ')';
+}
+
+// 4. INSERINDO NA TABELA VENDA
+$sql_venda = "INSERT INTO venda (data_venda, desconto, valor_total, forma_pagamento, observacao, codigo_funcionario, codigo_cliente) 
+              VALUES (NOW(), $desconto_bd, $valor_total_bd, '$forma_pagamento', '$observacao', $codigo_funcionario, $codigo_cliente)";
 
 // Aplica a subtração final
 $valor_total_liquido = $valor_total_bruto - $desconto;

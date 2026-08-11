@@ -99,9 +99,12 @@ $resultado = mysqli_query($conexao, $sql) or die("Erro no Banco de Dados: " . my
                 <p class="descricao-produto"><?php echo $produto['descricao']; ?></p>
                 <div class="rodape-produto">
                   <span class="preco-produto">R$ <?php echo $precoFormatado; ?></span>
-                  <button class="botao-adicionar-carrinho">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                  </button>
+                   <!-- botão do carrinho com a tag de link -->
+                  <a href="carrinho.php?id=<?php echo $produto['codigo_produto']; ?>">
+                      <button class="botao-adicionar-carrinho">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                      </button>
+                  </a>
                 </div>
               </div>
 
