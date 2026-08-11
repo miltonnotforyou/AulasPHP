@@ -13,9 +13,8 @@ if (!isset($_SESSION))
 ##################Cadastrando novo cliente##################
 
 if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_cliente') 
-    {
-    // Proteção básica contra SQL Injection e captura dos Dados de Acesso
-    $email = mysqli_real_escape_string($conexao, trim($_POST['email']));
+{
+    // Captura da senha pura e criptografia correta
     $senha_pura = $_POST['senha'];
     $senha_criptografada = password_hash($senha_pura, PASSWORD_DEFAULT);
    
@@ -34,40 +33,42 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_cliente')
     $estado = mysqli_real_escape_string($conexao, $_POST['estado']);
     $telefone_residencial = mysqli_real_escape_string($conexao, $_POST['telefone_residencial']);
     $telefone_celular = mysqli_real_escape_string($conexao, $_POST['telefone_celular']);
-    $email = mysqli_real_escape_string($conexao, $_POST['email']);
-    $senha = mysqli_real_escape_string($conexao, $_POST['senha']);
-    $senha_criptografada = password_hash($senha, PASSWORD_DEFAULT);
+    $email = mysqli_real_escape_string($conexao, trim($_POST['email']));
+    // Removi as capturas duplicadas de email e senha que estavam aqui embaixo
         
-    
     ########################Insert no banco de dados########################
-
-    $sql_insert = "INSERT INTO cliente VALUES (0,'$nome', '$nome_social', '$data_nascimento', '$sexo', '$CPF', '$RG', '$endereco', '$numero', '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$telefone_residencial', '$telefone_celular', '$email', '$senha_criptografada', 1, NOW())";
+    
+    // É mais seguro declarar os nomes das colunas, assim como fizemos no processa_cadastro.php
+    $sql_insert = "INSERT INTO cliente (
+        nome, nome_social, data_nascimento, sexo, cpf, rg, endereco, numero, 
+        complemento, bairro, cidade, estado, CEP, telefone_residencial, 
+        telefone_celular, email, senha, status, data_cadastro
+    ) VALUES (
+        '$nome', '$nome_social', '$data_nascimento', '$sexo', '$CPF', '$RG', '$endereco', '$numero', 
+        '$complemento', '$bairro', '$cidade', '$estado', '$cep', '$telefone_residencial', 
+        '$telefone_celular', '$email', '$senha_criptografada', 1, NOW()
+    )";
 
     try {
         if(mysqli_query($conexao, $sql_insert)) {
             $_SESSION['mensagem'] = "Cliente cadastrado com sucesso!";
         } else {
-            $_SESSION['mensagem'] = "Erro ao cadastrar cliente!";
+            $_SESSION['mensagem'] = "Erro ao cadastrar cliente: " . mysqli_error($conexao);
         }
 
-        } catch (mysqli_sql_exception) {
-            $_SESSION['mensagem'] = "Erro ao cadastrar cliente!";
-        }
+    } catch (mysqli_sql_exception $e) {
+        $_SESSION['mensagem'] = "Erro ao cadastrar cliente!";
+    }
 
     header("Location: Inserir.php");
     exit();
-     }
+}
 
 ##################Atualizando cliente existente##################
 
 if(isset($_POST['editar']) && $_POST['editar'] === 'editar_cliente') 
 {
-    // Proteção básica contra SQL Injection e captura dos Dados de Acesso
-    $email = mysqli_real_escape_string($conexao, trim($_POST['email']));
-    $senha_pura = $_POST['senha'];
-    $senha_criptografada = password_hash($senha_pura, PASSWORD_DEFAULT);
-
-    // 1. Recebe o ID do cliente e o Status (forçando para número inteiro por segurança)
+    // 1. Recebe o ID do cliente e o Status
     $codigo_cliente = intval($_POST['codigo_cliente']);
     $status = intval($_POST['status']);
 
@@ -87,21 +88,36 @@ if(isset($_POST['editar']) && $_POST['editar'] === 'editar_cliente')
     $estado = mysqli_real_escape_string($conexao, $_POST['estado']);
     $telefone_residencial = mysqli_real_escape_string($conexao, $_POST['telefone_residencial']);
     $telefone_celular = mysqli_real_escape_string($conexao, $_POST['telefone_celular']);
-    $email = mysqli_real_escape_string($conexao, $_POST['email']);
-    $senha = mysqli_real_escape_string($conexao, $_POST['senha']);
-    $senha_criptografada = password_hash($senha, PASSWORD_DEFAULT);
-        
+    $email = mysqli_real_escape_string($conexao, trim($_POST['email']));
     
+    // 3. Lógica para a SENHA ao editar
+    $senha_pura = $_POST['senha'];
+    $update_senha = ""; // Se não digitar nada, mantém a senha velha
+
+    // Só cria o pedaço de código SQL da senha se o admin digitou uma senha nova
+    if (!empty($senha_pura)) {
+        $senha_criptografada = password_hash($senha_pura, PASSWORD_DEFAULT);
+        $update_senha = ", senha = '$senha_criptografada'"; 
+    }
+        
     ########################Update no banco de dados########################
    
-    $sql_update = "UPDATE cliente SET nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', sexo = '$sexo', cpf = '$CPF', rg = '$RG', endereco = '$endereco', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', email = '$email', senha = '$senha_criptografada', status = $status 
+    // Variável $update_senha injetada no meio da query
+    $sql_update = "UPDATE cliente SET 
+        nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', 
+        sexo = '$sexo', cpf = '$CPF', rg = '$RG', endereco = '$endereco', numero = '$numero', 
+        complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', 
+        cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', 
+        email = '$email' 
+        $update_senha, 
+        status = $status 
     WHERE codigo_cliente = $codigo_cliente";
 
     try {
         if(mysqli_query($conexao, $sql_update)) {
             $_SESSION['mensagem'] = "Cliente atualizado com sucesso!";
         } else {
-            $_SESSION['mensagem'] = "Erro ao atualizar cliente!";
+            $_SESSION['mensagem'] = "Erro ao atualizar cliente: " . mysqli_error($conexao);
         }
 
     } catch (mysqli_sql_exception $e) {

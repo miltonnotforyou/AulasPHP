@@ -47,6 +47,47 @@ if (!isset($_SESSION))
     $res_pedidos = $conexao->query($sql_pedidos);
     $total_pedidos = $res_pedidos->fetch_assoc()['total'] ?? 0;
 
+    // Top Vendedor (com valor total vendido)
+    $sql_top_vendedor = "SELECT f.nome as vendedor, SUM(v.valor_total) as valor_vendido 
+                         FROM venda v 
+                         INNER JOIN funcionario f ON v.codigo_funcionario = f.codigo_funcionario 
+                         GROUP BY f.codigo_funcionario 
+                         ORDER BY valor_vendido DESC LIMIT 1";
+    $res_top_vendedor = $conexao->query($sql_top_vendedor);
+    if ($res_top_vendedor && $res_top_vendedor->num_rows > 0) {
+        $row_vend = $res_top_vendedor->fetch_assoc();
+        $top_vendedor = $row_vend['vendedor'];
+        $valor_top_vendedor = $row_vend['valor_vendido'];
+    } else {
+        $top_vendedor = 'Nenhum';
+        $valor_top_vendedor = 0;
+    }
+
+    // Top Cliente (com valor total comprado)
+    $sql_top_cliente = "SELECT c.nome as cliente, SUM(v.valor_total) as valor_comprado 
+                        FROM venda v 
+                        INNER JOIN cliente c ON v.codigo_cliente = c.codigo_cliente 
+                        GROUP BY c.codigo_cliente 
+                        ORDER BY valor_comprado DESC LIMIT 1";
+    $res_top_cliente = $conexao->query($sql_top_cliente);
+    if ($res_top_cliente && $res_top_cliente->num_rows > 0) {
+        $row_cli = $res_top_cliente->fetch_assoc();
+        $top_cliente = $row_cli['cliente'];
+        $valor_top_cliente = $row_cli['valor_comprado'];
+    } else {
+        $top_cliente = 'Nenhum';
+        $valor_top_cliente = 0;
+    }
+
+    // Itens Diferentes 
+    $sql_itens_diferentes = "SELECT COUNT(codigo_produto) as total_itens FROM produto";
+    $res_itens_diferentes = $conexao->query($sql_itens_diferentes);
+    $itens_diferentes = ($res_itens_diferentes && $res_itens_diferentes->num_rows > 0) ? $res_itens_diferentes->fetch_assoc()['total_itens'] : 0;
+
+    // 8º Bloco: Ticket Médio
+    // Condicional para evitar erro de divisão por zero caso não haja pedidos
+    $ticket_medio = ($total_pedidos > 0) ? ($total_vendas / $total_pedidos) : 0;
+
 
     // 3. CONSULTA PARA A TABELA DE PEDIDOS RECENTES
     $sql_recentes = "SELECT v.codigo_venda, c.nome as cliente_nome, v.forma_pagamento, v.valor_total 
@@ -202,7 +243,7 @@ if (!isset($_SESSION))
 
             <!-- Conteúdo Principal Graficos -->
 
-            <div class="corpo-dashboard">
+            <div class="corpo-dashboard"></div>
                 <div class="cabecalho-corpo">
                     <div class="titulo">
                         <h2>Visão Geral</h2>
@@ -254,7 +295,58 @@ if (!isset($_SESSION))
                         <h3>Total de Pedidos</h3>
                         <p class="valor"><?php echo $total_pedidos; ?></p>
                     </article>
+
+                    <!-- Bloco: Top Vendedor -->
+                    <article class="cartao-metas">
+                        <div class="cabecalho-metas">
+                            <div class="caixa-icone" style="background: #e0e7ff; color: #4338ca;">
+                                <i class="bi bi-award"></i>
+                            </div>
+                        </div>
+                        <h3>Top Vendedor</h3>
+                        <p class="valor" style="font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;" title="<?php echo htmlspecialchars($top_vendedor); ?>">
+                            <?php echo htmlspecialchars($top_vendedor); ?>
+                        </p>
+                        <span style="font-size: 0.9rem; color: #10b981; font-weight: 700;">R$ <?php echo number_format($valor_top_vendedor, 2, ',', '.'); ?></span>
+                    </article>
+
+                    <!-- Bloco: Top Cliente -->
+                    <article class="cartao-metas">
+                        <div class="cabecalho-metas">
+                            <div class="caixa-icone" style="background: #dcfce7; color: #15803d;">
+                                <i class="bi bi-star"></i>
+                            </div>
+                        </div>
+                        <h3>Top Cliente</h3>
+                        <p class="valor" style="font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;" title="<?php echo htmlspecialchars($top_cliente); ?>">
+                            <?php echo htmlspecialchars($top_cliente); ?>
+                        </p>
+                        <span style="font-size: 0.9rem; color: #10b981; font-weight: 700;">R$ <?php echo number_format($valor_top_cliente, 2, ',', '.'); ?></span>
+                    </article>
+
+                    <!-- Bloco: Itens Cadastrados -->
+                    <article class="cartao-metas">
+                        <div class="cabecalho-metas">
+                            <div class="caixa-icone" style="background: #f3e8ff; color: #7e22ce;">
+                                <i class="bi bi-box-seam"></i>
+                            </div>
+                        </div>
+                        <h3>Itens Cadastrados</h3>
+                        <p class="valor"><?php echo number_format($itens_diferentes, 0, ',', '.'); ?></p>
+                    </article>
+
+                    <!-- NOVO BLOCO: Ticket Médio -->
+                    <article class="cartao-metas">
+                        <div class="cabecalho-metas">
+                            <div class="caixa-icone" style="background: #ffedd5; color: #c2410c;">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                        </div>
+                        <h3>Ticket Médio</h3>
+                        <p class="valor">R$ <?php echo number_format($ticket_medio, 2, ',', '.'); ?></p>
+                    </article>
                 </div>
+                
 
                 <div class="grade-graficos" style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;">
     

@@ -131,9 +131,25 @@ function inicializarGraficosDashboard() {
                 datasets: [{
                     label: 'Faturamento Mensal (R$)',
                     data: dadosVendas.length > 0 ? dadosVendas : [0],
-                    backgroundColor: '#1d4ed8',
-                    borderRadius: 4
-                }]
+                backgroundColor: [
+                    'rgba(23, 37, 56, 0.8)',    // Azul Escuro
+                    'rgba(31, 97, 214, 0.8)',   // Azul Royal 
+                    'rgba(103, 118, 138, 0.8)', // Azul Acinzentado 
+                    'rgba(178, 77, 15, 0.8)',   // Ferrugem/Marrom 
+                    'rgba(206, 216, 226, 0.8)', // Cinza Claro 
+                    'rgba(71, 85, 105, 0.8)'    // Cinza Chumbo Escuro
+                ],
+                borderColor: [
+                    'rgba(23, 37, 56, 1)',      // Azul Escuro
+                    'rgba(31, 97, 214, 1)',     // Azul Royal
+                    'rgba(103, 118, 138, 1)',   // Azul Acinzentado
+                    'rgba(178, 77, 15, 1)',     // Ferrugem/Marrom
+                    'rgba(206, 216, 226, 1)',   // Cinza Claro
+                    'rgba(71, 85, 105, 1)'      // Cinza Chumbo Escuro
+                ],
+                borderWidth: 1,
+                borderRadius: 4 // Deixa as pontas das barras levemente arredondadas (opcional)
+            }]
             },
             options: {
                 responsive: true,
