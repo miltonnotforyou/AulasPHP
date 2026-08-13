@@ -2,6 +2,7 @@
 // Conexão com o banco de dados
 require_once __DIR__ .'/../../conexao/conecta.php';
 
+
 ######## Inicia a sessão #######
 
 if (!isset($_SESSION)) 
@@ -36,7 +37,10 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
     $codigo_cargo = mysqli_real_escape_string($conexao, $_POST['codigo_cargo'] ?? '');
     $salario = str_replace(',', '.', $_POST['salario']); ## Corrigido: Substituindo vírgula por ponto para o formato decimal
     $usuario = mysqli_real_escape_string($conexao, $_POST['usuario']); 
-    $senha = mysqli_real_escape_string($conexao, $_POST['senha']); 
+    
+    // --- ADIÇÃO DA CRIPTOGRAFIA NA HORA DE CADASTRAR ---
+    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); 
+    
     $tipo_acesso = mysqli_real_escape_string($conexao, $_POST['tipo_acesso']); 
     //$status = mysqli_real_escape_string($conexao, $_POST['status']);    
 
@@ -99,7 +103,10 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
     $codigo_cargo = mysqli_real_escape_string($conexao, $_POST['codigo_cargo'] ?? '');
     $salario = str_replace(',', '.', $_POST['salario']); 
     $usuario = mysqli_real_escape_string($conexao, $_POST['usuario']); 
-    $senha = mysqli_real_escape_string($conexao, $_POST['senha']); 
+    
+    // --- ADIÇÃO DA CRIPTOGRAFIA NA HORA DE EDITAR ---
+    $senha_pura = $_POST['senha']; 
+    
     $tipo_acesso = mysqli_real_escape_string($conexao, $_POST['tipo_acesso']); 
     $status = mysqli_real_escape_string($conexao, $_POST['status']);    
 
@@ -116,7 +123,14 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
     
     ########################UPDATE no banco de dados########################
 
-    $sql = "UPDATE funcionario SET nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', sexo = '$sexo', estado_civil = '$estado_civil', CPF = '$CPF', RG = '$RG', salario = '$salario', endereco = '$endereco', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', email = '$email', status = $status, usuario = '$usuario', senha = '$senha', tipo_acesso = $tipo_acesso, codigo_cargo = $cargo";
+    // Se o administrador digitou uma senha nova, criptografa e atualiza o campo `senha`.
+    if(!empty($senha_pura)) {
+        $senha_criptografada = password_hash($senha_pura, PASSWORD_DEFAULT);
+        $sql = "UPDATE funcionario SET nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', sexo = '$sexo', estado_civil = '$estado_civil', CPF = '$CPF', RG = '$RG', salario = '$salario', endereco = '$endereco', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', email = '$email', status = $status, usuario = '$usuario', senha = '$senha_criptografada', tipo_acesso = $tipo_acesso, codigo_cargo = $cargo";
+    } else {
+        // Se deixou a senha em branco, a query é executada normalmente, preservando a senha atual.
+        $sql = "UPDATE funcionario SET nome = '$nome', nome_social = '$nome_social', data_nascimento = '$data_nascimento', sexo = '$sexo', estado_civil = '$estado_civil', CPF = '$CPF', RG = '$RG', salario = '$salario', endereco = '$endereco', numero = '$numero', complemento = '$complemento', bairro = '$bairro', cidade = '$cidade', estado = '$estado', cep = '$cep', telefone_residencial = '$telefone_residencial', telefone_celular = '$telefone_celular', email = '$email', status = $status, usuario = '$usuario', tipo_acesso = $tipo_acesso, codigo_cargo = $cargo";
+    }
 
     ##################### SOMENTE PARA TABELAS QUE TEM FOTO ###########################
     //VERIFICNADO SE O USUÁRIO ENVIOU UMA NOVA FOTO PARA ATUALIZAR. SE SIM, INCLUIR A FOTO NO UPDATE, SE NÃO, MANTER A FOTO ANTIGA.
