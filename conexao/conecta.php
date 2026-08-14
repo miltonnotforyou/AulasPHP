@@ -27,4 +27,3 @@
     if (mysqli_connect_errno()) {
         die("Falha na conexão: " . mysqli_connect_error());
     }
-?>
