@@ -14,7 +14,7 @@ if (!isset($_SESSION))
         {
                   
             $_SESSION['naoAutorizado'] = "Apenas usuários autenticados podem acessar o painel administrativo."; // Armazenando a mensagem de erro na sessão para exibir na página de login
-            header("Location: ../Index.php"); // Redireciona para a página de login se o usuário não estiver autenticado
+            header("Location: ../index.php"); // Redireciona para a página de login se o usuário não estiver autenticado
 
           
                    

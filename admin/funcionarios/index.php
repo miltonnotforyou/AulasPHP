@@ -19,7 +19,7 @@
 
 
   // Verificando se o usuário está autenticado para permitir o acesso à página de administração
-  include_once '../Usuario_Admin.php'; // Verifica se o usuário é administrador (tipo 1)
+  include_once '../Usuario_admin.php'; // Verifica se o usuário é administrador (tipo 1)
 ?>
 
 <!DOCTYPE html>
@@ -39,19 +39,19 @@
 </head>
 <body>
 
-  <?php include('../Topo.php'); /* Barra superior do sistema */ ?>
+  <?php include('../topo.php'); /* Barra superior do sistema */ ?>
 
   <div class="container-fluid">
     <div class="row">
 
-      <?php include('../Navegacao.php'); /* Menu lateral esquerdo */ ?>
+      <?php include('../navegacao.php'); /* Menu lateral esquerdo */ ?>
 
       <!-- Área de conteúdo principal — 10 colunas Bootstrap -->
       <main class="ms-auto col-lg-10 px-md-4">
 
         <?php
-          include('../Log.php');      // Registra acesso do usuário
-          include('../Mensagem.php'); // Exibe alertas de ações anteriores (sucesso/erro)
+          include('../log.php');      // Registra acesso do usuário
+          include('../mensagem.php'); // Exibe alertas de ações anteriores (sucesso/erro)
         ?>
 
         <div class="card mt-3 mb-4">
@@ -62,7 +62,7 @@
             <h4 class="m-0">Funcionários</h4>
 
             <!-- Botão que leva para a página de cadastro de novo funcionário -->
-            <a href="Inserir.php" class="btn btn-light btn-sm">
+            <a href="inserir.php" class="btn btn-light btn-sm">
               <i class="bi bi-plus"></i> Adicionar Novo
             </a>
           </div>

@@ -187,14 +187,14 @@
                Passam o código do funcionário via GET na URL de destino. -->
           <td class="table-light">
             <!-- Link para a página de edição, passando o código do funcionário na URL. O botão tem um ícone de lápis e um título "Editar" para acessibilidade.  -->
-            <a href="Editar.php?codigo_funcionario=<?php echo $funcionario['codigo_funcionario']; ?>" 
+            <a href="editar.php?codigo_funcionario=<?php echo $funcionario['codigo_funcionario']; ?>" 
                class="btn btn-outline-success btn-sm" 
                title="Editar">
               <i class="bi bi-pencil"></i> <!-- Ícone de lápis (Bootstrap Icons) -->
             </a>
             
           <!-- Botões de ação: Excluir. -->
-            <form action="Acoes.php" method="POST" class="d-inline">
+            <form action="acoes.php" method="POST" class="d-inline">
               <button type="submit" class="btn btn-outline-danger btn-sm" title="Excluir" 
                       name="deletar_funcionario" 
                       value="<?php echo $funcionario['codigo_funcionario']; ?>" 

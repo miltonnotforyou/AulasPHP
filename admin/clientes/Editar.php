@@ -32,7 +32,7 @@
 
   <?php
     #Início TOPO
-    include('../Topo.php');
+    include('../topo.php');
     #Final TOPO
   ?>
 
@@ -40,14 +40,14 @@
     <div class="row">
       <?php
         #Início MENU
-        include('../Navegacao.php');
+        include('../navegacao.php');
         #Final MENU
       ?>
 
       <main class="ms-auto col-lg-10 px-md-4">
          <?php
-          include('../Log.php');
-          include('../Mensagem.php');
+          include('../log.php');
+          include('../mensagem.php');
 
           if(isset($_GET['codigo_cliente']) && $_GET['codigo_cliente'] != '')          
         {
@@ -68,7 +68,7 @@
           </div>
 
           <div class="card-body">
-            <form action="Acoes.php" method="post" enctype="multipart/form-data"> 
+            <form action="acoes.php" method="post" enctype="multipart/form-data"> 
                         
                 <div class="row">       
                     <div class="col-8 hr mt-1">

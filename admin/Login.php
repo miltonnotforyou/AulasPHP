@@ -34,12 +34,12 @@ if(isset($_POST['usuario']) && $_POST['usuario'] != ''&& isset($_POST['senha']) 
                 // ESTA LINHA para exibir o nome social do usuário logado no painel administrativo, armazenando o nome social na variável de sessão NOME_SOCIAL:
                 $_SESSION['NOME_SOCIAL'] = $funcionario['nome_social'];
 
-                header("Location: Admin.php"); // Redireciona para a página de dashboard após o login bem-sucedido
+                header("Location: admin.php"); // Redireciona para a página de dashboard após o login bem-sucedido
             }
             else
                 {
                     $_SESSION['loginErro'] = "Usuário ou senha inválidos."; // Armazenando a mensagem de erro na sessão para exibir na página de login
-                    header("Location: Index.php"); // Redireciona de volta para a página de login    
+                    header("Location: index.php"); // Redireciona de volta para a página de login    
                 }
 
 
@@ -47,7 +47,7 @@ if(isset($_POST['usuario']) && $_POST['usuario'] != ''&& isset($_POST['senha']) 
     else
     {
         $_SESSION['loginVazio'] = "Preencha os campos de usuário e senha para acessar o painel administrativo."; // Armazenando a mensagem de erro na sessão para exibir na página de login
-        header("Location: Index.php"); // Redireciona de volta para a página de login    
+        header("Location: index.php"); // Redireciona de volta para a página de login    
     }
     
 ?>

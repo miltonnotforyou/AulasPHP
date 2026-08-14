@@ -38,7 +38,7 @@
 
   <?php
     #Início TOPO
-    include('../Topo.php');
+    include('../topo.php');
     #Final TOPO
   ?>
 
@@ -46,14 +46,14 @@
     <div class="row">
       <?php
         #Início MENU
-        include('../Navegacao.php');
+        include('../navegacao.php');
         #Final MENU
       ?>
 
       <main class="ms-auto col-lg-10 px-md-4">
         <?php
-          include('../Log.php');
-          include('../Mensagem.php');
+          include('../log.php');
+          include('../mensagem.php');
           
           if(isset($_GET['codigo_cargo']) && $_GET['codigo_cargo'] != '')          
         {

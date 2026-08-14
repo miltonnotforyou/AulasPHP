@@ -78,7 +78,7 @@
           <td class="table-light"><?php echo date('d/m/Y', strtotime($categoria['data_cadastro'])); ?></td>
 
           <td class="table-light"> 
-            <a href="Editar.php?codigo_categoria=<?php echo $categoria['codigo_categoria']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
+            <a href="editar.php?codigo_categoria=<?php echo $categoria['codigo_categoria']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
             </a>
             <!-- Botões de ação: Excluir. -->

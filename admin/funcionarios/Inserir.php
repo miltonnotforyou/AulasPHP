@@ -3,7 +3,7 @@
   require_once __DIR__ .'/../../conexao/conecta.php';
 
 // Verificando se o usuário está autenticado para permitir o acesso à página de administração
-  include_once '../Usuario_Admin.php'; // Verifica se o usuário é administrador (tipo 1)
+  include_once '../Usuario_admin.php'; // Verifica se o usuário é administrador (tipo 1)
 
 ?>
 
@@ -35,7 +35,7 @@
 
   <?php
     #Início TOPO
-    include('../Topo.php');
+    include('../topo.php');
     #Final TOPO
   ?>
 
@@ -43,14 +43,14 @@
     <div class="row">
       <?php
         #Início MENU
-        include('../Navegacao.php');
+        include('../navegacao.php');
         #Final MENU
       ?>
 
       <main class="ms-auto col-lg-10 px-md-4">
          <?php
-          include('../Log.php');
-          include('../Mensagem.php');
+          include('../log.php');
+          include('../mensagem.php');
         ?>
         
         <div class="card">
@@ -69,7 +69,7 @@
                
 
                <div class="card-body">
-                    <form action="Acoes.php" method="post" enctype="multipart/form-data"> <!-- enctype necessário para upload de arquivos -->
+                    <form action="acoes.php" method="post" enctype="multipart/form-data"> <!-- enctype necessário para upload de arquivos -->
                         
                         <div class="hr ms-5">
                             <h6>Dados Pessoais</h6>
@@ -311,7 +311,7 @@
                                                                
                 <div class="col-3 mt-2 d-flex align-items-end">
 
-                <input type="hidden" name="cadastrar" value="cadastrar_funcionario">   <!-- // Campo oculto para identificar a ação no Acoes.php -->
+                <input type="hidden" name="cadastrar" value="cadastrar_funcionario">   <!-- // Campo oculto para identificar a ação no acoes.php -->
                 
                     
                  <input type="submit" value="Cadastrar" class="btn btn-dark"> 

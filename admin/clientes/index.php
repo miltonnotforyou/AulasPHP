@@ -34,7 +34,7 @@
 
   <?php /* Barra superior do sistema */
     #Início TOPO
-    include('../Topo.php');
+    include('../topo.php');
     #Final TOPO
   ?>
 
@@ -42,15 +42,15 @@
     <div class="row">
       <?php
         #Início MENU
-        include('../Navegacao.php'); /* Menu lateral esquerdo */
+        include('../navegacao.php'); /* Menu lateral esquerdo */
         #Final MENU
       ?>
 
     <!-- Área de conteúdo principal — 10 colunas Bootstrap -->
       <main class="ms-auto col-lg-10 px-md-4">
         <?php
-          include('../Log.php'); // Registra acesso do usuário
-          include('../Mensagem.php'); // Exibe mensagens de sucesso/erro armazenadas na sessão
+          include('../log.php'); // Registra acesso do usuário
+          include('../mensagem.php'); // Exibe mensagens de sucesso/erro armazenadas na sessão
         ?>
         
          <!-- Cabeçalho do card com título e botão de cadastro -->
@@ -59,7 +59,7 @@
             <h4 class="m-0">Clientes</h4>
 
             <!-- Botão que leva para a página de cadastro de novo funcionário -->
-            <a href="Inserir.php" class="btn btn-light btn-sm">
+            <a href="inserir.php" class="btn btn-light btn-sm">
               <i class="bi bi-plus"></i> Adicionar
             </a>
           </div>

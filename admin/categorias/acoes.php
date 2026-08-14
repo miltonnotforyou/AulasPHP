@@ -37,7 +37,7 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_categoria')
             $_SESSION['mensagem'] = "Erro ao cadastrar categoria";
             }
 
-    header("Location: Inserir.php");
+    header("Location: inserir.php");
     exit();
 }
 

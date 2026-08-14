@@ -100,7 +100,7 @@ function buscarAdmin() {
 
     // Se tiver algo digitado, envia pro PHP
     $.ajax({
-        url: '../BuscaAdmin.php', 
+        url: '../buscaadmin.php', 
         type: 'POST',
         data: { pesquisa: termoPesquisa },
         success: function(data) {

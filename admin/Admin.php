@@ -13,7 +13,7 @@ if (!isset($_SESSION))
     if (!isset($_SESSION['USER']))
         {
             $_SESSION['naoAutorizado'] = "Apenas usuários autenticados podem acessar o painel administrativo."; // Armazenando a mensagem de erro na sessão para exibir na página de login
-            header("Location: Index.php"); // Redireciona para a página de login se o usuário não estiver autenticado
+            header("Location: index.php"); // Redireciona para a página de login se o usuário não estiver autenticado
             
         }
     // Configuração da data de hoje em Português
@@ -165,7 +165,7 @@ if (!isset($_SESSION))
 
   <?php
     #Início TOPO
-    include('Topo.php');
+    include('topo.php');
     #Final TOPO
   ?>
 
@@ -173,13 +173,13 @@ if (!isset($_SESSION))
     <div class="row">
       <?php
         #Início MENU
-        include('Navegacao.php');
+        include('navegacao.php');
         #Final MENU
       ?>
 
       <div class="ms-auto col-lg-10 px-md-4">
         <?php
-          include('Log.php');
+          include('log.php');
         ?>
 
         <div>
@@ -421,12 +421,12 @@ if (!isset($_SESSION))
                     <h5>Gerenciamento Rápido</h5>
                     <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Acesse as principais seções do painel.</p>
                 </div>
-              <a href="../admin/produtos/Inserir.php" class="btn btn-dark btn-sm">Adicionar Produto</a>
-              <a href="../admin/funcionarios/Inserir.php" class="btn btn-dark btn-sm">Adicionar Funcionario</a>
-              <a href="../admin/clientes/Inserir.php" class="btn btn-dark btn-sm">Adicionar Cliente</a>
-              <a href="../admin/cargos/Inserir.php" class="btn btn-dark btn-sm">Adicionar Cargo</a>
-              <a href="../admin/categorias/Inserir.php" class="btn btn-dark btn-sm">Adicionar Categoria</a>
-              <a href="../admin/marcas/Inserir.php" class="btn btn-dark btn-sm">Adicionar Marca</a>
+              <a href="../admin/produtos/inserir.php" class="btn btn-dark btn-sm">Adicionar Produto</a>
+              <a href="../admin/funcionarios/inserir.php" class="btn btn-dark btn-sm">Adicionar Funcionario</a>
+              <a href="../admin/clientes/inserir.php" class="btn btn-dark btn-sm">Adicionar Cliente</a>
+              <a href="../admin/cargos/inserir.php" class="btn btn-dark btn-sm">Adicionar Cargo</a>
+              <a href="../admin/categorias/inserir.php" class="btn btn-dark btn-sm">Adicionar Categoria</a>
+              <a href="../admin/marcas/inserir.php" class="btn btn-dark btn-sm">Adicionar Marca</a>
 
 
               </div>

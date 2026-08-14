@@ -97,11 +97,11 @@
           </td>
           <td class="table-light"><?php echo date('d/m/Y', strtotime($produto['data_cadastro'])); ?></td>
           <td class="table-light"> 
-            <a href="Editar.php?codigo_produto=<?php echo $produto['codigo_produto']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
+            <a href="editar.php?codigo_produto=<?php echo $produto['codigo_produto']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
             </a>
             <!-- Botões de ação: Excluir. -->
-            <form action="Acoes.php" method="POST" class="d-inline">
+            <form action="acoes.php" method="POST" class="d-inline">
               <button type="submit" class="btn btn-outline-danger btn-sm" title="Excluir" name="deletar_produto" value="<?php echo $produto['codigo_produto']; ?>" onclick="return confirm('Tem certeza que deseja excluir o produto <?php echo $produto['nome']; ?>?');">
                 <i class="bi bi-trash"> </i>
               </button>

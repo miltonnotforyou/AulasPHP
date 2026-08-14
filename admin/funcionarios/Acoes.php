@@ -70,7 +70,7 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_funcionario'
             $_SESSION['mensagem'] = "Erro ao cadastrar funcionário!";
         }
 
-    header("Location: Inserir.php");
+    header("Location: inserir.php");
     exit();
     }
 

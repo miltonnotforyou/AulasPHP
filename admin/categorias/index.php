@@ -25,7 +25,7 @@
 
   <?php
     #Início TOPO
-    include('../Topo.php');
+    include('../topo.php');
     #Final TOPO
   ?>
 
@@ -33,21 +33,21 @@
     <div class="row">
       <?php
         #Início MENU
-        include('../Navegacao.php');
+        include('../navegacao.php');
         #Final MENU
       ?>
 
       <main class="ms-auto col-lg-10 px-md-4">
         <?php
-          include('../Log.php');
-          include('../Mensagem.php');
+          include('../log.php');
+          include('../mensagem.php');
         
         ?>
         
         <div class="card">
           <div class="card-header d-flex justify-content-between" style="background-color: #2b3d4f; color: white;">
             <h4 class="m-0">Categorias</h4>
-            <a href="Inserir.php" class="btn btn-light btn-sm">
+            <a href="inserir.php" class="btn btn-light btn-sm">
               <i class="bi bi-plus"></i> Adicionar
             </a>
           </div>

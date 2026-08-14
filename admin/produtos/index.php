@@ -22,24 +22,24 @@
 </head>
 <body>
 
-  <?php include('../Topo.php'); 
+  <?php include('../topo.php'); 
   ?>
 
   <div class="container-fluid">
     <div class="row">
-      <?php include('../Navegacao.php'); 
+      <?php include('../navegacao.php'); 
       ?>
 
       <main class="ms-auto col-lg-10 px-md-4">
         <?php 
-        include('../Log.php');
-        include('../Mensagem.php');
+        include('../log.php');
+        include('../mensagem.php');
         ?>
         
         <div class="card">
           <div class="card-header d-flex justify-content-between" style="background-color: #2b3d4f; color: white;">
             <h4 class="m-0">Produtos</h4>
-            <a href="Inserir.php" class="btn btn-light btn-sm">
+            <a href="inserir.php" class="btn btn-light btn-sm">
               <i class="bi bi-plus"></i> Adicionar
             </a>
           </div>
@@ -149,10 +149,10 @@
                   ?></td>
                   <td class="table-light"><?php echo date('d/m/Y', strtotime($produto['data_cadastro'])) ?></td>
                   <td class="table-light">
-                    <a href="Editar.php?codigo_produto=<?php echo $produto['codigo_produto'] ?>" class="btn btn-outline-success btn-sm" title="Editar">
+                    <a href="editar.php?codigo_produto=<?php echo $produto['codigo_produto'] ?>" class="btn btn-outline-success btn-sm" title="Editar">
                       <i class="bi bi-pencil"> </i>
                     </a>
-                    <form action="Acoes.php" method="POST" class="d-inline">
+                    <form action="acoes.php" method="POST" class="d-inline">
                     <button type="submit" class="btn btn-outline-danger btn-sm" title="Excluir" name="deletar_produto" value="<?php echo $produto['codigo_produto']; ?>" onclick="return confirm('Tem certeza que deseja excluir o produto <?php echo $produto['nome']; ?>?');">
                       <i class="bi bi-trash"> </i>
                     </button>

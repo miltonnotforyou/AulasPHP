@@ -70,7 +70,7 @@
           <td class="table-light"><?php echo date('d/m/Y', strtotime($marca['data_cadastro'])); ?></td>
 
           <td class="table-light"> 
-            <a href="Editar.php?codigo_marca=<?php echo $marca['codigo_marca']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
+            <a href="editar.php?codigo_marca=<?php echo $marca['codigo_marca']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
             </a>
            <!-- Botões de ação: Excluir. -->

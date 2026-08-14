@@ -35,7 +35,7 @@ if(isset($_POST['cadastrar']) && $_POST['cadastrar'] === 'cadastrar_marca')
             $_SESSION['mensagem'] = "Erro ao cadastrar marca";
             }
 
-    header("Location: Inserir.php");
+    header("Location: inserir.php");
     exit();
 }
 

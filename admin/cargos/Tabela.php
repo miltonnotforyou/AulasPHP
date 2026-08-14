@@ -79,7 +79,7 @@
           <td class="table-light"><?php echo date('d/m/Y', strtotime($cargo['data_cadastro'])); ?></td>
 
           <td class="table-light"> 
-            <a href="Editar.php?codigo_cargo=<?php echo $cargo['codigo_cargo']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
+            <a href="editar.php?codigo_cargo=<?php echo $cargo['codigo_cargo']; ?>" class="btn btn-outline-success btn-sm" title="Editar">
               <i class="bi bi-pencil"></i>
             </a>
             
